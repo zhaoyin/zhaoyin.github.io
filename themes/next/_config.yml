@@ -306,8 +306,8 @@ han: false
 
 # Disqus
 disqus:
-  enable: false
-  shortname:
+  enable: true
+  shortname: 雨来
   count: true
 
 # Hypercomments
@@ -338,7 +338,7 @@ changyan:
 ##  type: button
 
 # Share
-#jiathis:
+jiathis: true
 # Warning: JiaThis does not support https.
 #add_this_id:
 
@@ -404,9 +404,9 @@ vkontakte_api:
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
 leancloud_visitors:
-  enable: false
-  app_id: #<app_id>
-  app_key: #<app_key>
+  enable: true
+  app_id: MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz
+  app_key: NrqlYJViJsDVg4JNTKTW0fFQ
 
 # Show PV/UV of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
@@ -433,6 +433,12 @@ busuanzi_count:
 # Tencent MTA ID
 # tencent_mta:
 
+algolia:
+  applicationID: 'KB0W0YA2QV'
+  apiKey: '89767cf2290afa4adfbf45fec82c46ad'
+  adminApiKey: '67154f24cd9583aa17a31d4958497f0b'
+  indexName: 'prod_xcoder'
+  chunkSize: 5000
 
 # Enable baidu push so that the blog will push the url to baidu automatically which is very helpful for SEO
 baidu_push: false
@@ -456,7 +462,7 @@ calendar:
 
 # Algolia Search
 algolia_search:
-  enable: false
+  enable: true
   hits:
     per_page: 10
   labels:
