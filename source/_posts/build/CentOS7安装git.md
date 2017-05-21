@@ -3,6 +3,9 @@
 title: Centos7安装git
 date: 2017-05-21 16:40:56
 tags:
+    - centos7
+    - git
+    - yum
 ---
 
 ## 查看系统是否已经安装git

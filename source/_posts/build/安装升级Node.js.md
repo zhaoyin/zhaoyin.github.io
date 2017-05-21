@@ -3,6 +3,8 @@
 title: 安装升级Node.js
 date: 2017-05-20 16:40:56
 tags:
+    - Node.js
+    - pm2
 ---
 
 推荐使用[nodesource-nodejs-and-iojs-binary-distributions](https://github.com/nodesource/distributions)提供的方式安装
