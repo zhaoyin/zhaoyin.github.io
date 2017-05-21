@@ -306,15 +306,15 @@ han: false
 
 # Disqus
 disqus:
-  enable: true
+  enable: false
   shortname: 雨来
-  count: true
+  count: false
 
 # Hypercomments
 #hypercomments_id:
 
 # Gentie productKey
-#gentie_productKey:
+gentie_productKey: 516dfb07ef914da3a18ae1e79c4ab547
 
 # changyan
 changyan:
@@ -466,9 +466,9 @@ algolia_search:
   hits:
     per_page: 10
   labels:
-    input_placeholder: Search for Posts
-    hits_empty: "We didn't find any results for the search: ${query}"
-    hits_stats: "${hits} results found in ${time} ms"
+    input_placeholder: 搜索
+    hits_empty: "没有找到搜索结果: ${query}"
+    hits_stats: " ${time} ms 内发现了 ${hits} 条记录"
 
 
 # Local search
