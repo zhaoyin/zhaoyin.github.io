@@ -2,6 +2,8 @@
 ---
 title: 自动部署发布Hexo程序到Github上
 date: 2017-05-20 22:40:56
+categories:
+    - build
 tags: 
     - Hexo
     - travis CI

@@ -2,6 +2,8 @@
 ---
 title: 安装升级Node.js
 date: 2017-05-20 16:40:56
+categories:
+    - build
 tags:
     - Node.js
     - pm2

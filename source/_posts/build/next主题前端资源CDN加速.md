@@ -2,6 +2,8 @@
 ---
 title: next主题前端资源CDN加速
 date: 2017-05-22 13:40:46
+categories:
+    - build
 tags: 
     - Hexo
     - NexT

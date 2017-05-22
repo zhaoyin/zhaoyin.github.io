@@ -2,6 +2,8 @@
 ---
 title: Centos7安装git
 date: 2017-05-21 16:40:56
+categories:
+    - build
 tags:
     - centos7
     - git

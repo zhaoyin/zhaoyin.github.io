@@ -2,6 +2,8 @@
 ---
 title: YAML使用
 date: 2017-05-20 20:40:56
+categories:
+    - language
 tags:
     - YAML
     - yml
