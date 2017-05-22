@@ -250,7 +250,7 @@ post_wordcount:
 wechat_subscriber:
   enabled: true
   qcode: /uploads/qrcode.jpg
-  description: 扫描上面的微信公众号，订阅博客
+  description: 扫描微信公众号订阅博客
 
 # Declare license on posts
 post_copyright:
