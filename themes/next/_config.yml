@@ -32,11 +32,11 @@ copyright: true
 canonical: true
 
 # Change headers hierarchy on site-subtitle (will be main site description) and on all post/pages titles for better SEO-optimization.
-seo: false
+seo: true
 
 # If true, will add site-subtitle to index page, added in main hexo config.
 # subtitle: Subtitle
-index_with_subtitle: false
+index_with_subtitle: true
 
 # ---------------------------------------------------------------
 # Menu Settings
@@ -466,8 +466,8 @@ algolia_search:
   hits:
     per_page: 10
   labels:
-    input_placeholder: 搜索
-    hits_empty: "没有找到搜索结果: ${query}"
+    input_placeholder: "搜索"
+    hits_empty: "没有搜索到结果: ${query}"
     hits_stats: " ${time} ms 内发现了 ${hits} 条记录"
 
 

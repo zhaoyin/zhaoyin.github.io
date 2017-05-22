@@ -8,7 +8,7 @@ tags:
     - 高效
 ---
 
-POI是apache下一个进行office相关格式文件的读写开源工具。我们最近在使用这个框架实现Excel格式数据的导入和导出功能。这里进行一个使用总结。
+POI是apache下一个进行office相关格式文件的读写开源工具。
 POI提供两种读写API模型：事件模型（eventmodel）和用户模型（usermodel）。
 
 ## 事件模型
