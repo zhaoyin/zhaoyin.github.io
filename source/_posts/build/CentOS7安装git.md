@@ -21,7 +21,7 @@ git --version
 ```
 yum install git
 ```
- 
+<!--more--> 
 ## 安装成功
 
 ```

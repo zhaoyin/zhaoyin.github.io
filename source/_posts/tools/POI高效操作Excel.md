@@ -20,7 +20,7 @@ POI提供两种读写API模型：事件模型（eventmodel）和用户模型（u
 ## 用户模型
 
 基于内存树（memory tree）的方式实现，使用DOM进行excel的解析，对CPU和内存的消耗大，但能够以面向对象的方式进行操作，使用简便，可读可写。
-
+<!--more-->
 对于2007版excel，POI还提供了可缓存流的用户模型API，使用滑动窗口（sliding window）的方法控制缓存区的大小，实现对海量数据的读写。
 
 ![POI操作性能对比](http://oqcey66z7.bkt.clouddn.com/public/images/ss-features.png)

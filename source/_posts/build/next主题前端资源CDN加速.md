@@ -23,7 +23,7 @@ vendors:
   # See: http://fancyapps.com/fancybox/
   fancybox: //cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js
   fancybox_css: //cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css
-
+<!--more-->
   # Internal version: 1.0.6
   # See: https://github.com/ftlabs/fastclick
   fastclick: //cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js

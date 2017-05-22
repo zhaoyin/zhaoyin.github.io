@@ -18,6 +18,7 @@ yum -y install nodejs
 ```
 
 ## 升级Node
+<!--more-->
 
 ### 全局安装n模块
 

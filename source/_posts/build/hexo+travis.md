@@ -11,3 +11,4 @@ tags:
 ---
 
 [自动部署发布Hexo程序到Github上](http://blog.csdn.net/woblog/article/details/51319364)
+<!--more-->
