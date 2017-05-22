@@ -10,7 +10,7 @@ tags:
     - Thread
 ---
 
-通过Github上的开源项目[运维脚本](https://github.com/superhj1987/awesome-scripts)
+通过Github上的开源项目[awesome-scripts](https://github.com/superhj1987/awesome-scripts)
 
 这个项目是从https://github.com/oldratlee/useful-scripts fork来的，貌似是阿里运维人员的工具总结，只是awesome-scripts维护的更频繁。
 
