@@ -534,11 +534,11 @@ vendors:
 
   # Internal version: 1.2.1
   # See: http://VelocityJS.org
-  velocity: //cdn.staticfile.org/velocity/1.5.0/velocity.min.js
+  velocity: //cdn.staticfile.org/velocity/1.2.1/velocity.min.js
 
   # Internal version: 1.2.1
   # See: http://VelocityJS.org
-  velocity_ui: //cdn.staticfile.org/velocity/1.5.0/velocity.ui.min.js
+  velocity_ui: //cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js
 
   # Internal version: 0.7.9
   # See: https://faisalman.github.io/ua-parser-js/
@@ -546,7 +546,7 @@ vendors:
 
   # Internal version: 4.6.2
   # See: http://fontawesome.io/
-  fontawesome: //cdn.staticfile.org/font-awesome/4.4.0/css/font-awesome.min.css
+  fontawesome: //cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css
 
   # Internal version: 1
   # https://www.algolia.com
@@ -555,7 +555,7 @@ vendors:
 
   # Internal version: 1.0.0
   # https://github.com/hustcc/canvas-nest.js
-  canvas_nest: //cdn.staticfile.org/canvas-nest.js/1.0.1/canvas-nest.min.js
+  canvas_nest: //cdn.staticfile.org/canvas-nest.js/1.0.0/canvas-nest.min.js
 
   # three
   three: //cdn.staticfile.org/three.js/r83/three.min.js
