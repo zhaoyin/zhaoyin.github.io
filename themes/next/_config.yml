@@ -211,7 +211,12 @@ sidebar:
 #links_layout: inline
 #links:
   #Title: http://example.com/
-
+links_title: 收藏
+links:
+  dbanotes: http://news.dbanotes.net/
+  数据库: http://hedengcheng.com/
+  ruanyifeng: http://www.ruanyifeng.com/blog/
+  readhub: https://readhub.me/
 
 # ---------------------------------------------------------------
 # Post Settings
