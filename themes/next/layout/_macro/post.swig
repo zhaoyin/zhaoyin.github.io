@@ -302,10 +302,12 @@
           {% if post.type === 'picture' %}
             <a href="{{ url_for(post.path) }}">{{ post.content }}</a>
           {% else %}
+            <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.permalink }}</a>
             {{ post.content }}
           {% endif %}
         {% endif %}
       {% else %}
+        <a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.permalink }}</a>
         {{ post.content }}
       {% endif  %}
     </div>
