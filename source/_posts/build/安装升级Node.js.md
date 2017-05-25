@@ -2,6 +2,7 @@
 ---
 title: 安装升级Node.js
 date: 2017-05-20 16:40:56
+reward: true
 categories:
     - build
 tags:
