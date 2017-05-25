@@ -2,6 +2,7 @@
 ---
 title: 转换HQL为原生SQL解决Cross Join问题
 date: 2017-05-25 18:50:56
+reward: true
 categories:
     - tools
 tags:
