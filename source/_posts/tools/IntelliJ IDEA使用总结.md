@@ -60,17 +60,21 @@ Eclipse有的咱就不说了，说点实用的
 * command+x
     剪切当前行
 * command+c \ command+v 
-    不用都知道
+    不讲都知道
 * command+z
     撤销
 * command+shift+z
     取消撤销
-* alt+insert
-    等同于Eclipse中用鼠标点到红色波浪线上出现的浮窗效果
 * alt+enter
+    等同于Eclipse中用鼠标点到红色波浪线上出现的浮窗效果
     各种checkstyle
 * command+alt+L
     自动格式化代码
+* ctrl+alt+O
+    去除没有用到的import
+* command+F1
+    各种建议
+    [!优化建议](http://oqcey66z7.bkt.clouddn.com/public/images/%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE.png)
 
 参考了这位小哥[码农往事](http://www.blogjava.net/rockblue1988/archive/2014/10/24/418994.html)的文章，在此谢过！
 
