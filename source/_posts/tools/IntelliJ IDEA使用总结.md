@@ -60,7 +60,7 @@ Eclipse有的咱就不说了，说点实用的
 * command+x
     剪切当前行
 * command+c \ command+v 
-
+    不用都知道
 * command+z
     撤销
 * command+shift+z
