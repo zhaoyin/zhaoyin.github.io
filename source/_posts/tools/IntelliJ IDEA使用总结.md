@@ -67,6 +67,7 @@ Eclipse有的咱就不说了，说点实用的
     取消撤销
 * alt+enter
     等同于Eclipse中用鼠标点到红色波浪线上出现的浮窗效果
+    如果有引用的类没导入也使用此快捷键
     各种checkstyle
 * command+alt+L
     自动格式化代码
