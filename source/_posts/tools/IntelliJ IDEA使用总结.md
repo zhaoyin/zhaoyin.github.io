@@ -13,6 +13,7 @@ tags:
 
 今天中午收到一公众号推送说Eclipse 4.7 M7里程碑版发布,Oxygen，氧气啊，作为一个遇到新版本就闲的蛋疼的二逼程序员，我果断下载安装并替换了本机的Eclipse Mars，很快下载完后安装升级原有设置，导入项目。好了，撸起袖子开始干活，哪不对啊？右键怎么没有maven菜单了？项目启动的Jetty设置呢？我要启动项目啊。也许是升级了版本，这些东西都需要重新适配吧，没事，谁让咱二逼呢，咱再来一遍就是了，嗯，咱打开熟悉的Eclipse MarkerPlace去搜索一下这两个玩意弄上不就完了。
   然后，没有然后了，一个小时过去了我依然没有找到应用市场，终于我在熟悉的stackoverflow上找到了这货:
+  <!--more-->
   ![stackoverflow-eclipse-4.7-M7](http://oqcey66z7.bkt.clouddn.com/public/images/eclipse-Oxygen-m7.png)
 
 ```
