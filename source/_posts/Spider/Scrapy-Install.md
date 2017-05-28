@@ -1,5 +1,5 @@
 ---
-title: Scrapy安装使用
+title: Scrapy之新手上路
 date: 2017-05-28 22:38:56
 reward: true
 categories:
@@ -108,7 +108,12 @@ class CnblogsSpider(scrapy.Spider):
         f.close()
 ```
 
+输出效果
+![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-export-json.png)
+
 这只是一个简单的示例程序，如果需要按照一定抓取规则采集数据还需要进一步改造spider。
+
+
 
 
     
