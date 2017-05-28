@@ -24,6 +24,8 @@ Scrapy吸引人的地方在于它是一个框架，任何人都可以根据需�
 
 这些基础组件的安装，网络上都有很详细的安装过程，这里只是简单介绍，且针对macOs（想详细了解／其他系统？[scrapy-install]https://docs.scrapy.org/en/latest/intro/install.html）。
 
+<!--more-->
+
 * 安装python
 
     执行``python -V``看看是否安装了2.7或3.3的python。
