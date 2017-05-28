@@ -94,18 +94,21 @@ class CnblogsSpider(scrapy.Spider):
     def parse(self, response):
         page = response.url.split('/')[-2]
         filename = 'cnblogs-%s.json' % page
-        with open(filename, 'w') as f:
-            for new in response.css('div.content'):
+        with open(filename, 'wb') as f:
+            data = []
+            for new in response.css('div#news_list div.content'):
                 new_content = {
                     'title': ''.join(new.css('h2.news_entry a::text').extract()),
-                    'summary': new.css('div.entry_summary::text').extract()[1].lstrip().rstrip(),
+                    'summary': ''.join(new.css('div.entry_summary::text').extract()[1].lstrip().rstrip()),
                     'author': ''.join(new.css('div.entry_footer a::text').extract()[0].strip()),
-                    'url': new.css('h2.news_entry a::attr(href)').extract_first()
+                    'url': 'https://news.cnblogs.com'+new.css('h2.news_entry a::attr(href)').extract_first()
                 }
-                str = json.dumps(new_content, ensure_ascii=False).join('\r\n')
-                f.write(unicode.encode(str, 'utf-8'))
+                data.append(new_content)
+
+            f.write(unicode.encode(json.dumps(data, ensure_ascii=False, sort_keys=True, indent=4)+'\r\n', 'utf-8'))
         self.log('save file %s' % filename)
         f.close()
+
 ```
 
 ## 运行Spider
@@ -119,8 +122,8 @@ scrapy crawl cnblogs
 其中cnblogs即为定义的spider的name
 
 
-输出效果
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-export-json.png)
+最终输出一个完整的json数据
+![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-spider-export-json.png)
 
 这只是一个简单的示例程序，如果需要按照一定抓取规则采集数据还需要进一步改造spider。
 
