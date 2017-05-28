@@ -108,6 +108,17 @@ class CnblogsSpider(scrapy.Spider):
         f.close()
 ```
 
+## 运行Spider
+
+完成了一个简单的spider，如何运行它来输出我们需要的结果呢？
+在项目的根目录中执行如下的命令：
+
+```
+scrapy crawl cnblogs
+```
+其中cnblogs即为定义的spider的name
+
+
 输出效果
 ![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-export-json.png)
 
