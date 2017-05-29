@@ -75,7 +75,7 @@ scrapy startproject project名称
 ```
 # encoding=utf8
 import scrapy
-import json
+# import json
 
 
 class CnblogsSpider(scrapy.Spider):
@@ -117,10 +117,15 @@ class CnblogsSpider(scrapy.Spider):
         for new in response.css('div#news_list div.content'):
             yield {
                 'title': ''.join(new.css('h2.news_entry a::text').extract()),
-                'summary': ''.join(new.css('div.entry_summary::text').extract()[1].lstrip().rstrip()),
-                'author': ''.join(new.css('div.entry_footer a::text').extract()[0].strip()),
+                'summary': ''.join(new.css('div.entry_summary::text').extract()).lstrip().rstrip(),
+                'author': ''.join(new.css('div.entry_footer a::text').extract()[1]).strip(),
                 'url': 'https://news.cnblogs.com'+new.css('h2.news_entry a::attr(href)').extract_first()
             }
+
+        next_page = response.css('div#pager a::attr(href)').extract()[-1]
+        if next_page is not None:
+            next_page = response.urljoin(next_page)
+            yield scrapy.Request(next_page, callback=self.parse)
 
 ```
 
