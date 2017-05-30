@@ -1,1077 +1,481 @@
-<!doctype html>
 
-
-
-  
-
-
-<html class="theme-next mist use-motion" lang="zh-Hans">
-<head>
-  <meta charset="UTF-8"/>
-<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
-<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
-
-
-
-
-
-<meta http-equiv="Cache-Control" content="no-transform" />
-<meta http-equiv="Cache-Control" content="no-siteapp" />
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    
-  
-  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css" />
-
-
-
-
-  
-  
-  
-  
-
-  
-    
-    
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-    
-    
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-  
-
-
-
-
-
-
-  
-
-<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
-
-<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
-
-
-  <meta name="keywords" content="YAML,yml," />
-
-
-
-
-
-
-
-
-  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
-
-
-
-
-
-
-<meta name="description" content="YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。 YAML vs XML与YAML相似的数据格式定义语言是XML，YAML比">
-<meta name="keywords" content="YAML,yml">
-<meta property="og:type" content="article">
-<meta property="og:title" content="YAML使用">
-<meta property="og:url" content="http://xcoder.me/2017/05/20/language/YAML使用/index.html">
-<meta property="og:site_name" content="架构演进之旅">
-<meta property="og:description" content="YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。 YAML vs XML与YAML相似的数据格式定义语言是XML，YAML比">
-<meta property="og:image" content="http://oqcey66z7.bkt.clouddn.com/public/images/timg.png">
-<meta property="og:updated_time" content="2017-05-30T05:16:34.899Z">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="YAML使用">
-<meta name="twitter:description" content="YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。 YAML vs XML与YAML相似的数据格式定义语言是XML，YAML比">
-<meta name="twitter:image" content="http://oqcey66z7.bkt.clouddn.com/public/images/timg.png">
-
-
-
-<script type="text/javascript" id="hexo.configurations">
-  var NexT = window.NexT || {};
-  var CONFIG = {
-    root: '/',
-    scheme: 'Mist',
-    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
-    fancybox: true,
-    motion: true,
-    duoshuo: {
-      userId: '0',
-      author: '博主'
-    },
-    algolia: {
-      applicationID: 'KB0W0YA2QV',
-      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
-      indexName: 'prod_xcoder',
-      hits: {"per_page":10},
-      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
-    }
-  };
-</script>
-
-
-
-  <link rel="canonical" href="http://xcoder.me/2017/05/20/language/YAML使用/"/>
-
-
-
-
-
-  <title>YAML使用 | 架构演进之旅</title>
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
-
-  
-
-
-
-
-
-  <script type="text/javascript">
-    var _hmt = _hmt || [];
-    (function() {
-      var hm = document.createElement("script");
-      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
-      var s = document.getElementsByTagName("script")[0];
-      s.parentNode.insertBefore(hm, s);
-    })();
-  </script>
-
-
-
-
-
-
-
-
-
-
-
-  
-  
-    
-  
-
-  <div class="container sidebar-position-left page-post-detail ">
-    <div class="headband"></div>
-
-    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-wrapper">
-  <div class="site-meta ">
-    
-
-    <div class="custom-logo-site-title">
-      <a href="/"  class="brand" rel="start">
-        <span class="logo-line-before"><i></i></span>
-        <span class="site-title">架构演进之旅</span>
-        <span class="logo-line-after"><i></i></span>
-      </a>
-    </div>
-      
-        <h1 class="site-subtitle" itemprop="description">DevOps,互联网架构设计,架构演进</h1>
-      
-  </div>
-
-  <div class="site-nav-toggle">
-    <button>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-      <span class="btn-bar"></span>
-    </button>
-  </div>
-</div>
-
-<nav class="site-nav">
-  
-
-  
-    <ul id="menu" class="menu">
-      
-        
-        <li class="menu-item menu-item-home">
-          <a href="/" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
-            
-            首页
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-categories">
-          <a href="/categories" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
-            
-            分类
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-archives">
-          <a href="/archives" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
-            
-            归档
-          </a>
-        </li>
-      
-        
-        <li class="menu-item menu-item-tags">
-          <a href="/tags" rel="section">
-            
-              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
-            
-            标签
-          </a>
-        </li>
-      
-
-      
-        <li class="menu-item menu-item-search">
-          
-            <a href="javascript:;" class="popup-trigger">
-          
-            
-              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
-            
-            搜索
-          </a>
-        </li>
-      
-    </ul>
-  
-
-  
-    <div class="site-search">
-      
-  
-  <div class="algolia-popup popup search-popup">
-    <div class="algolia-search">
-      <div class="algolia-search-input-icon">
-        <i class="fa fa-search"></i>
-      </div>
-      <div class="algolia-search-input" id="algolia-search-input"></div>
-    </div>
-
-    <div class="algolia-results">
-      <div id="algolia-stats"></div>
-      <div id="algolia-hits"></div>
-      <div id="algolia-pagination" class="algolia-pagination"></div>
-    </div>
-
-    <span class="popup-btn-close">
-      <i class="fa fa-times-circle"></i>
-    </span>
-  </div>
-
-
-
-
-    </div>
-  
-</nav>
-
-
-
- </div>
-    </header>
-
-    <main id="main" class="main">
-      <div class="main-inner">
+<main id="main" class="main">
+    <div class="main-inner">
         <div class="content-wrap">
-          <div id="content" class="content">
-            
+            <div id="content" class="content">
 
-  <div id="posts" class="posts-expand">
-    
 
-  
+                <div id="posts" class="posts-expand">
 
-  
-  
-  
 
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017/05/20/language/YAML使用/">
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+
+
+
+
+
+                    <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+                        <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017/05/20/language/YAML使用/">
+
+                        <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="小英雄雨来">
       <meta itemprop="description" content="">
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+                        <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
       <meta itemprop="name" content="架构演进之旅">
     </span>
 
-    
-      <header class="post-header">
 
-        
-        
-          <h2 class="post-title" itemprop="name headline">YAML使用</h2>
-        
+                        <header class="post-header">
 
-        <div class="post-meta">
+
+
+                            <h2 class="post-title" itemprop="name headline">YAML使用</h2>
+
+
+                            <div class="post-meta">
           <span class="post-time">
-            
 
-            
 
-            
+
+
+
               <span class="post-meta-item-icon">
                 <i class="fa fa-calendar-check-o"></i>
               </span>
-              
+
                 <span class="post-meta-item-text">更新于</span>
-              
+
               <time title="更新于" itemprop="dateModified" datetime="2017-05-30T05:16:34+00:00">
                 2017-05-30
               </time>
-            
+
           </span>
 
-          
-            <span class="post-category" >
-            
+
+                                <span class="post-category" >
+
               <span class="post-meta-divider">|</span>
-            
+
               <span class="post-meta-item-icon">
                 <i class="fa fa-folder-o"></i>
               </span>
-              
+
                 <span class="post-meta-item-text">分类于</span>
-              
-              
+
+
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
                   <a href="/categories/language/" itemprop="url" rel="index">
                     <span itemprop="name">language</span>
                   </a>
                 </span>
 
-                
-                
-              
+
+
+
             </span>
-          
 
-          
-            
-          
 
-          
-          
-             <span id="/2017/05/20/language/YAML使用/" class="leancloud_visitors" data-flag-title="YAML使用">
+
+
+
+
+
+
+                                <span id="/2017/05/20/language/YAML使用/" class="leancloud_visitors" data-flag-title="YAML使用">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
                </span>
-               
+
                  <span class="post-meta-item-text">阅读次数 </span>
-               
+
                  <span class="leancloud-visitors-count"></span>
              </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DS2FPo9pod%2FMcQipKwQzePCperVdZeJviEViQ0P1Vf2kguMN8XjClAoggAmZh6Xz4dTUCp7J6xLhlPjx8CqYfPWjTbzraVxy7YzvZkCrmclL9U03wBYLV9%2Bdn1BbglxZYxUhy8exlzcpAFEHVckI7b93srg%2FL%2FeD3keUEnoKELDlWYetMiZZgV%2BSx6OrKqagyklzFeKMz7Cd4Qek9OyREeQ%2BdciYQJaT7LNmFwzcjFAU%3D" title="阿里云推广">
-        <img src="http://oqcey66z7.bkt.clouddn.com/public/images/aliyun-ECS-AD/700-90.jpg" height="90" width="700" alt="阿里云推广" />
-        </a>
-        <br/>
-        [本文(YAML使用)原始地址]<a href="http://xcoder.me/2017/05/20/language/YAML使用/" title="YAML使用">http://xcoder.me/2017/05/20/language/YAML使用/</a>
-        <p><img src="http://oqcey66z7.bkt.clouddn.com/public/images/timg.png" alt="img"></p>
-<p>YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
-<h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
-<blockquote>
-<p><strong>优势:</strong></p>
-<ul>
-<li>YAML的可读性好</li>
-<li>YAML和脚本语言的交互性好</li>
-<li>YAML使用实现语言的数据类型</li>
-<li>YAML有一个一致的信息模型</li>
-<li>YAML易于实现</li>
-</ul>
-</blockquote>
-<p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
-<blockquote>
-<ul>
-<li>YAML可以基于流来处理</li>
-<li>YAML表达能力强，扩展性好</li>
-</ul>
-</blockquote>
-<p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。<br><a id="more"></a></p>
-<h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
-<h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
-<h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
-<h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
-<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
-<h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
-<h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
-<ul>
-<li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
-<li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
-<li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
-<li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
-<li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
-<li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
-<li>字串一般不使用引号，但必要的时候可以用引号框住</li>
-<li>使用双引号表示字串时，可用倒斜线（<kbd>\</kbd>）进行特殊字符转义</li>
-<li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>&gt;</kbd>）两种方式</li>
-<li>在单一档案中，可用连续三个连字号（<kbd>—</kbd>）区分多个档案</li>
-<li>可选择性的连续三个点号（<kbd>…</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
-<li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&amp;</kbd>）</li>
-<li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
-</ul>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">receipt:     Oz-Ware Purchase Invoice</div><div class="line">date:        2007-08-06</div><div class="line">customer:</div><div class="line">    given:   Dorothy</div><div class="line">    family:  Gale</div><div class="line">items:</div><div class="line">    - part_no:   A4786</div><div class="line">      descrip:   Water Bucket (Filled)</div><div class="line">      price:     1.47</div><div class="line">      quantity:  4</div><div class="line">    - part_no:   E1628</div><div class="line">      descrip:   High Heeled &quot;Ruby&quot; Slippers </div><div class="line">      price:     100.27</div><div class="line">      quantity:  1</div><div class="line">bill-to:  &amp;id001</div><div class="line">    street: | </div><div class="line">            123 Tornado Alley</div><div class="line">            Suite 16</div><div class="line">    city:   East Westville</div><div class="line">    state:  KS</div><div class="line">ship-to:  *id001   </div><div class="line">specialDelivery:  &gt;</div><div class="line">    Follow the Yellow Brick</div><div class="line">    Road to the Emerald City.</div><div class="line">    Pay no attention to the </div><div class="line">    man behind the curtain.</div><div class="line">...</div></pre></td></tr></table></figure>
-<p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
-<h2 id="YAML的JavaScript实现"><a href="#YAML的JavaScript实现" class="headerlink" title="YAML的JavaScript实现"></a>YAML的JavaScript实现</h2><p><a href="http://www.ruanyifeng.com/blog/2016/07/yaml.html?f=tt" target="_blank" rel="external">阮一峰的网络日志</a></p>
-<h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/" target="_blank" rel="external">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">name: John Smith</div><div class="line">age: 37</div><div class="line">children:</div><div class="line">    - name: Jimmy Smith</div><div class="line">      age: 15</div><div class="line">    - name: Jenny Smith</div><div class="line">      age: 12</div><div class="line">spouse:</div><div class="line">    name: Jane Smith</div><div class="line">    age: 25</div></pre></td></tr></table></figure></p>
-<blockquote>
-<p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Person &#123;</div><div class="line">    private String name;</div><div class="line">    private int age;</div><div class="line">    private Person sponse;</div><div class="line">    private Person[] children;</div><div class="line">    // setXXX, getXXX方法略.</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-</blockquote>
-<p>现在我们使用java装配一个Jone：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Person john = new Person();</div><div class="line">john.setAge(37);</div><div class="line">john.setName(&quot;John Smith&quot;);</div><div class="line">Person sponse = new Person();</div><div class="line">sponse.setName(&quot;Jane Smith&quot;);</div><div class="line">sponse.setAge(25);</div><div class="line">john.setSponse(sponse);</div><div class="line">Person[] children = &#123;new Person(), new Person()&#125;;</div><div class="line">children[0].setName(&quot;Jimmy Smith&quot;);</div><div class="line">children[0].setAge(15);</div><div class="line">children[1].setName(&quot;Jenny Smith&quot;);</div><div class="line">children[1].setAge(12);</div><div class="line">john.setChildren(children);</div></pre></td></tr></table></figure></p>
-<h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/" target="_blank" rel="external">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation" target="_blank" rel="external">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
-<blockquote>
-<ul>
-<li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
-<li>支持YAML的所有类型</li>
-<li>支持UTF-8/UTF-16的输入和输出</li>
-<li>提供了本地java对象的序列化和反序列化的高层API</li>
-<li>提供相对合理的错误提示信息</li>
-</ul>
-</blockquote>
-<p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&amp;</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">DumperOptions options = new DumperOptions();</div><div class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);</div><div class="line">Yaml yaml = new Yaml(options);</div><div class="line">//Yaml yaml = new Yaml();</div><div class="line">String dump = yaml.dump(john);</div><div class="line">System.out.println(dump);</div></pre></td></tr></table></figure></p>
-<p>内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">!!Person</div><div class="line">age: 37</div><div class="line">children:</div><div class="line">- age: 15</div><div class="line">  children: null</div><div class="line">  name: Jimmy Smith</div><div class="line">  sponse: null</div><div class="line">- age: 12</div><div class="line">  children: null</div><div class="line">  name: Jenny Smith</div><div class="line">  sponse: null</div><div class="line">name: John Smith</div><div class="line">sponse:</div><div class="line">  age: 25</div><div class="line">  children: null</div><div class="line">  name: Jane Smith</div><div class="line">  sponse: null</div></pre></td></tr></table></figure></p>
-<p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&amp;</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">Object load = yaml.load(new FileInputStream(new File(&quot;jhon.yaml&quot;)));</div><div class="line">System.out.println(load.getClass());</div><div class="line">System.out.println(yaml.dump(load));</div></pre></td></tr></table></figure></p>
-<p>或<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml(options);</div><div class="line">Person person = yaml.loadAs(inputStream, Person.class);</div><div class="line">System.out.println(person.getSponse().getChildren().length);</div></pre></td></tr></table></figure></p>
-<p>如果一个yaml文件中有多个文档，由<kbd>—</kbd>分割，解析如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">        int counter = 0;</div><div class="line">        for (Object data : yaml.loadAll(input)) &#123;</div><div class="line">            System.out.println(data);</div><div class="line">            counter++;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
-<p>保存一个Map对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Map&lt;String, Object&gt; data = new HashMap&lt;String, Object&gt;();</div><div class="line">        data.put(&quot;name&quot;, &quot;Silenthand Olleander&quot;);</div><div class="line">        data.put(&quot;race&quot;, &quot;Human&quot;);</div><div class="line">        data.put(&quot;traits&quot;, new String[] &#123; &quot;ONE_HAND&quot;, &quot;ONE_EYE&quot; &#125;);</div><div class="line">        Yaml yaml = new Yaml();</div><div class="line">        String output = yaml.dump(data);</div><div class="line">        System.out.println(output);</div><div class="line">    // or</div><div class="line">    StringWriter writer = new StringWriter();</div><div class="line">    yaml.dump(data, writer);</div><div class="line">    System.out.println(writer.toString());</div></pre></td></tr></table></figure></p>
-<p>将多个文档dump出到同一个yaml文件中去：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; docs = new LinkedList&lt;Integer&gt;();</div><div class="line">    for (int i = 1; i &lt; 4; i++) &#123;</div><div class="line">        docs.add(i);</div><div class="line">    &#125;</div><div class="line">    DumperOptions options = new DumperOptions();</div><div class="line">    //options.setCanonical(true);</div><div class="line">    options.explicitStart(true);</div><div class="line">    Yaml yaml = new Yaml(options);</div><div class="line">    System.out.println(yaml.dump(docs));</div><div class="line">    System.out.println(yaml.dumpAll(docs.iterator()));</div></pre></td></tr></table></figure></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--- [1, 2, 3]</div><div class="line"></div><div class="line">--- 1</div><div class="line">--- 2</div><div class="line">--- 3</div></pre></td></tr></table></figure>
-<p>YAML与java类型对照表：<br>YAML     | JAVA<br>——– | ——-<br>!null     |null<br>!!bool     |Boolean<br>!!int     |Integer, Long, BigInteger<br>!!float     |Double<br>!!binary     |String<br>!!timestamp     |java.util.Date, java.sql.Date, java.sql.Timestamp<br>!!omap, !!pairs     |List of Object[]<br>!!set     |Set<br>!!str     |String<br>!!seq     |List<br>!!map     |Map</p>
-<p>集合的默认实现是：</p>
-<blockquote>
-<ul>
-<li>List:  ArrayList</li>
-<li>Map:  LinkedHashMap</li>
-</ul>
-</blockquote>
-<h3 id="YAML转MAP"><a href="#YAML转MAP" class="headerlink" title="YAML转MAP"></a>YAML转MAP</h3><blockquote>
-<p>YAML数据</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">data1: AAA</div><div class="line">data2:</div><div class="line">  - aaa</div><div class="line">  - bbb</div><div class="line">  - ccc</div><div class="line">data3:</div><div class="line">  zzz: ZZZ</div><div class="line">  yyy: YYY</div><div class="line">  xxx: XXX</div></pre></td></tr></table></figure>
-<blockquote>
-<p>JAVA代码</p>
-</blockquote>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Yaml sYaml = new Yaml();</div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        Map&lt;String, Object&gt; yaml = (Map&lt;String, Object&gt;) sYaml.load(yamlString);</div><div class="line"></div><div class="line">        assertThat((String) yaml.get(&quot;data1&quot;), is(&quot;AAA&quot;));</div><div class="line"></div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        List&lt;String&gt; data2 = (List&lt;String&gt;) yaml.get(&quot;data2&quot;);</div><div class="line">        assertThat(data2.get(0), is(&quot;aaa&quot;));</div><div class="line">        assertThat(data2.get(1), is(&quot;bbb&quot;));</div><div class="line">        assertThat(data2.get(2), is(&quot;ccc&quot;));</div><div class="line"></div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        Map&lt;String, String&gt; data3 = (Map&lt;String, String&gt;) yaml.get(&quot;data3&quot;);</div><div class="line">        assertThat(data3.get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">        assertThat(data3.get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">        assertThat(data3.get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
-<h2 id="YAML转Bean"><a href="#YAML转Bean" class="headerlink" title="YAML转Bean"></a>YAML转Bean</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">!!com.YamlBean</div><div class="line">data1: AAA</div><div class="line">data2:</div><div class="line">  - aaa</div><div class="line">  - bbb</div><div class="line">  - ccc</div><div class="line">data3:</div><div class="line">  zzz: ZZZ</div><div class="line">  yyy: YYY</div><div class="line">  xxx: XXX</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">package com;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line">import java.util.Map;</div><div class="line"></div><div class="line">public class YamlBean &#123;</div><div class="line"></div><div class="line">    private String data1;</div><div class="line">    private List&lt;String&gt; data2;</div><div class="line">    private Map&lt;String, String&gt; data3;</div><div class="line"></div><div class="line">    public String getData1() &#123;</div><div class="line">        return data1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData1(String data1) &#123;</div><div class="line">        this.data1 = data1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public List&lt;String&gt; getData2() &#123;</div><div class="line">        return data2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData2(List&lt;String&gt; data2) &#123;</div><div class="line">        this.data2 = data2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Map&lt;String, String&gt; getData3() &#123;</div><div class="line">        return data3;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData3(Map&lt;String, String&gt; data3) &#123;</div><div class="line">        this.data3 = data3;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">       YamlBean yamlBean = (YamlBean) yaml.load(yamlString);</div><div class="line"></div><div class="line">       assertThat(yamlBean.getData1(), is(&quot;AAA&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(0), is(&quot;aaa&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(1), is(&quot;bbb&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(2), is(&quot;ccc&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">        YamlBean yamlBean = yaml.loadAs(yamlString, YamlBean.class);</div><div class="line"></div><div class="line">        assertThat(yamlBean.getData1(), is(&quot;AAA&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(0), is(&quot;aaa&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(1), is(&quot;bbb&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(2), is(&quot;ccc&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
-        <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DGxUK4RxRAUwcQipKwQzePCperVdZeJviK7Vc7tFgwiFRAdhuF14FMaoDsluWCMrtJ1gyddu7kN%2FjA8%2F%2BZJDLfQ4Zu0ikTBVI5H6lqT7H0fKnLcgY8qPbG6UuZxIcp9pfUIgVEmFmgnaR4ypTBJBwtB6l0bxfYrBpJPwiig1bxLMAV4Err%2B0r%2ByrbHgqSJ08vcSpj5qSCmbA%3D" title="2017天猫618">
-        <img src="https://img.alicdn.com/tfs/TB1_phpRpXXXXaTXVXXXXXXXXXX-440-180.jpg" height="180" width="440" alt="2017天猫618" />
-        </a>
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <div>
-      
-        
-      
-    </div>
-
-    <div>
-      
-        
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-      <strong>本文作者：</strong>
-      小英雄雨来
-    </li>
-    <li class="post-copyright-link">
-      <strong>本文链接：</strong>
-      <a href="http://xcoder.me/2017/05/20/language/YAML使用/" title="YAML使用">http://xcoder.me/2017/05/20/language/YAML使用/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明： </strong>
-      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
-    </li>
-  </ul>
-
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/YAML/" rel="tag"># YAML</a>
-          
-            <a href="/tags/yml/" rel="tag"># yml</a>
-          
-        </div>
-      
-
-      
-        
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/05/20/build/安装升级Node.js/" rel="next" title="安装升级Node.js">
-                <i class="fa fa-chevron-left"></i> 安装升级Node.js
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/20/build/hexo+travis/" rel="prev" title="自动部署发布Hexo程序到Github上">
-                自动部署发布Hexo程序到Github上 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
-  </article>
 
 
 
-    <div class="post-spread">
-      
-        <!-- JiaThis Button BEGIN -->
-<div class="jiathis_style">
-  <a class="jiathis_button_tsina"></a>
-  <a class="jiathis_button_tqq"></a>
-  <a class="jiathis_button_weixin"></a>
-  <a class="jiathis_button_cqq"></a>
-  <a class="jiathis_button_douban"></a>
-  <a class="jiathis_button_renren"></a>
-  <a class="jiathis_button_qzone"></a>
-  <a class="jiathis_button_kaixin001"></a>
-  <a class="jiathis_button_copy"></a>
-  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
-  <a class="jiathis_counter_style"></a>
-</div>
-<script type="text/javascript" >
-  var jiathis_config={
-    hideMore:false
-  }
-</script>
-<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
-<!-- JiaThis Button END -->
-
-      
-    </div>
-  </div>
 
 
-          </div>
-
-          
 
 
-          
-  <div class="comments" id="comments">
-    
-  </div>
+
+                            </div>
+                        </header>
 
 
-        </div>
-        
-          
-  
-  <div class="sidebar-toggle">
-    <div class="sidebar-toggle-line-wrap">
-      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
-      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
-    </div>
-  </div>
+                        <div class="post-body" itemprop="articleBody">
 
-  <aside id="sidebar" class="sidebar">
-    <div class="sidebar-inner">
 
-      
 
-      
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-          <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
-               alt="小英雄雨来" />
-          <p class="site-author-name" itemprop="name">小英雄雨来</p>
-           
-              <p class="site-description motion-element" itemprop="description"></p>
-           
-        </div>
-        <nav class="site-state motion-element">
 
-          
-            <div class="site-state-item site-state-posts">
-              <a href="/archives">
-                <span class="site-state-item-count">16</span>
-                <span class="site-state-item-name">日志</span>
-              </a>
+                            <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DS2FPo9pod%2FMcQipKwQzePCperVdZeJviEViQ0P1Vf2kguMN8XjClAoggAmZh6Xz4dTUCp7J6xLhlPjx8CqYfPWjTbzraVxy7YzvZkCrmclL9U03wBYLV9%2Bdn1BbglxZYxUhy8exlzcpAFEHVckI7b93srg%2FL%2FeD3keUEnoKELDlWYetMiZZgV%2BSx6OrKqagyklzFeKMz7Cd4Qek9OyREeQ%2BdciYQJaT7LNmFwzcjFAU%3D" title="阿里云推广">
+                                <img src="http://oqcey66z7.bkt.clouddn.com/public/images/aliyun-ECS-AD/700-90.jpg" height="90" width="700" alt="阿里云推广" />
+                            </a>
+                            <br/>
+                            [本文(YAML使用)原始地址]<a href="http://xcoder.me/2017/05/20/language/YAML使用/" title="YAML使用">http://xcoder.me/2017/05/20/language/YAML使用/</a>
+                            <p><img src="http://oqcey66z7.bkt.clouddn.com/public/images/timg.png" alt="img"></p>
+                            <p>YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。</p>
+                            <h2 id="YAML-vs-XML"><a href="#YAML-vs-XML" class="headerlink" title="YAML vs XML"></a>YAML vs XML</h2><p>与YAML相似的数据格式定义语言是XML，YAML比XML优越性表现在</p>
+                            <blockquote>
+                                <p><strong>优势:</strong></p>
+                                <ul>
+                                    <li>YAML的可读性好</li>
+                                    <li>YAML和脚本语言的交互性好</li>
+                                    <li>YAML使用实现语言的数据类型</li>
+                                    <li>YAML有一个一致的信息模型</li>
+                                    <li>YAML易于实现</li>
+                                </ul>
+                            </blockquote>
+                            <p>上面5条是XML不足的地方，同时，YAML也具有XML的下列优点：</p>
+                            <blockquote>
+                                <ul>
+                                    <li>YAML可以基于流来处理</li>
+                                    <li>YAML表达能力强，扩展性好</li>
+                                </ul>
+                            </blockquote>
+                            <p>YAML类似于XML的数据描述语言，语法比XML简单很多，YAML试图用一种比XML更敏捷的方式，来完成XML所完成的任务。<br><a id="more"></a></p>
+                            <h2 id="YAML-vs-JSON"><a href="#YAML-vs-JSON" class="headerlink" title="YAML vs JSON"></a>YAML vs JSON</h2><p>JSON的语法其实是YAML的子集，大部分的JSON文件都可以被YAML的剖析器剖析。虽然大部分的数据分层形式也可以使用类似JSON的格式，不过YAML并不建议这样使用，除非这样编写能让文件可读性增加，更重要的是，YAML的许多扩展在JSON是找不到的，如：<em>进阶资料形态</em>、<em>关系锚点</em>、<em>字串不需要引号</em>、<em>映射资料形态会储存键值的顺序</em>等。</p>
+                            <h2 id="YAML用途"><a href="#YAML用途" class="headerlink" title="YAML用途"></a>YAML用途</h2><h3 id="脚本语言"><a href="#脚本语言" class="headerlink" title="脚本语言"></a>脚本语言</h3><p>由于实现简单，解析成本很低，YAML特别适合在脚本语言中使用。列一下现有的语言实现：Ruby，Java，Perl，Python，PHP，OCaml，JavaScript，除了Java，其他都是脚本语言。</p>
+                            <h3 id="序列化"><a href="#序列化" class="headerlink" title="序列化"></a>序列化</h3><p>YAML比较适合做序列化。因为它是宿主语言数据类型直转的。</p>
+                            <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p>YAML做配置文件也不错。写YAML要比写XML快得多(<strong>无需关注标签或引号</strong>)，并且比ini文档功能更强。</p>
+                            <h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>由于其很强的阅读性，用于调试过程中dump出信息供分析也是一种比较方便的做法。</p>
+                            <h2 id="YAML缺陷与不足"><a href="#YAML缺陷与不足" class="headerlink" title="YAML缺陷与不足"></a>YAML缺陷与不足</h2><p>YAML没有自己的数据类型的定义，而是使用实现语言的数据类型。一个YAML文件，在不同语言中解析后得到的数据类型可能会不同，由于其兼容性问题，不同语言间的数据流转不建议使用YAML。</p>
+                            <h2 id="YAML语法与范例"><a href="#YAML语法与范例" class="headerlink" title="YAML语法与范例"></a>YAML语法与范例</h2><blockquote>
+                            <ul>
+                                <li>YAML使用可打印的Unicode字符，可使用UTF-8或UTF-16</li>
+                                <li>使用<strong>空白字符</strong>（不能使用<kbd>Tab</kbd>）分层，同层元素左侧对齐</li>
+                                <li>单行注解由井字号（<kbd> #</kbd> ）开始，可以出现在行中任何位置</li>
+                                <li>每个清单成员以单行表示，并用短杠+空白（<kbd>-  </kbd>）起始</li>
+                                <li>每个杂凑表的成员用冒号+空白（<kbd>:  </kbd>）分开键和值</li>
+                                <li>杂凑表的键值可以用问号 (<kbd>?</kbd>)起始，表示多个词汇组成的键值</li>
+                                <li>字串一般不使用引号，但必要的时候可以用引号框住</li>
+                                <li>使用双引号表示字串时，可用倒斜线（<kbd>\</kbd>）进行特殊字符转义</li>
+                                <li>区块的字串用缩排和修饰词（非必要）来和其他资料分隔，有新行保留（使用符号<kbd>|</kbd>）或新行折叠（使用符号<kbd>&gt;</kbd>）两种方式</li>
+                                <li>在单一档案中，可用连续三个连字号（<kbd>—</kbd>）区分多个档案</li>
+                                <li>可选择性的连续三个点号（<kbd>…</kbd>）用来表示档案结尾(在流式传输时非常有用，不需要关闭流即可知道到达结尾处)</li>
+                                <li>重复的内容可使从参考标记星号 (<kbd>*</kbd>)复制到锚点标记（<kbd>&amp;</kbd>）</li>
+                                <li>指定格式可以使用两个惊叹号 ( !! )，后面接上名称</li>
+                            </ul>
+                        </blockquote>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">receipt:     Oz-Ware Purchase Invoice</div><div class="line">date:        2007-08-06</div><div class="line">customer:</div><div class="line">    given:   Dorothy</div><div class="line">    family:  Gale</div><div class="line">items:</div><div class="line">    - part_no:   A4786</div><div class="line">      descrip:   Water Bucket (Filled)</div><div class="line">      price:     1.47</div><div class="line">      quantity:  4</div><div class="line">    - part_no:   E1628</div><div class="line">      descrip:   High Heeled &quot;Ruby&quot; Slippers </div><div class="line">      price:     100.27</div><div class="line">      quantity:  1</div><div class="line">bill-to:  &amp;id001</div><div class="line">    street: | </div><div class="line">            123 Tornado Alley</div><div class="line">            Suite 16</div><div class="line">    city:   East Westville</div><div class="line">    state:  KS</div><div class="line">ship-to:  *id001   </div><div class="line">specialDelivery:  &gt;</div><div class="line">    Follow the Yellow Brick</div><div class="line">    Road to the Emerald City.</div><div class="line">    Pay no attention to the </div><div class="line">    man behind the curtain.</div><div class="line">...</div></pre></td></tr></table></figure>
+                            <p>这个文件的的顶层由七个键值组成：其中一个键值”items”，是个两个元素构成的清单，清单中的两个元素同时也是包含了四个键值的杂凑表。<br>文件中重复的部分处理方式：使用锚点（&amp;）和参考（*）标签将”bill-to”杂凑表的内容复制到”ship-to”杂凑表。也可以在文件中加入选择性的空行，以增加可读性。</p>
+                            <h2 id="YAML的JavaScript实现"><a href="#YAML的JavaScript实现" class="headerlink" title="YAML的JavaScript实现"></a>YAML的JavaScript实现</h2><p><a href="http://www.ruanyifeng.com/blog/2016/07/yaml.html?f=tt" target="_blank" rel="external">阮一峰的网络日志</a></p>
+                            <h2 id="YAML的JAVA实现"><a href="#YAML的JAVA实现" class="headerlink" title="YAML的JAVA实现"></a>YAML的JAVA实现</h2><p>YAML已经有了多种语言不少实现，详见<a href="http://yaml.org/" target="_blank" rel="external">YAML官网</a>。<br>一般YAML文件扩展名为.yaml，比如John.yaml，其内容为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">name: John Smith</div><div class="line">age: 37</div><div class="line">children:</div><div class="line">    - name: Jimmy Smith</div><div class="line">      age: 15</div><div class="line">    - name: Jenny Smith</div><div class="line">      age: 12</div><div class="line">spouse:</div><div class="line">    name: Jane Smith</div><div class="line">    age: 25</div></pre></td></tr></table></figure></p>
+                            <blockquote>
+                                <p>由于yaml的超强可读性，我们了解到：John今年37岁，两个孩子Jimmy 和Jenny活泼可爱，妻子Jane年轻美貌，而且年仅25岁，一个幸福的四口之家。<br>对John.yaml进行java描述，抽象出一个Person类，如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public class Person &#123;</div><div class="line">    private String name;</div><div class="line">    private int age;</div><div class="line">    private Person sponse;</div><div class="line">    private Person[] children;</div><div class="line">    // setXXX, getXXX方法略.</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+                            </blockquote>
+                            <p>现在我们使用java装配一个Jone：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">Person john = new Person();</div><div class="line">john.setAge(37);</div><div class="line">john.setName(&quot;John Smith&quot;);</div><div class="line">Person sponse = new Person();</div><div class="line">sponse.setName(&quot;Jane Smith&quot;);</div><div class="line">sponse.setAge(25);</div><div class="line">john.setSponse(sponse);</div><div class="line">Person[] children = &#123;new Person(), new Person()&#125;;</div><div class="line">children[0].setName(&quot;Jimmy Smith&quot;);</div><div class="line">children[0].setAge(15);</div><div class="line">children[1].setName(&quot;Jenny Smith&quot;);</div><div class="line">children[1].setAge(12);</div><div class="line">john.setChildren(children);</div></pre></td></tr></table></figure></p>
+                            <h3 id="使用SnakeYAML实现"><a href="#使用SnakeYAML实现" class="headerlink" title="使用SnakeYAML实现"></a>使用SnakeYAML实现</h3><p>项目主页：<a href="http://code.google.com/p/snakeyaml/" target="_blank" rel="external">http://code.google.com/p/snakeyaml/</a><br>使用手册：<a href="https://code.google.com/p/snakeyaml/wiki/Documentation" target="_blank" rel="external">https://code.google.com/p/snakeyaml/wiki/Documentation</a><br>SnakeYAML是一个标准的YAML的java实现，它有以下特点：</p>
+                            <blockquote>
+                                <ul>
+                                    <li>完全支持YAML 1.1，可以跑通规范中的所有示例</li>
+                                    <li>支持YAML的所有类型</li>
+                                    <li>支持UTF-8/UTF-16的输入和输出</li>
+                                    <li>提供了本地java对象的序列化和反序列化的高层API</li>
+                                    <li>提供相对合理的错误提示信息</li>
+                                </ul>
+                            </blockquote>
+                            <p>使用SnakeYAML将john dump出来，<strong>如果有引用相同对象，则dump出到yaml文件会自动使用<kbd>&amp;</kbd>和<kbd>*</kbd>进行锚点和引用</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">DumperOptions options = new DumperOptions();</div><div class="line">options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);</div><div class="line">Yaml yaml = new Yaml(options);</div><div class="line">//Yaml yaml = new Yaml();</div><div class="line">String dump = yaml.dump(john);</div><div class="line">System.out.println(dump);</div></pre></td></tr></table></figure></p>
+                            <p>内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">!!Person</div><div class="line">age: 37</div><div class="line">children:</div><div class="line">- age: 15</div><div class="line">  children: null</div><div class="line">  name: Jimmy Smith</div><div class="line">  sponse: null</div><div class="line">- age: 12</div><div class="line">  children: null</div><div class="line">  name: Jenny Smith</div><div class="line">  sponse: null</div><div class="line">name: John Smith</div><div class="line">sponse:</div><div class="line">  age: 25</div><div class="line">  children: null</div><div class="line">  name: Jane Smith</div><div class="line">  sponse: null</div></pre></td></tr></table></figure></p>
+                            <p>现在用SnakeYAML把yaml load进来，<strong>如果yaml文件中使用了<kbd>&amp;</kbd>和<kbd>*</kbd>，则会自动对load出来的对象赋相同的值</strong>：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">Object load = yaml.load(new FileInputStream(new File(&quot;jhon.yaml&quot;)));</div><div class="line">System.out.println(load.getClass());</div><div class="line">System.out.println(yaml.dump(load));</div></pre></td></tr></table></figure></p>
+                            <p>或<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml(options);</div><div class="line">Person person = yaml.loadAs(inputStream, Person.class);</div><div class="line">System.out.println(person.getSponse().getChildren().length);</div></pre></td></tr></table></figure></p>
+                            <p>如果一个yaml文件中有多个文档，由<kbd>—</kbd>分割，解析如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">        int counter = 0;</div><div class="line">        for (Object data : yaml.loadAll(input)) &#123;</div><div class="line">            System.out.println(data);</div><div class="line">            counter++;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+                            <p>保存一个Map对象：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">Map&lt;String, Object&gt; data = new HashMap&lt;String, Object&gt;();</div><div class="line">        data.put(&quot;name&quot;, &quot;Silenthand Olleander&quot;);</div><div class="line">        data.put(&quot;race&quot;, &quot;Human&quot;);</div><div class="line">        data.put(&quot;traits&quot;, new String[] &#123; &quot;ONE_HAND&quot;, &quot;ONE_EYE&quot; &#125;);</div><div class="line">        Yaml yaml = new Yaml();</div><div class="line">        String output = yaml.dump(data);</div><div class="line">        System.out.println(output);</div><div class="line">    // or</div><div class="line">    StringWriter writer = new StringWriter();</div><div class="line">    yaml.dump(data, writer);</div><div class="line">    System.out.println(writer.toString());</div></pre></td></tr></table></figure></p>
+                            <p>将多个文档dump出到同一个yaml文件中去：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">List&lt;Integer&gt; docs = new LinkedList&lt;Integer&gt;();</div><div class="line">    for (int i = 1; i &lt; 4; i++) &#123;</div><div class="line">        docs.add(i);</div><div class="line">    &#125;</div><div class="line">    DumperOptions options = new DumperOptions();</div><div class="line">    //options.setCanonical(true);</div><div class="line">    options.explicitStart(true);</div><div class="line">    Yaml yaml = new Yaml(options);</div><div class="line">    System.out.println(yaml.dump(docs));</div><div class="line">    System.out.println(yaml.dumpAll(docs.iterator()));</div></pre></td></tr></table></figure></p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">--- [1, 2, 3]</div><div class="line"></div><div class="line">--- 1</div><div class="line">--- 2</div><div class="line">--- 3</div></pre></td></tr></table></figure>
+                            <p>YAML与java类型对照表：<br>YAML     | JAVA<br>——– | ——-<br>!null     |null<br>!!bool     |Boolean<br>!!int     |Integer, Long, BigInteger<br>!!float     |Double<br>!!binary     |String<br>!!timestamp     |java.util.Date, java.sql.Date, java.sql.Timestamp<br>!!omap, !!pairs     |List of Object[]<br>!!set     |Set<br>!!str     |String<br>!!seq     |List<br>!!map     |Map</p>
+                            <p>集合的默认实现是：</p>
+                            <blockquote>
+                                <ul>
+                                    <li>List:  ArrayList</li>
+                                    <li>Map:  LinkedHashMap</li>
+                                </ul>
+                            </blockquote>
+                            <h3 id="YAML转MAP"><a href="#YAML转MAP" class="headerlink" title="YAML转MAP"></a>YAML转MAP</h3><blockquote>
+                            <p>YAML数据</p>
+                        </blockquote>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">data1: AAA</div><div class="line">data2:</div><div class="line">  - aaa</div><div class="line">  - bbb</div><div class="line">  - ccc</div><div class="line">data3:</div><div class="line">  zzz: ZZZ</div><div class="line">  yyy: YYY</div><div class="line">  xxx: XXX</div></pre></td></tr></table></figure>
+                            <blockquote>
+                                <p>JAVA代码</p>
+                            </blockquote>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">Yaml sYaml = new Yaml();</div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        Map&lt;String, Object&gt; yaml = (Map&lt;String, Object&gt;) sYaml.load(yamlString);</div><div class="line"></div><div class="line">        assertThat((String) yaml.get(&quot;data1&quot;), is(&quot;AAA&quot;));</div><div class="line"></div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        List&lt;String&gt; data2 = (List&lt;String&gt;) yaml.get(&quot;data2&quot;);</div><div class="line">        assertThat(data2.get(0), is(&quot;aaa&quot;));</div><div class="line">        assertThat(data2.get(1), is(&quot;bbb&quot;));</div><div class="line">        assertThat(data2.get(2), is(&quot;ccc&quot;));</div><div class="line"></div><div class="line">        @SuppressWarnings(&quot;unchecked&quot;)</div><div class="line">        Map&lt;String, String&gt; data3 = (Map&lt;String, String&gt;) yaml.get(&quot;data3&quot;);</div><div class="line">        assertThat(data3.get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">        assertThat(data3.get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">        assertThat(data3.get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
+                            <h2 id="YAML转Bean"><a href="#YAML转Bean" class="headerlink" title="YAML转Bean"></a>YAML转Bean</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">!!com.YamlBean</div><div class="line">data1: AAA</div><div class="line">data2:</div><div class="line">  - aaa</div><div class="line">  - bbb</div><div class="line">  - ccc</div><div class="line">data3:</div><div class="line">  zzz: ZZZ</div><div class="line">  yyy: YYY</div><div class="line">  xxx: XXX</div></pre></td></tr></table></figure>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div></pre></td><td class="code"><pre><div class="line">package com;</div><div class="line"></div><div class="line">import java.util.List;</div><div class="line">import java.util.Map;</div><div class="line"></div><div class="line">public class YamlBean &#123;</div><div class="line"></div><div class="line">    private String data1;</div><div class="line">    private List&lt;String&gt; data2;</div><div class="line">    private Map&lt;String, String&gt; data3;</div><div class="line"></div><div class="line">    public String getData1() &#123;</div><div class="line">        return data1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData1(String data1) &#123;</div><div class="line">        this.data1 = data1;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public List&lt;String&gt; getData2() &#123;</div><div class="line">        return data2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData2(List&lt;String&gt; data2) &#123;</div><div class="line">        this.data2 = data2;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public Map&lt;String, String&gt; getData3() &#123;</div><div class="line">        return data3;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setData3(Map&lt;String, String&gt; data3) &#123;</div><div class="line">        this.data3 = data3;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">       YamlBean yamlBean = (YamlBean) yaml.load(yamlString);</div><div class="line"></div><div class="line">       assertThat(yamlBean.getData1(), is(&quot;AAA&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(0), is(&quot;aaa&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(1), is(&quot;bbb&quot;));</div><div class="line">       assertThat(yamlBean.getData2().get(2), is(&quot;ccc&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">       assertThat(yamlBean.getData3().get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">Yaml yaml = new Yaml();</div><div class="line">        YamlBean yamlBean = yaml.loadAs(yamlString, YamlBean.class);</div><div class="line"></div><div class="line">        assertThat(yamlBean.getData1(), is(&quot;AAA&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(0), is(&quot;aaa&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(1), is(&quot;bbb&quot;));</div><div class="line">        assertThat(yamlBean.getData2().get(2), is(&quot;ccc&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;zzz&quot;), is(&quot;ZZZ&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;yyy&quot;), is(&quot;YYY&quot;));</div><div class="line">        assertThat(yamlBean.getData3().get(&quot;xxx&quot;), is(&quot;XXX&quot;));</div></pre></td></tr></table></figure>
+                            <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DGxUK4RxRAUwcQipKwQzePCperVdZeJviK7Vc7tFgwiFRAdhuF14FMaoDsluWCMrtJ1gyddu7kN%2FjA8%2F%2BZJDLfQ4Zu0ikTBVI5H6lqT7H0fKnLcgY8qPbG6UuZxIcp9pfUIgVEmFmgnaR4ypTBJBwtB6l0bxfYrBpJPwiig1bxLMAV4Err%2B0r%2ByrbHgqSJ08vcSpj5qSCmbA%3D" title="2017天猫618">
+                                <img src="https://img.alicdn.com/tfs/TB1_phpRpXXXXaTXVXXXXXXXXXX-440-180.jpg" height="180" width="440" alt="2017天猫618" />
+                            </a>
+
+                        </div>
+
+                        <div>
+
+
+
+
+                        </div>
+
+                        <div>
+
+
+
+                        </div>
+
+                        <div>
+
+
+                            <ul class="post-copyright">
+                                <li class="post-copyright-author">
+                                    <strong>本文作者：</strong>
+                                    小英雄雨来
+                                </li>
+                                <li class="post-copyright-link">
+                                    <strong>本文链接：</strong>
+                                    <a href="http://xcoder.me/2017/05/20/language/YAML使用/" title="YAML使用">http://xcoder.me/2017/05/20/language/YAML使用/</a>
+                                </li>
+                                <li class="post-copyright-license">
+                                    <strong>版权声明： </strong>
+                                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+                                </li>
+                            </ul>
+
+
+
+                        </div>
+
+                        <footer class="post-footer">
+
+                            <div class="post-tags">
+
+                                <a href="/tags/YAML/" rel="tag"># YAML</a>
+
+                                <a href="/tags/yml/" rel="tag"># yml</a>
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="post-nav">
+                                <div class="post-nav-next post-nav-item">
+
+                                    <a href="/2017/05/20/build/安装升级Node.js/" rel="next" title="安装升级Node.js">
+                                        <i class="fa fa-chevron-left"></i> 安装升级Node.js
+                                    </a>
+
+                                </div>
+
+                                <span class="post-nav-divider"></span>
+
+                                <div class="post-nav-prev post-nav-item">
+
+                                    <a href="/2017/05/20/build/hexo+travis/" rel="prev" title="自动部署发布Hexo程序到Github上">
+                                        自动部署发布Hexo程序到Github上 <i class="fa fa-chevron-right"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+
+
+
+                        </footer>
+                    </article>
+
+
+
+                    <div class="post-spread">
+
+                        <!-- JiaThis Button BEGIN -->
+                        <div class="jiathis_style">
+                            <a class="jiathis_button_tsina"></a>
+                            <a class="jiathis_button_tqq"></a>
+                            <a class="jiathis_button_weixin"></a>
+                            <a class="jiathis_button_cqq"></a>
+                            <a class="jiathis_button_douban"></a>
+                            <a class="jiathis_button_renren"></a>
+                            <a class="jiathis_button_qzone"></a>
+                            <a class="jiathis_button_kaixin001"></a>
+                            <a class="jiathis_button_copy"></a>
+                            <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+                            <a class="jiathis_counter_style"></a>
+                        </div>
+                        <script type="text/javascript" >
+                            var jiathis_config={
+                                hideMore:false
+                            }
+                        </script>
+                        <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+                        <!-- JiaThis Button END -->
+
+
+                    </div>
+                </div>
+
+
             </div>
-          
 
-          
-            
-            
-            <div class="site-state-item site-state-categories">
-              <a href="/categories/index.html">
-                <span class="site-state-item-count">8</span>
-                <span class="site-state-item-name">分类</span>
-              </a>
+
+
+
+
+            <div class="comments" id="comments">
+
             </div>
-          
 
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              <a href="/tags/index.html">
-                <span class="site-state-item-count">39</span>
-                <span class="site-state-item-name">标签</span>
-              </a>
-            </div>
-          
 
-        </nav>
-
-        
-
-        <div class="links-of-author motion-element">
-          
         </div>
 
-        
-        
 
-        
-        
-          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
-            <div class="links-of-blogroll-title">
-              <i class="fa  fa-fw fa-globe"></i>
-              收藏
+
+        <div class="sidebar-toggle">
+            <div class="sidebar-toggle-line-wrap">
+                <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+                <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+                <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
             </div>
-            <ul class="links-of-blogroll-list">
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
-                </li>
-              
-                <li class="links-of-blogroll-item">
-                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
-                </li>
-              
-            </ul>
-          </div>
-        
+        </div>
 
-        
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-inner">
 
 
-      </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
 
-            
-              
-            
+                <ul class="sidebar-nav motion-element">
+                    <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+                        文章目录
+                    </li>
+                    <li class="sidebar-nav-overview" data-target="site-overview">
+                        站点概览
+                    </li>
+                </ul>
 
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML-vs-XML"><span class="nav-number">1.</span> <span class="nav-text">YAML vs XML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML-vs-JSON"><span class="nav-number">2.</span> <span class="nav-text">YAML vs JSON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML用途"><span class="nav-number">3.</span> <span class="nav-text">YAML用途</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本语言"><span class="nav-number">3.1.</span> <span class="nav-text">脚本语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化"><span class="nav-number">3.2.</span> <span class="nav-text">序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">3.3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试"><span class="nav-number">3.4.</span> <span class="nav-text">调试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML缺陷与不足"><span class="nav-number">4.</span> <span class="nav-text">YAML缺陷与不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML语法与范例"><span class="nav-number">5.</span> <span class="nav-text">YAML语法与范例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML的JavaScript实现"><span class="nav-number">6.</span> <span class="nav-text">YAML的JavaScript实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML的JAVA实现"><span class="nav-number">7.</span> <span class="nav-text">YAML的JAVA实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用SnakeYAML实现"><span class="nav-number">7.1.</span> <span class="nav-text">使用SnakeYAML实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YAML转MAP"><span class="nav-number">7.2.</span> <span class="nav-text">YAML转MAP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML转Bean"><span class="nav-number">8.</span> <span class="nav-text">YAML转Bean</span></a></li></ol></div>
-            
 
-          </div>
-        </section>
-      <!--/noindex-->
-      
+                <section class="site-overview sidebar-panel">
+                    <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                        <img class="site-author-image" itemprop="image"
+                             src="/images/avatar.gif"
+                             alt="小英雄雨来" />
+                        <p class="site-author-name" itemprop="name">小英雄雨来</p>
 
-      
+                        <p class="site-description motion-element" itemprop="description"></p>
+
+                    </div>
+                    <nav class="site-state motion-element">
+
+
+                        <div class="site-state-item site-state-posts">
+                            <a href="/archives">
+                                <span class="site-state-item-count">16</span>
+                                <span class="site-state-item-name">日志</span>
+                            </a>
+                        </div>
+
+
+
+
+
+                        <div class="site-state-item site-state-categories">
+                            <a href="/categories/index.html">
+                                <span class="site-state-item-count">8</span>
+                                <span class="site-state-item-name">分类</span>
+                            </a>
+                        </div>
+
+
+
+
+
+                        <div class="site-state-item site-state-tags">
+                            <a href="/tags/index.html">
+                                <span class="site-state-item-count">39</span>
+                                <span class="site-state-item-name">标签</span>
+                            </a>
+                        </div>
+
+
+                    </nav>
+
+
+
+                    <div class="links-of-author motion-element">
+
+                    </div>
+
+
+
+
+
+
+                    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+                        <div class="links-of-blogroll-title">
+                            <i class="fa  fa-fw fa-globe"></i>
+                            收藏
+                        </div>
+                        <ul class="links-of-blogroll-list">
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+
+
+
+                </section>
+
+
+                <!--noindex-->
+                <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+                    <div class="post-toc">
+
+
+
+
+
+
+                        <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML-vs-XML"><span class="nav-number">1.</span> <span class="nav-text">YAML vs XML</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML-vs-JSON"><span class="nav-number">2.</span> <span class="nav-text">YAML vs JSON</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML用途"><span class="nav-number">3.</span> <span class="nav-text">YAML用途</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#脚本语言"><span class="nav-number">3.1.</span> <span class="nav-text">脚本语言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#序列化"><span class="nav-number">3.2.</span> <span class="nav-text">序列化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置文件"><span class="nav-number">3.3.</span> <span class="nav-text">配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试"><span class="nav-number">3.4.</span> <span class="nav-text">调试</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML缺陷与不足"><span class="nav-number">4.</span> <span class="nav-text">YAML缺陷与不足</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML语法与范例"><span class="nav-number">5.</span> <span class="nav-text">YAML语法与范例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML的JavaScript实现"><span class="nav-number">6.</span> <span class="nav-text">YAML的JavaScript实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML的JAVA实现"><span class="nav-number">7.</span> <span class="nav-text">YAML的JAVA实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用SnakeYAML实现"><span class="nav-number">7.1.</span> <span class="nav-text">使用SnakeYAML实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#YAML转MAP"><span class="nav-number">7.2.</span> <span class="nav-text">YAML转MAP</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#YAML转Bean"><span class="nav-number">8.</span> <span class="nav-text">YAML转Bean</span></a></li></ol></div>
+
+
+                    </div>
+                </section>
+                <!--/noindex-->
+
+
+
+
+            </div>
+        </aside>
+
+
 
     </div>
-  </aside>
-
-
-        
-      </div>
-    </main>
-
-    <footer id="footer" class="footer">
-      <div class="footer-inner">
-        <div class="copyright" >
-  
-  &copy; 
-  <span itemprop="copyrightYear">2017</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
-</div>
-
-
-
-        
-
-        
-      </div>
-    </footer>
-
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
-    
-
-  </div>
-
-  
-
-<script type="text/javascript">
-  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
-    window.Promise = null;
-  }
-</script>
-
-
-
-
-
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
-
-  
-  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
-
-  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
-
-
-
-  
-  
-
-  
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
-
-
-
-  
-
-
-  
-
-
-
-
-	
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-  
-
-
-
-
-
-
-  
-
-
-
-
-  
-  
-  
-    
-  
-  <link rel="stylesheet" href="//oqcey66z7.bkt.clouddn.com/public/js/instantsearch.min.css">
-
-  
-  
-    
-  
-  <script src="//oqcey66z7.bkt.clouddn.com/public/js/instantsearch.min.js"></script>
-  
-
-  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
-
-
-
-  
-
-  
-  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
-  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
-  <script>
-    function showTime(Counter) {
-      var query = new AV.Query(Counter);
-      var entries = [];
-      var $visitors = $(".leancloud_visitors");
-
-      $visitors.each(function () {
-        entries.push( $(this).attr("id").trim() );
-      });
-
-      query.containedIn('url', entries);
-      query.find()
-        .done(function (results) {
-          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
-
-          if (results.length === 0) {
-            $visitors.find(COUNT_CONTAINER_REF).text(0);
-            return;
-          }
-
-          for (var i = 0; i < results.length; i++) {
-            var item = results[i];
-            var url = item.get('url');
-            var time = item.get('time');
-            var element = document.getElementById(url);
-
-            $(element).find(COUNT_CONTAINER_REF).text(time);
-          }
-          for(var i = 0; i < entries.length; i++) {
-            var url = entries[i];
-            var element = document.getElementById(url);
-            var countSpan = $(element).find(COUNT_CONTAINER_REF);
-            if( countSpan.text() == '') {
-              countSpan.text(0);
-            }
-          }
-        })
-        .fail(function (object, error) {
-          console.log("Error: " + error.code + " " + error.message);
-        });
-    }
-
-    function addCount(Counter) {
-      var $visitors = $(".leancloud_visitors");
-      var url = $visitors.attr('id').trim();
-      var title = $visitors.attr('data-flag-title').trim();
-      var query = new AV.Query(Counter);
-
-      query.equalTo("url", url);
-      query.find({
-        success: function(results) {
-          if (results.length > 0) {
-            var counter = results[0];
-            counter.fetchWhenSave(true);
-            counter.increment("time");
-            counter.save(null, {
-              success: function(counter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(counter.get('time'));
-              },
-              error: function(counter, error) {
-                console.log('Failed to save Visitor num, with error message: ' + error.message);
-              }
-            });
-          } else {
-            var newcounter = new Counter();
-            /* Set ACL */
-            var acl = new AV.ACL();
-            acl.setPublicReadAccess(true);
-            acl.setPublicWriteAccess(true);
-            newcounter.setACL(acl);
-            /* End Set ACL */
-            newcounter.set("title", title);
-            newcounter.set("url", url);
-            newcounter.set("time", 1);
-            newcounter.save(null, {
-              success: function(newcounter) {
-                var $element = $(document.getElementById(url));
-                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
-              },
-              error: function(newcounter, error) {
-                console.log('Failed to create');
-              }
-            });
-          }
-        },
-        error: function(error) {
-          console.log('Error:' + error.code + " " + error.message);
-        }
-      });
-    }
-
-    $(function() {
-      var Counter = AV.Object.extend("Counter");
-      if ($('.leancloud_visitors').length == 1) {
-        addCount(Counter);
-      } else if ($('.post-title-link').length > 1) {
-        showTime(Counter);
-      }
-    });
-  </script>
-
-
-
-  
-<script>
-(function(){
-    var bp = document.createElement('script');
-    var curProtocol = window.location.protocol.split(':')[0];
-    if (curProtocol === 'https') {
-        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
-    }
-    else {
-        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
-    }
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(bp, s);
-})();
-</script>
-
-
-  
-
-  
-
-  
-
-</body>
-</html>
+</main>
