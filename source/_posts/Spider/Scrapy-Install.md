@@ -2,6 +2,7 @@
 title: Scrapy之新手上路
 date: 2017-05-28 22:38:56
 reward: true
+permalink: /2017/05/28/Spider/Scrapy-Install/
 categories:
     - Spider
 tags:
