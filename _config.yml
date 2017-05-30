@@ -65,6 +65,13 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 theme: next
 
+# 自动生成sitemap
+sitemap:
+path: sitemap.xml
+baidusitemap:
+path: baidusitemap.xml
+
+
 algolia:
   applicationID: 'KB0W0YA2QV'
   apiKey: '89767cf2290afa4adfbf45fec82c46ad'
