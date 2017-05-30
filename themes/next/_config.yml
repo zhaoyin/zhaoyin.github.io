@@ -261,8 +261,8 @@ post_wordcount:
 # Declare license on posts
 post_copyright:
   enable: true
-  license: CC BY-NC-SA 3.0
-  license_url: https://creativecommons.org/licenses/by-nc-sa/3.0/
+  license: 知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议
+  license_url: https://creativecommons.org/licenses/by-nc-nd/4.0/
 
 reward_comment: enjoy?donate!
 wechatpay: http://oqcey66z7.bkt.clouddn.com/public/images/wechat.png
