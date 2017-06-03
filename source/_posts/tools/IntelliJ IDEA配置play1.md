@@ -1,4 +1,15 @@
-# IntelliJ IDEA 配置 PlayFramework(play1)
+
+---
+title: IntelliJ IDEA 配置 PlayFramework(play1)
+date: 2017-06-04 00:00:00
+reward: true
+categories:
+    - tools
+tags:
+    - IntelliJ Idea
+    - play1
+    - playframework
+---
 
 ## 生成ipr工程文件
 
