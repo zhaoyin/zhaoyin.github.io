@@ -1,6 +1,6 @@
 
 ---
-title: JsonMappingException: Can not construct instance of xxx
+title: jackson反序列化化无法构造实例的问题
 date: 2017-06-03 22:40:56
 categories:
     - build
