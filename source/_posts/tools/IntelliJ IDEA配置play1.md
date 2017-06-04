@@ -44,6 +44,8 @@ tags:
 ```
 比如上面的配置就是修改后的，play idea生成的iml文件默认缺少``$MODULE_DIR$/``这一级，会导致引用的模块无法找到的错误。
 
+<!--more-->
+
 ## 配置playframework框架信息
 
 * 菜单栏点设置（Settings)按钮(即macOS 产品的Preferencs，按快捷键command+,)

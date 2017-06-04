@@ -37,7 +37,7 @@ BUFFER POOLAND MEMORY
 ROWOPERATIONS
 主要显示的是与客户端的请求query和query所影响的记录统计信息
 ```
-
+<!--more-->
 * 查询是否锁表
 ``show OPEN TABLES where In_use > 0;``
 

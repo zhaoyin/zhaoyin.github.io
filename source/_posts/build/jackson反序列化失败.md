@@ -33,4 +33,5 @@ Caused by: com.fasterxml.jackson.databind.JsonMappingException: Can not construc
 ```
 
 无法实例化json对象，没有找到适合的构造函数。
+<!--more-->
 在进行反序列号的时候，需要要转换类是普通的pojo类，并且类中的变量都需要有setXXX的set方法，如果没有set方法或者没有“正确”的set方法，就会报无法实例化JSON对象的异常
