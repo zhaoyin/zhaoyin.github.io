@@ -7,6 +7,7 @@ categories:
 tags:
     - Spring
     - Spring Boot
+    - JAVA
 ---
 
 [Spring Boot(1)-构建应用实践](http://blog.csdn.net/hguisu/article/details/50956370)
