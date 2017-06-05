@@ -1,6 +1,6 @@
 
 ---
-title: [转]Memcached总结
+title: (转)Memcached总结
 date: 2017-06-05 22:40:56
 categories:
     - language
