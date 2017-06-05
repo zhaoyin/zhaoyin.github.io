@@ -13,6 +13,7 @@ tags:
 * lsof  -i:port  可以检测到打开套接字的状况
 * sar -n SOCK 查看tcp创建的连接数
 * tcpdump -iany tcp port 9000 对tcp端口为9000的进行抓包
+[Linux tcpdump命令详解](http://www.cnblogs.com/ggjucheng/archive/2012/01/14/2322659.html)
 <!--more-->
 ## 网络测试常用命令
 ### ping
@@ -31,9 +32,6 @@ pathping www.baidu.com
 用于解析域名，一般用来检测本机的DNS设置是否配置正确。
 ### mtr
 以结合ping nslookup tracert 来判断网络的相关特性
-### tcpdump
-tcpdump -iany tcp port 9502
-[Linux tcpdump命令详解](http://www.cnblogs.com/ggjucheng/archive/2012/01/14/2322659.html)
 
 ## 系统大量TIME_WAIT状态连接的处理
 发现系统存在大量TIME_WAIT状态的连接，可以通过调整内核参数解决：``vi /etc/sysctl.conf`` 加入以下内容：
