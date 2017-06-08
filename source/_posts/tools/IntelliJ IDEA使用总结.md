@@ -38,7 +38,7 @@ Eclipse有的咱就不说了，说点实用的
 * command+shift+f
     当前项目查找包含特定内容的文件
 * command+n 
-    查找类
+    相当于右键菜单
 * command+shift+n
     查找文件
 * command+e 
