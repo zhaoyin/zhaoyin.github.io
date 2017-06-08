@@ -19,6 +19,7 @@ firewalld 提供了支持网络/防火墙区域(zone)定义网络链接以及接
 
 这里有必要说明一下 firewalld 和 iptables 之间的关系， firewalld 提供了一个 daemon 和 service，还有命令行和图形界面配置工具，它仅仅是替代了 iptables service 部分，其底层还是使用 iptables 作为防火墙规则管理入口。firewalld 使用 python 语言开发，在新版本中已经计划使用 c++ 重写 daemon 部分。
 ```
+<!--more-->
 ## firewalld区域
 firewalld将网卡对应到不同的区域（zone），zone 默认共有9个，block dmz drop external home internal public trusted work.
 ```markdown
