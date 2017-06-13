@@ -2,6 +2,7 @@
 ---
 title: (转)Memcached总结
 date: 2017-06-05 22:40:56
+reward: true
 categories:
     - language
 tags:

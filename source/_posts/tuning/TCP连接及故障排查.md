@@ -2,6 +2,7 @@
 ---
 title: TCP命令及故障排查
 date: 2017-06-05 21:40:46
+reward: true
 categories:
     - tuning
 tags: 
@@ -9,8 +10,9 @@ tags:
 ---
 
 ## linux查看tcp的状态命令
-* netstat -nat  查看TCP各个状态的数量
+
 ### netstat用法
+* netstat -nat  查看TCP各个状态的数量
 ```markdown
 usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
        netstat [-vWnNcaeol] [<Socket> ...]
@@ -49,8 +51,21 @@ usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
     netrom (AMPR NET/ROM) ipx (Novell IPX) ddp (Appletalk DDP)
     x25 (CCITT X.25)
 ```
-* lsof  -i:port  可以检测到打开套接字的状况
+其中
+* -a (all)显示所有选项，默认不显示LISTEN相关
+* -t (tcp)仅显示tcp相关选项
+* -u (udp)仅显示udp相关选项
+* -n 拒绝显示别名，能显示数字的全部转化成数字
+* -l 仅列出有在 Listen (监听) 的服務状态
+* -p 显示建立相关链接的程序名
+* -r 显示路由信息，路由表
+* -e 显示扩展信息，例如uid等
+* -s 按各个协议进行统计
+* -c 每隔一个固定时间，执行该netstat命令。
+提示：LISTEN和LISTENING的状态只有用-a或者-l才能看到
+
 ### lsof用法
+* lsof  -i:port  可以检测到打开套接字的状况
 ```markdown
 -?|-h list help          -a AND selections (OR)     -b avoid kernel blocks
   -c c  cmd c ^c /c/[bix]  +c w  COMMAND width (9)    +d s  dir s files
@@ -77,8 +92,9 @@ usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
   names  select named files or files on named file systems
 
 ```
-* sar -n SOCK 查看tcp创建的连接数
+
 ### sar用法
+* sar -n SOCK 查看tcp创建的连接数
 ```markdown
 Usage: sar [ options ] [ <interval> [ <count> ] ]
 Main options and reports:
@@ -129,8 +145,9 @@ Main options and reports:
 	-W	Swapping statistics
 	-y	TTY device statistics
 ```
-* tcpdump -iany tcp port 9000 对tcp端口为9000的进行抓包
+
 ### tcpdump用法
+* tcpdump -iany tcp port 9000 对tcp端口为9000的进行抓包
 ```markdown
 -A  以ASCII码方式显示每一个数据包(不会显示数据包中链路层头部信息). 在抓取包含网页数据的数据包时, 可方便查看数据(nt: 即Handy for capturing web pages).
 
@@ -280,7 +297,7 @@ pathping www.baidu.com
 ### nslookup
 用于解析域名，一般用来检测本机的DNS设置是否配置正确。
 ### mtr
-以结合ping nslookup tracert 来判断网络的相关特性
+可以结合ping nslookup tracert 来判断网络的相关特性
 
 ## 系统大量TIME_WAIT状态连接的处理
 发现系统存在大量TIME_WAIT状态的连接，可以通过调整内核参数解决：``vi /etc/sysctl.conf`` 加入以下内容：

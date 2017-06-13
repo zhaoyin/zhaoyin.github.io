@@ -2,6 +2,7 @@
 ---
 title: centos7上firewalld防火墙配置
 date: 2017-06-08 09:40:56
+reward: true
 categories:
     - build
 tags:
