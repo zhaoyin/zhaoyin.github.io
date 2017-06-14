@@ -4,8 +4,8 @@
 
 # Site
 title: 架构演进之旅
-subtitle: DevOps,互联网架构设计,架构演进
-description: 互联网架构设计及DevOps总结
+subtitle: DevOps,互联网架构设计,架构演进,性能调优
+description: 互联网架构设计及DevOps总结,性能调优,运维,mysql,linux,jvm,java
 author: 小英雄雨来
 language: zh-Hans
 timezone: Asia/Shanghai
