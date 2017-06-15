@@ -24,7 +24,7 @@ enabled=1
 ```markdown
 sudo yum install -y logstash-forwarder
 ```
-
+<!--more-->
 ## logstash-forwarder 配置
    
 logstash-forwarder 的配置文件是纯 JSON 格式。因为其轻量级的设计目的，所以可配置项很少。下面是一个 /etc/logstash-forwarder 配置示例：
