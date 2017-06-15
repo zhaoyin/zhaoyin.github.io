@@ -80,3 +80,7 @@ npm uninstall express  #删除指定的模块
 ```
 
 其他相关命令
+
+## 去掉express框架设置的x-power-by
+``app.disable('x-powered-by');``
+
