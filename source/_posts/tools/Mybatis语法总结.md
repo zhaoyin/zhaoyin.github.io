@@ -32,7 +32,7 @@ tags:
 ```
 查询条件通过sql标签动态传入
 通过where节点的处理能防止传入phone为null时出现``select userName,id,sex,age,phone from user where ``导致的尴尬异常.
-
+<!--more-->
 ## choose
 choose标签是按顺序判断其内部when标签中的test条件出否成立，如果有一个成立，则 choose 结束。当 choose 中所有 when 的条件都不满则时，则执行 otherwise 中的sql。类似于Java 的 switch 语句，choose 为 switch，when 为 case，otherwise 则为 default。
 因为\<if>...\</if>并没对应的<else>标签，所以要达到\<if>...\<else>...\</else> \</if>的效果，得借助\<choose>、\<when>、\<otherwise>组合使用
