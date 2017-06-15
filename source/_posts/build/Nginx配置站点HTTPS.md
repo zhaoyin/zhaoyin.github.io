@@ -158,3 +158,6 @@ $HTTP["scheme"] == "https" {
     setenv.add-response-header  = ( "X-Frame-Options" => "DENY")
 }
 ```
+
+最后，盗张阿里的图
+![阿里HTTPS](http://oqcey66z7.bkt.clouddn.com/public/resource/alibaba-https.jpeg)
