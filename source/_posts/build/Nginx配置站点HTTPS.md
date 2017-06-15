@@ -10,12 +10,12 @@ tags:
     - HTTPS
 ---
 
-##什么是HTTPS？
+## 什么是HTTPS？
 HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。
 
 采用HTTPS的服务器必须从CA （Certificate Authority）申请一个用于证明服务器用途类型的证书。该证书只有用于对应的服务器的时候，客户端才信任此主机。所以所有的银行系统网站，关键部分应用都是HTTPS的。客户通过信任该证书，从而信任了该主机。其实这样做效率很低，但是银行更侧重安全。这一点对局域网对内提供服务处的服务器没有任何意义。局域网中的服务器，采用的证书不管是自己发布的还是从公众的地方发布的，其客户端都是自己人，所以该局域网中的客户端也就肯定信任该服务器。
 
-##启用HTTPS
+## 启用HTTPS
 有不少网站只通过HTTPS对外提供服务，但用户在访问某个网站的时候，在浏览器里却往往直接输入网站域名（例如www.example.com），而不是输入完整的URL（例如https://www.example.com），不过浏览器依然能正确的使用HTTPS发起请求。这背后多亏了服务器和浏览器的协作
 ![强制全站https](http://oqcey66z7.bkt.clouddn.com/public/resource/http-https.png)
 
@@ -73,7 +73,7 @@ server {
 ![http跳转中被劫持](http://oqcey66z7.bkt.clouddn.com/public/resource/http-unsafe.png)
 * 拖慢访问速度，302 跳转需要一个 RTT（The role of packet loss and round-trip time），浏览器执行跳转也需要时间
 
-##HSTS解决跳转不安全的问题
+## HSTS解决跳转不安全的问题
 HSTS的全称是HTTP Strict-Transport-Security，它是一个Web安全策略机制（web security policy mechanism）。
 302跳转是由浏览器触发的，服务器无法完全控制，这个需求导致了 HSTS(HTTP Strict Transport Security)的诞生。
 HSTS就是添加 header 头（add_header Strict-Transport-Security max-age=15768000;includeSubDomains），告诉浏览器网站使用 HTTPS 访问，支持HSTS的浏览器（Chrome, firefox, ie 都支持了 HSTS（http://caniuse.com/#feat=stricttransportsecurity））就会在后面的请求中直接切换到 HTTPS。在 Chrome 中会看到浏览器自己会有个 307 Internal Redirect 的内部重定向。在一段时间内也就是max-age定义的时间，不管用户输入www.example.com还是http://www.example.com，都会默认将请求内部跳转到https://www.example.com。
@@ -112,7 +112,7 @@ $HTTP["scheme"] == "https" {
 }
 ```
 
-##全站HTTPS必须解决的问题
+## 全站HTTPS必须解决的问题
 
 然而，HTTPS并非“想上就上”，正式启用之前，必须解决至少三个方面的大问题。
 
@@ -136,7 +136,7 @@ $HTTP["scheme"] == "https" {
 
 最后，为保证上线时的顺利切换，需要提前准备大量的预案，以应对各种可能出现的情况。
 
-##全站HTTPS还可以做的更多
+## 全站HTTPS还可以做的更多
 
 X-Frame-Options 头部添加到HTTPS站点，确保不会嵌入到frame 或 iframe，避免点击劫持，以确保网站的内容不会嵌入到其他网站。
 
