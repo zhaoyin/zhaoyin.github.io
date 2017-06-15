@@ -74,6 +74,8 @@ Eclipse有的咱就不说了，说点实用的
     各种checkstyle
 * command+alt+L
     自动格式化代码
+* ctr+shift+U
+  大小写转化--命令static常量很有用 
 * ctrl+alt+O
     去除没有用到的import
 * command+F1
