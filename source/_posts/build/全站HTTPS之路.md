@@ -1,6 +1,6 @@
 
 ---
-title: 配置全站HTTPS
+title: 全站HTTPS之路
 date: 2017-06-15 22:12:25
 reward: true
 categories:
