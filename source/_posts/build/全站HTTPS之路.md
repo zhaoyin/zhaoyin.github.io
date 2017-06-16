@@ -53,7 +53,7 @@ server {
         ssl_session_timeout 5m;
         #不使用SSLv2,SSLv3等不安全协议
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-        ssl_ciphers AESGCM:ALL:!DH:!EXPORT:!RC4:+HIGH:!MEDIUM:!LOW:!aNULL:!eNULL;
+        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
         ssl_prefer_server_ciphers on;
 
         location / {
@@ -167,6 +167,16 @@ $HTTP["scheme"] == "https" {
 yum update nginx
 yum update openssl
 ```
+
+### 配置赫尔曼密钥
+
+```markdown
+openssl dhparam -out dhparam.pem 2048 // 在 ssh 运行， openssl 生成 2048 位的密钥而不是当作参数写入 nginx.conf 文件。
+
+ssl_dhparam /path/to/dhparam.pem; //在 .conf 中配置
+```
+
+
 
 最后，盗张阿里的图
 ![阿里HTTPS](http://oqcey66z7.bkt.clouddn.com/public/resource/alibaba-https.jpeg)
