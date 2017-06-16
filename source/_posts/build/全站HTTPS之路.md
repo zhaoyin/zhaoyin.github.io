@@ -44,6 +44,9 @@ server {
         server_name  www.example.com;
 
         #charset koi8-r;
+        #配置HSTS
+        add_header Strict-Transport-Security "max-age=15552000; includeSubdomains; preload" always;
+        add_header X-Frame-Options "DENY";
 
         #access_log  logs/host.access.log  main;
         ssl on;
