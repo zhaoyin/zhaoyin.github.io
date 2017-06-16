@@ -147,7 +147,8 @@ $HTTP["scheme"] == "https" {
 
 ## 全站HTTPS还可以做的更多
 
-X-Frame-Options 头部添加到HTTPS站点，确保不会嵌入到frame 或 iframe，避免点击劫持，以确保网站的内容不会嵌入到其他网站。
+### 配置X-Frame-Options
+X-Frame-Options头部添加到HTTPS站点，确保不会嵌入到frame 或 iframe，避免点击劫持，以确保网站的内容不会嵌入到其他网站。
 
 Apache配置
 ```markdown
