@@ -39,7 +39,8 @@ server{
 nginx的HTTPS配置
 ```markdown
 server {
-        listen       443;
+        #开启 SPDY 和 HTTP2 支持，借助多路复用提升传输性能。
+        listen   443  ssl http2 default_server;
         server_name  www.example.com;
 
         #charset koi8-r;
@@ -50,6 +51,7 @@ server {
         ssl_certificate  /usr/nginx/ssl/example.com.crt;
         ssl_certificate_key  /usr/nginx/ssl/example.com.key;
         ssl_session_timeout 5m;
+        #不使用SSLv2,SSLv3等不安全协议
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers AESGCM:ALL:!DH:!EXPORT:!RC4:+HIGH:!MEDIUM:!LOW:!aNULL:!eNULL;
         ssl_prefer_server_ciphers on;
@@ -128,7 +130,7 @@ $HTTP["scheme"] == "https" {
 
 其次，兼容性及周边。
 
-* 页面里所有嵌入的资源(图片/附件/js/css)都要改成HTTPS的，这些资源可能会来自不同的部门甚至不同的公司，包括图片、视频、表单等等，否则浏览器就会报警；
+* 页面里所有嵌入的资源(图片/附件/js/css/视频等)都要改成HTTPS的,否则浏览器就会报警(静态资源的URL，采用 // 引用资源，表示遵从当前页面的协议，浏览器会进行自动补全).
 
 * 移动客户端（APP）也需要适配HTTPS，所以必须做调整修改；
 
