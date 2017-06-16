@@ -1,6 +1,6 @@
 
 ---
-title: (转)Memcached总结
+title: Memcached总结
 date: 2017-06-05 22:40:56
 reward: true
 categories:
@@ -11,6 +11,14 @@ tags:
 ---
 
 ## memcached相关命令
+
+### 安装memcached
+
+```markdown
+yum clean all
+yum -y update
+yum -y install memcached
+```
 
 ### 启动memcached
 
