@@ -55,7 +55,9 @@ server {
         ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
         ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;
         ssl_prefer_server_ciphers on;
-
+        
+        ssl_dhparam /path/to/dhparam.pem;
+        
         location / {
             proxy_pass http://127.0.0.1:8080;
         }
