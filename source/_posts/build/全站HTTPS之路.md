@@ -161,5 +161,12 @@ $HTTP["scheme"] == "https" {
 }
 ```
 
+设置``listen   443  ssl http2 default_server;``最好将openssl和nginx升级到当前版本的最新版本
+
+```markdown
+yum update nginx
+yum update openssl
+```
+
 最后，盗张阿里的图
 ![阿里HTTPS](http://oqcey66z7.bkt.clouddn.com/public/resource/alibaba-https.jpeg)
