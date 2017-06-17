@@ -75,6 +75,11 @@ server {
         }
 }
 ```
+
+有了这个配置，您在[ssllab](https://www.ssllabs.com/ssltest/)上的评级得到下面的结果就so easy了
+
+![ssllab-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
+
 通常情况下，我们将用户的 HTTP 请求 301或302 跳转到 HTTPS，这会存在两个问题：
 * 不够安全，302 跳转会暴露用户访问站点，也容易被劫持
 ![http跳转中被劫持](http://oqcey66z7.bkt.clouddn.com/public/resource/http-unsafe.png)
