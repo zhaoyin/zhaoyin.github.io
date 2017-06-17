@@ -71,6 +71,11 @@ sitemap:
 baidusitemap:
   path: baidusitemap.xml
 
+# Include/Exclude Files/Folders
+#include:
+#  - .nojekyll
+exclude:
+  - .DS_Store
 
 algolia:
   applicationID: 'KB0W0YA2QV'
