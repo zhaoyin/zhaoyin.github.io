@@ -10,8 +10,8 @@ tags:
     - HTTPS
 ---
 
-想让您的站点在[ssllab](https://www.ssllabs.com/ssltest/)上评A+吗？
-![ssllab-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
+想让您的站点在[ssllabs](https://www.ssllabs.com/ssltest/)上评A+吗？
+![ssllabs-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
 下面的内容也许能帮到你
 
 ## 什么是HTTPS？
@@ -80,7 +80,7 @@ server {
 }
 ```
 
-有了这个配置，您在[ssllab](https://www.ssllabs.com/ssltest/)上的评级得到下面的结果就so easy了
+有了这个配置，您在[ssllabs](https://www.ssllabs.com/ssltest/)上的评级得到下面的结果就so easy了
 
 通常情况下，我们将用户的 HTTP 请求 301或302 跳转到 HTTPS，这会存在两个问题：
 * 不够安全，302 跳转会暴露用户访问站点，也容易被劫持
