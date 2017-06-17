@@ -10,6 +10,10 @@ tags:
     - HTTPS
 ---
 
+想让您的站点在ssllab上评A+吗？
+![ssllab-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
+下面的内容也许能帮到你
+
 ## 什么是HTTPS？
 HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。
 
@@ -77,8 +81,6 @@ server {
 ```
 
 有了这个配置，您在[ssllab](https://www.ssllabs.com/ssltest/)上的评级得到下面的结果就so easy了
-
-![ssllab-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
 
 通常情况下，我们将用户的 HTTP 请求 301或302 跳转到 HTTPS，这会存在两个问题：
 * 不够安全，302 跳转会暴露用户访问站点，也容易被劫持
