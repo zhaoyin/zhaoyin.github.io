@@ -10,7 +10,9 @@ tags:
     - 缓存
 ---
 
-## memcached相关命令
+目前我们使用Memcache来实现系统的无状态，以便无障碍的集群化部署，为了较少投入而解决单点雪崩的问题，我们购买了阿里云的云数据库Memcached版。
+
+## Memcached相关命令
 
 ### 安装memcached
 
