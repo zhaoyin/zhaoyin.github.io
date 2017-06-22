@@ -258,10 +258,10 @@ post_wordcount:
   min2read: false
 
 # Wechat Subscriber
-#wechat_subscriber:
-#  enabled: true
-#  qcode: /uploads/qrcode.jpg
-#  description: 扫描微信公众号订阅博客
+wechat_subscriber:
+  enabled: true
+  qcode: /uploads/qrcode.jpg
+  description: 扫描微信公众号订阅博客
 
 # Declare license on posts
 post_copyright:
