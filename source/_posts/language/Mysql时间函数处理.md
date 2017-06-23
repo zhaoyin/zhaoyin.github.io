@@ -1,5 +1,5 @@
 ---
-title: Mysql时间函数处理总结
+title: 值得收藏的Mysql时间处理
 date: 2017-06-23 16:35:20
 reward: true
 categories:
@@ -25,6 +25,7 @@ SELECT * FROM  表名 WHERE YEARWEEK( date_format(时间字段名,'%Y-%m-%d' ) )
 ```markdown
 SELECT * FROM  表名 WHERE DATE_FORMAT( 时间字段名, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) ;
 ```
+<!--more-->
 * 上一个月
 ```markdown
 SELECT * FROM  表名 WHERE PERIOD_DIFF(date_format(now(),'%Y%m'),date_format(时间字段名,'%Y%m') =1;
