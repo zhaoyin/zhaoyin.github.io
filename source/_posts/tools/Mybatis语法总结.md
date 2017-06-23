@@ -94,7 +94,55 @@ select * from user
 
     </select>
 ```
+## \#{}和${}的区别和使用场景
 
+* \#将传入的数据都当成一个字符串，会对自动传入的数据加一个双引号。如：order by #user_id#，如果传入的值是111,那么解析成sql时的值为order by "111", 如果传入的值是id，则解析成的sql为order by "id".
+　　
+* $将传入的数据直接显示生成在sql中。如：order by $user_id$，如果传入的值是111,那么解析成sql时的值为order by user_id,  如果传入的值是id，则解析成的sql为order by id.
+　　
+* \#方式能够很大程度防止sql注入。
+　　
+* $方式无法防止Sql注入。
+
+* $方式一般用于传入数据库对象，例如传入表名.
+　　
+* 一般能用#的就别用$.
+
+* 排序时使用order by 动态参数时需要注意，用$而不是#
+
+### 说明
+
+默认情况下，使用#{}格式的语法会导致MyBatis创建预处理语句属性并以它为背景设置安全的值（比如?）。这样做很安全，很迅速也是首选做法，有时你只是想直接在SQL语句中插入一个不改变的字符串。比如，像ORDER BY，你可以这样来使用：
+ORDER BY ${columnName}
+这里MyBatis不会修改或转义字符串。
+
+重要：接受从用户输出的内容并提供给语句中不变的字符串，这样做是不安全的。这会导致潜在的SQL注入攻击，因此你不应该允许用户输入这些字段，或者通常自行转义并检查。
+
+1. 使用#{}格式的语法在mybatis中使用Preparement语句来安全的设置值，执行sql类似下面的：
+```markdown
+PreparedStatement ps = conn.prepareStatement(sql);
+ps.setInt(1,id);
+```
+这样做的好处是：更安全，更迅速，通常也是首选做法。
+
+2. 不过有时你只是想直接在 SQL 语句中插入一个不改变的字符串。比如，像 ORDER BY，你可以这样来使用：
+
+ORDER BY ${columnName}
+此时MyBatis 不会修改或转义字符串。
+
+这种方式类似于：
+```markdown
+Statement st = conn.createStatement();       
+ResultSet rs = st.executeQuery(sql);
+```
+这种方式的缺点是： 以这种方式接受从用户输出的内容并提供给语句中不变的字符串是不安全的，会导致潜在的 SQL 注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。
+
+## statementType属性
+
+这个属性的作用是告诉mybatis我们写的这个sql到底是预编译（PRESTATEMENT）还是非预编译（STATEMENT）的。有什么区别呢？如果是预编译的，那么系统在初始化时就会读取这段sql代码，将指定的实体类中的字段替换了类似#{}这样的语句，就是形成了类似这样的语句：
+"select * from tableName where code=?" 这个时候你在系统运行时再想向这句sql中替换tableName或者code，结果可想而知。如果是非预编译呢，结果刚好相反，他会在系统运行时才会去生成这样类似的语句。此时就可以去替换这些动态的字段或者表名之类。这样在结合之前所讲的返回类型的设置，我们的问题就解决了
+。我们可以不用设定参数和返回类型的实体类，只需要形成一个动态的表名和字段名的列表类。就可以动态对那些未知的物理模型进行操作.
+注明statementType="CALLABLE"表示调用存储过程.
 
 ## 兼容多数据库
 ```markdown
