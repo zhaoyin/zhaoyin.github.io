@@ -308,9 +308,6 @@
             <br/>
             [本文({{post.title}})原始地址]<a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.permalink }}</a>
             {{ post.content }}
-            <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DGxUK4RxRAUwcQipKwQzePCperVdZeJviK7Vc7tFgwiFRAdhuF14FMaoDsluWCMrtJ1gyddu7kN%2FjA8%2F%2BZJDLfQ4Zu0ikTBVI5H6lqT7H0fKnLcgY8qPbG6UuZxIcp9pfUIgVEmFmgnaR4ypTBJBwtB6l0bxfYrBpJPwiig1bxLMAV4Err%2B0r%2ByrbHgqSJ08vcSpj5qSCmbA%3D" title="2017天猫618">
-            <img src="https://img.alicdn.com/tfs/TB1_phpRpXXXXaTXVXXXXXXXXXX-440-180.jpg" height="180" width="440" alt="2017天猫618" />
-            </a>
           {% endif %}
         {% endif %}
       {% else %}
@@ -320,9 +317,6 @@
         <br/>
         [本文({{post.title}})原始地址]<a href="{{ post.permalink }}" title="{{ post.title }}">{{ post.permalink }}</a>
         {{ post.content }}
-        <a class="post-gallery" target="_blank" itemprop="contents" href="https://s.click.taobao.com/t?e=m%3D2%26s%3DGxUK4RxRAUwcQipKwQzePCperVdZeJviK7Vc7tFgwiFRAdhuF14FMaoDsluWCMrtJ1gyddu7kN%2FjA8%2F%2BZJDLfQ4Zu0ikTBVI5H6lqT7H0fKnLcgY8qPbG6UuZxIcp9pfUIgVEmFmgnaR4ypTBJBwtB6l0bxfYrBpJPwiig1bxLMAV4Err%2B0r%2ByrbHgqSJ08vcSpj5qSCmbA%3D" title="2017天猫618">
-        <img src="https://img.alicdn.com/tfs/TB1_phpRpXXXXaTXVXXXXXXXXXX-440-180.jpg" height="180" width="440" alt="2017天猫618" />
-        </a>
       {% endif  %}
     </div>
 
