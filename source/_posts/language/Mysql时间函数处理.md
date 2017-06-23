@@ -10,29 +10,29 @@ tags:
 ---
 
 * 今天
-```
+```markdown
 select * from 表名 where to_days(时间字段名) = to_days(now());
 ```
 * 昨天
 ```markdown
-SELECT * FROM 表名 WHERE TO_DAYS( NOW( ) ) - TO_DAYS( 时间字段名) <= 1;
+select * from 表名 where to_days(now()) - to_days(时间字段名)<=1;
 ```
 * 本周
 ```markdown
-SELECT * FROM  表名 WHERE YEARWEEK( date_format(时间字段名,'%Y-%m-%d' ) ) = YEARWEEK( now( ) ) ;
+select * from  表名 where yearweek(date_format(时间字段名,'%Y-%m-%d')) = yearweek(now());
 ```
 * 本月
 ```markdown
-SELECT * FROM  表名 WHERE DATE_FORMAT( 时间字段名, '%Y%m' ) = DATE_FORMAT( CURDATE( ) , '%Y%m' ) ;
+select * from  表名 where date_format(时间字段名,'%Y%m') = date_format(curdate(),'%Y%m');
 ```
 <!--more-->
 * 上一个月
 ```markdown
-SELECT * FROM  表名 WHERE PERIOD_DIFF(date_format(now(),'%Y%m'),date_format(时间字段名,'%Y%m') =1;
+select * from  表名 where period_diff(date_format(now(),'%Y%m'),date_format(时间字段名,'%Y%m') =1;
 ```
 * 本年
 ```markdown
-SELECT * FROM 表名 WHERE YEAR(时间字段名 ) = YEAR( NOW( ) ) ;
+select * from 表名 where year(时间字段名 ) = year(now()) ;
 ```
 * 查看当天日期
 ```markdown
@@ -48,23 +48,23 @@ select current_timestamp();
 ```
 * 查询7天的记录
 ```markdown
-SELECT * FROM 表名 where DATE_SUB(CURDATE(), INTERVAL 7 DAY) <= date(时间字段名);
+select * from 表名 where date_sub(curdate(), interval 7 day) <= date(时间字段名);
 ```
 * 查询近30天的记录
 ```markdown
-SELECT * FROM 表名 where DATE_SUB(CURDATE(), INTERVAL 30 DAY) <= date(时间字段名);
+select * from 表名 where date_sub(curdate(), interval 30 day) <= date(时间字段名);
 ```
 * 查询本季度数据
 ```markdown
-select * from 表名 where QUARTER(时间字段名)=QUARTER(now());
+select * from 表名 where quarter(时间字段名)=quarter(now());
 ```
 * 查询上季度数据
 ```markdown
-select * from 表名 where QUARTER(时间字段名)=QUARTER(DATE_SUB(now(),interval 1 QUARTER));
+select * from 表名 where quarter(时间字段名)=quarter(date_sub(now(),interval 1 quarter));
 ```
 * 查询本年数据
 ```markdown
-select * from 表名  where YEAR(时间字段名)=YEAR(NOW());
+select * from 表名  where year(时间字段名)=year(now());
 ```
 * 查询上年数据
 ```markdown
@@ -72,7 +72,7 @@ select * from 表名 where year(时间字段名)=year(date_sub(now(),interval 1 
 ```
 * 查询上周的数据
 ```markdown
-SELECT * FROM 表名 WHERE YEARWEEK(date_format(时间字段名,'%Y-%m-%d')) = YEARWEEK(now())-1;
+select * from 表名 where yearweek(date_format(时间字段名,'%Y-%m-%d')) = yearweek(now())-1;
 ```
 * 查询当前月份的数据
 ```markdown
@@ -80,7 +80,7 @@ select * from 表名   where date_format(时间字段名,'%Y-%m')=date_format(no
 ```
 * 查询距离当前现在6个月的数据
 ```markdown
-select * from 表明 where 时间字段名 between date_sub(now(),interval 6 month) and now();
+select * from 表名 where 时间字段名 between date_sub(now(),interval 6 month) and now();
 ```
 
 * date_format函数可用的标志符
