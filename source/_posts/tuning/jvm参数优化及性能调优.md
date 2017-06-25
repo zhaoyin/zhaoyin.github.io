@@ -14,7 +14,7 @@ tags:
 ![JVM结构](http://oqcey66z7.bkt.clouddn.com/public/resource/5e937446bd287857-af65270862aa1d4b-4217e4e9a77a4ed6808c89a303261dc9.jpg)
 
 ## 实践
-因为下面的内容太枯燥了，所以将实践放到这。这里面用到的，下面都有讲到,也可以看完下面的再会过来看这一节。
+因为下面的内容太枯燥了，所以将实践放到这。这里面用到的，下面都有讲到,也可以看完下面的再回过来看这一节。
 
 首先使用``jps -mlvV``可以看当前环境有哪些JVM的应用。
 ```markdown
@@ -25,6 +25,8 @@ tags:
 ```
 
 可以找到我们要分析的[play](https://github.com/playframework/play1)应用的pid是9604
+
+<!--more-->
 
 使用``jinfo -flags 9604``可以看到该应用的jvm参数设置
 ```markdown
