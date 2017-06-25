@@ -25,6 +25,7 @@ $max_longitude = $longitude + $i; //经度最大值
 ```markdown
 SELECT *,SQRT(POWER($latitude - latitude, 2) + POWER($longitude  - longitude, 2)) AS d FROM table WHERE (latitude BETWEEN $min_latitude AND $max_latitude) AND (longitude BETWEEN $min_longitude AND $max_longitude) ORDER BY d ASC LIMIT 10;
 ```
+<!--more-->
 2.计算经纬度两点之间的距离
 ```markdown
     private static final  double EARTH_RADIUS = 6378.137;//赤道半径(单位km)(此处单位km则算出来的距离就是km;此处单位为m，则算出来的距离就是m)
