@@ -1,7 +1,7 @@
 
 ---
-title: JVM参数调优总结
-date: 2017-06-14 09:20:46
+title: JVM参数调优
+date: 2017-06-25 09:20:46
 categories:
     - tuning
 tags: 
