@@ -262,7 +262,7 @@ post_wordcount:
 wechat_subscriber:
   enabled: true
   qcode: /uploads/qrcode.jpg
-  description: 扫描微信公众号订阅博客
+  description: 扫码二维码或搜索"架构演进之旅"订阅微信公众号
 
 # Declare license on posts
 post_copyright:
