@@ -88,9 +88,41 @@ old代的空间大小为3300M(4500-1200),其中活动对象需要占用306M，ol
 old代的空间占用是MinorGC之后Java堆中对象大小减去young代的大小,第一次Minor GC后old代空间大小为1032635K，第二次：1038824K，第三次：1040882K，第四次：1042883K，第五次：1047039K。可以看出每次增量大概为2000K(1.95M)。每40s进行一个Minor GC，则每40s时间old代会有1.95M的增量，算下来20小时会有3500M的增量。
 由于这只是截取中间一个片段做的统计，不能很准确的描述值。但是我们看到整个趋势是对的，3500M和3000M在大趋势上还是对得上的。
 
-由于old代的延迟太长了，执行时间也在1s，我们调整jvm参数设置，即增加young代空间大小，减小old代空间大小。
+由于old代的延迟太长了，执行时间也在1s，我们调整jvm参数设置，增加young代空间大小，减小old代空间大小。
 
 执行如下设定``-Xms4500M -Xmx4500M -Xss512K -Xmn2400M -XX:MetaspaceSize=1200M -XX:MaxMetaspaceSize=1200M``
+```markdown
+[root@iZbp1j14l08tzyjrzcqv7eZ ~]# jstat -gcutil 11355 500 10
+  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   
+  0.00  76.06  69.81  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  71.17  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  72.42  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  72.76  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  73.07  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  73.40  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  73.96  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  74.84  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  76.09  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+  0.00  76.06  76.39  55.01  83.81  52.20   1049   20.752     2    1.387   22.140
+```
+
+```markdown
+26299.005: [GC (Allocation Failure) [PSYoungGen: 2241419K->8181K(2244608K)] 4467648K->2242573K(4497408K), 0.0300744 secs] [Times: user=0.11 sys=0.00, real=0.03 secs]
+26392.190: [GC (Allocation Failure) [PSYoungGen: 2244597K->4370K(2237440K)] 4478989K->2246834K(4490240K), 0.0230028 secs] [Times: user=0.08 sys=0.00, real=0.02 secs]
+26478.535: [GC (Allocation Failure) [PSYoungGen: 2233618K->6539K(2241024K)] 4476082K->2252888K(4493824K), 0.0211527 secs] [Times: user=0.08 sys=0.00, real=0.02 secs]
+26478.557: [Full GC (Ergonomics) [PSYoungGen: 6539K->0K(2241024K)] [ParOldGen: 2246348K->204298K(2252800K)] 2252888K->204298K(4493824K), [Metaspace: 103567K->103351K(1146880K)], 0.6931326 secs] [Times: user=2.06 sys=0.00, real=0.69 secs]
+26559.819: [GC (Allocation Failure) [PSYoungGen: 2229248K->5546K(2242048K)] 2433546K->209844K(4494848K), 0.0137723 secs] [Times: user=0.05 sys=0.00, real=0.01 secs]
+26635.664: [GC (Allocation Failure) [PSYoungGen: 2236330K->7348K(2241536K)] 2440628K->216605K(4494336K), 0.0146880 secs] [Times: user=0.05 sys=0.00, real=0.01 secs]
+
+84567.977: [GC (Allocation Failure) [PSYoungGen: 2237974K->7231K(2241024K)] 4468728K->2246401K(4493824K), 0.0291482 secs] [Times: user=0.11 sys=0.00, real=0.03 secs]
+84657.219: [GC (Allocation Failure) [PSYoungGen: 2236479K->4715K(2241536K)] 4475649K->2250442K(4494336K), 0.0251333 secs] [Times: user=0.09 sys=0.00, real=0.03 secs]
+84657.244: [Full GC (Ergonomics) [PSYoungGen: 4715K->0K(2241536K)] [ParOldGen: 2245726K->268004K(2252800K)] 2250442K->268004K(4494336K), [Metaspace: 122575K->122537K(1167360K)], 0.6942766 secs] [Times: user=2.08 sys=0.00, real=0.69 secs]
+84741.778: [GC (Allocation Failure) [PSYoungGen: 2230272K->6880K(2241536K)] 2498276K->274884K(4494336K), 0.0164910 secs] [Times: user=0.05 sys=0.00, real=0.02 secs]
+84825.466: [GC (Allocation Failure) [PSYoungGen: 2237152K->5714K(2242048K)] 2505156K->279920K(4494848K), 0.0201746 secs] [Times: user=0.06 sys=0.00, real=0.02 secs]
+84893.970: [GC (Allocation Failure) [PSYoungGen: 2236498K->10165K(2241024K)] 2510704K->289567K(4493824K), 0.0206604 secs] [Times: user=0.08 sys=0.00, real=0.02 secs]
+
+```
+调整后，由于young代空间增大了，young代执行频率降低了。old代空间减小了，old代执行频率提高了，执行时间降低了。
 
 ## 常用命令
 * jps 虚拟机进程状况工具(Java Virtual Machine Process Status Tool)
@@ -373,5 +405,3 @@ jmap -histo:live pid
 因为年老代的并发收集器使用标记、清除算法，所以不会对堆进行压缩。当收集器回收时，他会把相邻的空间进行合并，这样可以分配给较大的对象。但是，当堆空间较小时，运行一段时间以后，就会出现“碎片”，如果并发收集器找不到足够的空间，那么并发收集器将会停止，然后使用传统的标记、清除方式进行回收。如果出现“碎片”，可能需要进行如下配置：
 -XX:+UseCMSCompactAtFullCollection：使用并发收集器时，开启对年老代的压缩。
 -XX:CMSFullGCsBeforeCompaction=0：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩
-
-
