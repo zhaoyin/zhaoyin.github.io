@@ -24,7 +24,7 @@ gpgcheck=0
 enabled=1
 ```
 Replace “OS” with “rhel” or “centos”, depending on the distribution used, and “OSRELEASE” with “5”, “6”, or “7”, for 5.x, 6.x, or 7.x versions, respectively.
-
+<!--more-->
 For Debian/Ubuntu, in order to authenticate the nginx repository signature and to eliminate warnings about missing PGP key during installation of the nginx package, it is necessary to add the key used to sign the nginx packages and repository to the apt program keyring. Please download this key from our web site, and add it to the apt program keyring with the following command:
 ```markdown
 sudo apt-key add nginx_signing.key
