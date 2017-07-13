@@ -9,6 +9,8 @@ tags:
     - CPU
 ---
 
+![cpu100%](http://oqcey66z7.bkt.clouddn.com/public/resource/cpu100%25.png)
+## 问题
 今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容
 ```markdown
 Exception:org.hibernate.exception.JDBCConnectionException: could not prepare statement
@@ -61,7 +63,7 @@ Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException:
 果然，接着就收到另一个站点不能访问的短信。已经波及另一个应用了。ssh一试也已经登录不上去了。
 登录阿里云重启机器后重启该机器的所有服务，过一会看日志服务又有大量的``could not prepare statement``这种日志了。因为这个是定时任务服务器，出问题的堆栈显示是一个每20分钟执行的JOB。现在要解决问题只能先停掉定时任务的服务，以免重蹈CPU飙升的覆辙。
 停止后分析问题，该JOB执行是从数据表里面取出数据（其他站点服务存放的未处理数据），然后调用第三方服务处理数据后再将处理结果回写。
-查看数据表现在的数据量，不查不知道，一查吓一跳，里面有3400条未处理数据。这说明当时二十分钟内突然积聚了几百条数据，能短时间内突然积聚上百条数据应该是站点上导入数据造成的。
+查看数据表中的数据量，不查不知道，一查吓一跳，里面有3400条未处理数据。这说明当时二十分钟内突然积聚了几百条数据，能短时间内突然积聚上百条数据应该是站点上导入数据造成的。
 以下是出问题的代码
 ```markdown
 for(Entity entity : entities){
@@ -190,3 +192,20 @@ for(Entity entity : entities){
 }
 ```
 每100条清理一次缓存。行百里者半九十，每一步都做好才能写出经得起考验的程序。
+
+## 扩展:Hibernate三态转换
+![三态转换](http://oqcey66z7.bkt.clouddn.com/public/resource/hibernate-three-states.jpg)
+
+Hibernate有三种状态：transient(瞬时状态)，persistent(持久化状态)以及detached(游离状态)。
+
+* transient（瞬时状态）--临时状态
+
+当new出来一个新对象，还没有保存到数据库中的时候，就是transient状态。
+
+* persistent(持久化状态)
+
+当临时状态的对象被执行save之后，就会被session托管，在session中有一个map存放着user对象，也就是说user对象被session引用着，被session纳入管理了。此时的user就处于持久状态了。
+
+* detached(游离状态)
+
+当持久状态的对象user,在session关闭之后就会变成有游离状态。
