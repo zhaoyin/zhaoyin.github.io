@@ -81,6 +81,7 @@ Eclipse有的咱就不说了，说点实用的
 * command+F1
     各种建议
     ![优化建议](http://oqcey66z7.bkt.clouddn.com/public/images/%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE.png)
-
+* command+F12
+    在Eclipse中使用很频繁的ctrl+o对应的快捷键就是command+F12
 参考了这位小哥[码农往事](http://www.blogjava.net/rockblue1988/archive/2014/10/24/418994.html)的文章，在此谢过！
 
