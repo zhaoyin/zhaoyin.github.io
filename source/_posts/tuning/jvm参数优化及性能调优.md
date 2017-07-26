@@ -13,6 +13,12 @@ tags:
 由于Java字节码是运行在JVM虚拟机上的，同样的字节码使用不同的JVM虚拟机参数运行，其性能表现可能各不相同。为了能使系统性能最优，就需要对JVM参数进行调整以达到应用程序运行的最佳效果。
 ![JVM结构](http://oqcey66z7.bkt.clouddn.com/public/resource/5e937446bd287857-af65270862aa1d4b-4217e4e9a77a4ed6808c89a303261dc9.jpg)
 
+## 写在前面
+GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用性)]P[Partition tolerance(分区容错性) 可靠性]一样,也有自己的原则。
+就是吞吐量，响应时间，内存占用来3选2。基本的设计原理就是内存占用为有限值的条件下，我们再在响应时间和吞吐量上挑一个优化。
+比如Hotspot JVM实现中，CMS算法主攻响应时间，Parallel GC 主攻吞吐量，G1 GC较关注响应时间同时兼顾一点吞吐量；
+但是如果内存占用小于2G，不建议使用CMS，此时使用CMS调优效果不明显。内存占用小于6G不建议使用G1[Recommended Use Cases for G1](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html)
+
 ## 实践
 因为下面的内容太枯燥了，所以将实践放到这。这里面用到的，下面都有讲到,也可以看完下面的再回过来看这一节。
 
