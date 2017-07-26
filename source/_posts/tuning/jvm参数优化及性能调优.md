@@ -19,6 +19,8 @@ GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用�
 比如Hotspot JVM实现中，CMS算法主攻响应时间，Parallel GC 主攻吞吐量，G1 GC较关注响应时间同时兼顾一点吞吐量；
 但是如果内存占用小于2G，不建议使用CMS，此时使用CMS调优效果不明显。内存占用小于6G不建议使用G1[Recommended Use Cases for G1](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html)
 
+<!--more-->
+
 大神的传送门：
 >[Major GC和Full GC的区别是什么？触发条件呢？ - RednaxelaFX的回答 - 知乎](https://www.zhihu.com/question/41922036/answer/93079526)
 > [Java的GC为什么要分代？ - RednaxelaFX 的回答 - 知乎](https://www.zhihu.com/question/53613423/answer/135743258)
@@ -37,7 +39,6 @@ GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用�
 
 可以找到我们要分析的[play](https://github.com/playframework/play1)应用的pid是9604
 
-<!--more-->
 
 使用``jinfo -flags 9604``可以看到该应用的jvm参数设置
 ```markdown
