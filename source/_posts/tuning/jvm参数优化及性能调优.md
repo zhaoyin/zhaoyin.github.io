@@ -19,6 +19,11 @@ GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用�
 比如Hotspot JVM实现中，CMS算法主攻响应时间，Parallel GC 主攻吞吐量，G1 GC较关注响应时间同时兼顾一点吞吐量；
 但是如果内存占用小于2G，不建议使用CMS，此时使用CMS调优效果不明显。内存占用小于6G不建议使用G1[Recommended Use Cases for G1](http://www.oracle.com/webfolder/technetwork/tutorials/obe/java/G1GettingStarted/index.html)
 
+大神的传送门：
+>[Major GC和Full GC的区别是什么？触发条件呢？ - RednaxelaFX的回答 - 知乎](https://www.zhihu.com/question/41922036/answer/93079526)
+> [Java的GC为什么要分代？ - RednaxelaFX 的回答 - 知乎](https://www.zhihu.com/question/53613423/answer/135743258)
+> [G1 GC的讨论 - 高级语言虚拟机 - ITeye群组](http://hllvm.group.iteye.com/group/topic/44381#post-272188)
+
 ## 实践
 因为下面的内容太枯燥了，所以将实践放到这。这里面用到的，下面都有讲到,也可以看完下面的再回过来看这一节。
 
