@@ -39,6 +39,7 @@ lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
         TX packets 26876964  bytes 18080849599 (16.8 GiB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 ```
+<!--more-->
 我们发现无论eth0内网网卡还是eth1公网网卡都没有inet6,即该服务器未配置IPV6地址.如下配置了IPV6地址的服务器设置如下:
 ```markdown
 [test@xptest tmp]# ifconfig
