@@ -202,6 +202,22 @@ jinfo -flag +PrintGCDDetails 8359
 
 ```
 
+* 日志记录
+```angular2html
+-verbose:gc 
+-XX:+PrintGCDetails 
+-XX:+PrintGCDateStamps
+-Xloggc:/path/gc.log
+-XX:+UseGCLogFileRotation  启用GC日志文件的自动转储 (Since Java)
+-XX:NumberOfGClogFiles=1  GC日志文件的循环数目 (Since Java)
+-XX:GCLogFileSize=1M  控制GC日志文件的大小 (Since Java)
+-XX:+PrintGC包含-verbose:gc
+-XX:+PrintGCDetails //包含-XX:+PrintGC
+只要设置-XX:+PrintGCDetails 就会自动带上-verbose:gc和-XX:+PrintGC
+-XX:+PrintGCDateStamps/-XX:+PrintGCTimeStamps 输出gc的触发时间
+```
+
+
 * GCViewer
 工欲善其事，必先利其器。
 [GCViewer](https://github.com/chewiebug/GCViewer)
@@ -223,6 +239,10 @@ preliminary support for OpenJDK 9 Shenandoah algorithm in unified logging format
 * IBM iSeries Classic JVM 1.4.2 with option -verbose:gc
 * HP-UX JDK 1.2/1.3/1.4.x with the option -Xverbosegc
 * BEA JRockit 1.4.2/1.5/1.6 with the option -verbose:memory [-Xverbose:gcpause,gcreport] [-Xverbosetimestamp]
+
+* 两个在线GC分析工具
+http://gceasy.io
+http://fastthread.io
 
 ## 评估堆大小和内存占用
 ### JVM内存模型
@@ -441,5 +461,4 @@ jmap -histo:live pid
 -XX:CMSFullGCsBeforeCompaction=0：上面配置开启的情况下，这里设置多少次Full GC后，对年老代进行压缩
 
 在官方的JVM性能调优中给出的建议也是，如果你的应用对峰值处理有要求，而对一两秒的停顿可以接受，则使用(-XX:+UseParallelGC)；如果应用对响应有更高的要求，停顿最好小于一秒，则使用(-XX:+UseConcMarkSweepGC)。
-
 
