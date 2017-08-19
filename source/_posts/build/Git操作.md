@@ -9,6 +9,7 @@ tags:
 ---
 
 ## Git pull 强制覆盖本地文件
+<!--more-->
 ```angular2html
 git fetch --all  
 git reset --hard origin/master 
