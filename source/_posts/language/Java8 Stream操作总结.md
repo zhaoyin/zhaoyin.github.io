@@ -14,6 +14,10 @@ Stream 作为 Java 8 的一大亮点，它与 java.io 包里的 InputStream 和 
 
 <!--more-->
 
+![Stream语法解析](http://img04.taobaocdn.com/imgextra/i4/90219132/T2ycFgXQ8XXXXXXXXX_!!90219132.jpg)
+
+## 示例
+
 ### List转Map
 原来的代码
 ```markdown
