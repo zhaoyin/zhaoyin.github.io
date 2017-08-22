@@ -32,6 +32,7 @@
       <div id="SOHUCS"></div>
     {% elseif theme.gitment and theme.gitment.enable %}
       {% include 'share/gitment.swig' %}
+      <div id="gitment_container"></div>
     {% endif %}
   </div>
 {% endif %}
