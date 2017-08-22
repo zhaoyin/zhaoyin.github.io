@@ -390,7 +390,7 @@ duoshuo_info:
 gitment:
   enable: true
   username: zhaoyin
-  repo: xcoder.me
+  repo: comments
   client_id: fbf487ab0c2f9a26b06c
   client_secret: b067cd9221324f0c865c1507dcedaaa53dfa1cdb
 
