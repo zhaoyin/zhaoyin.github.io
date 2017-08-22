@@ -30,6 +30,8 @@
       <div id="lv-container" data-id="city" data-uid="{{ theme.livere_uid }}"></div>
     {% elseif theme.changyan.appid and theme.changyan.appkey %}
       <div id="SOHUCS"></div>
+    {% elseif theme.gitment and theme.gitment.enable %}
+      {% include '_partials/share/gitment.swig' %}
     {% endif %}
   </div>
 {% endif %}
