@@ -31,7 +31,7 @@
     {% elseif theme.changyan.appid and theme.changyan.appkey %}
       <div id="SOHUCS"></div>
     {% elseif theme.gitment and theme.gitment.enable %}
-      {% include '_partials/share/gitment.swig' %}
+      {% include 'share/gitment.swig' %}
     {% endif %}
   </div>
 {% endif %}
