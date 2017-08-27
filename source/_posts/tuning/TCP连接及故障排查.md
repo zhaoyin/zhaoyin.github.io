@@ -306,16 +306,36 @@ pathping www.baidu.com
 ```
 net.ipv4.tcp_syncookies = 1
 net.ipv4.tcp_tw_reuse = 1
-net.ipv4.tcp_tw_recycle = 1
+#net.ipv4.tcp_tw_recycle = 1
 net.ipv4.tcp_fin_timeout = 30
 ```
 然后执行 ``/sbin/sysctl -p`` 让参数生效。
 ```
 net.ipv4.tcp_syncookies = 1 表示开启SYN Cookies。当出现SYN等待队列溢出时，启用cookies来处理，可防范少量SYN攻击，默认为0，表示关闭；
 net.ipv4.tcp_tw_reuse = 1 表示开启重用。允许将TIME-WAIT sockets重新用于新的TCP连接，默认为0，表示关闭；
-net.ipv4.tcp_tw_recycle = 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
-net.ipv4.tcp_fin_timeout 修改系統默认的 TIMEOUT 时间
+#net.ipv4.tcp_tw_recycle = 1 表示开启TCP连接中TIME-WAIT sockets的快速回收，默认为0，表示关闭。
+net.ipv4.tcp_fin_timeout = 30 修改系統默认的 TIMEOUT 时间
 ```
+
+net.ipv4.tcp_timestamps 开启时，net.ipv4.tcp_tw_recycle开启才能生效,原因可以参考以下代码
+
+```angularjs
+if(tcp_death_row.sysctl_tw_recycle&&tp->rx_opt.ts_recent_stamp)recycle_ok=icsk->icsk_af_ops->remember_stamp(sk);
+if(recycle_ok){
+tw->tw_timeout=rto;
+}
+else{tw->tw_timeout=TCP_TIMEWAIT_LEN;
+if(state==TCP_TIME_WAIT)
+timeo=TCP_TIMEWAIT_LEN;
+}
+
+```
+
+``net.ipv4.tcp_tw_recycle = {0|1}``是否启用timewait快速回收；注意：开启此功能在NAT环境下可能会出现严重的问题：因为TCP有一种行为，它可以缓存每个连接最新的时间戳，后续请求中如果时间戳小于缓存中的时间戳，即被视为无效并丢弃相应的请求报文；Linux是否启用这种行为取决于``tcp_timestamp``和``tcp_tw_recycle``，而前一个参数默认是启用的，所以启用后面的参数就会激活此功能； 因此，如果是NAT环境，安全起见，应该禁用``tcp_tw_recycle``。另一种解决方案：把``tcp_timestamps``设置为0，``tcp_tw_recycle``设置为1并不会如想象中奏效，因为一旦关闭了``tcp_timestamps``，那么即便打开了``tcp_tw_recycle``，后面的参数也没有效果。此时降低``net.ipv4.tcp_max_tw_buckets``的值就可以显著降低tw连接的数量了。
+
+当多个客户端使用同一个外网IP通过NAT访问内网服务器的时候，服务器如果在内核参数中打开了``net.ipv4.tcp_tw_recycle = 1``
+就有可能导致服务器收到SYN但是不会向客户端发送SYN+ACK包。因为打开recyle参数后会识别这些包的时间戳（``net.ipv4.tcp_timestamps = 1``），但是nat过来的数据包又因为时间戳有可能不是顺序的，导致服务器认为包不可信而丢弃。
+
 ## 以下相关内容值得学习
 
 [TCP连接的状态详解以及故障排查](http://blog.csdn.net/hguisu/article/details/38700899)
