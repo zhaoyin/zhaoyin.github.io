@@ -26,6 +26,9 @@ GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用�
 > [Java的GC为什么要分代？ - RednaxelaFX 的回答 - 知乎](https://www.zhihu.com/question/53613423/answer/135743258)
 > [G1 GC的讨论 - 高级语言虚拟机 - ITeye群组](http://hllvm.group.iteye.com/group/topic/44381#post-272188)
 
+> [JVM调优的"标准参数"的各种陷阱](http://hllvm.group.iteye.com/group/topic/27945)
+
+
 ## 实践
 因为下面的内容太枯燥了，所以将实践放到这。这里面用到的，下面都有讲到,也可以看完下面的再回过来看这一节。
 
