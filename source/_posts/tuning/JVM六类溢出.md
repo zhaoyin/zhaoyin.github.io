@@ -18,6 +18,8 @@ tags:
 ``java.lang.OutOfMemoryError:GC over head limit exceeded``
 这种情况是当系统处于高频的GC状态，而且回收的效果依然不佳的情况，就会开始报这个错误，这种情况一般是产生了很多不可以被释放的对象，有可能是引用使用不当导致，或申请大对象导致，但是java heap space的内存溢出有可能提前不会报这个错误，也就是可能内存就直接不够导致，而不是高频GC.
 
+<!--more-->
+
 ## PermGen space
 
 ``java.lang.OutOfMemoryError: PermGen space``
