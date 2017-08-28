@@ -1,6 +1,6 @@
 
 ---
-title: JProfile的使用
+title: JProfiler的使用
 date: 2017-08-23 20:50:56
 reward: true
 categories:
