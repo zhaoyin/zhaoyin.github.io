@@ -192,6 +192,11 @@ openssl dhparam -out dhparam.pem 2048 // 在 ssh 运行， openssl 生成 2048 �
 ssl_dhparam /path/to/dhparam.pem; //在 .conf 中配置
 ```
 
+### 使用httpsecurityreport网站进一步改进安全性
+
+推荐使用[httpsecurityreport](https://httpsecurityreport.com/)网站来检测安全性得分，更重要的是它能指导你如何更近一步的改进安全性。
+
+[HTTP安全性最佳实践](https://httpsecurityreport.com/best_practice.html),安全路上永不止步！
 
 
 最后，盗张阿里的图
