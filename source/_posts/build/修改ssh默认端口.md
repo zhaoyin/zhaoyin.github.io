@@ -12,6 +12,8 @@ tags:
 
 * ``vi /etc/ssh/sshd_config``
 
+<!--more-->
+
 ```angularjs
 # If you want to change the port on a SELinux system, you have to tell
 # SELinux about this change.
