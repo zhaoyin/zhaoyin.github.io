@@ -8,6 +8,12 @@ tags:
     - Spring
 ---
 
+Spring 单例bean和多例bean的异同
+
+Spring InitializingBean和init-method的异同
+
+Spring 初始化bean和销毁bean的方式
+
 <!--more-->
 
 ```angularjs
