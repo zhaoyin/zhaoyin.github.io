@@ -6,7 +6,6 @@ categories:
     - build
 tags: 
     - Hexo
-    - travis CI
     - GitHub
 ---
 

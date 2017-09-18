@@ -5,8 +5,7 @@ reward: true
 categories:
     - language
 tags:
-    - mysql
-    - date
+    - MySQL
 ---
 
 * 今天

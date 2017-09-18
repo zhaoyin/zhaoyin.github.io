@@ -6,9 +6,8 @@ reward: true
 categories:
     - language
 tags:
-    - mysql
+    - MySQL
     - 死锁
-    - 事务
 ---
 * 查询innodb 死锁
 ```

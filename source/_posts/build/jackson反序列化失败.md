@@ -6,7 +6,6 @@ categories:
     - build
 tags:
     - jackson
-    - 反序列化
     - JsonMappingException
 ---
 

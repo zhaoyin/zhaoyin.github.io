@@ -7,8 +7,6 @@ categories:
     - tools
 tags:
     - Hibernate
-    - HQL
-    - Cross Join
 ---
 
 [Hibernate 测试用例](https://github.com/hibernate/hibernate-orm/blob/0a2a5c622e3eb30724e80bc8661c0ac55ebfb2be/hibernate-core/src/test/java/org/hibernate/test/locale/LocaleTest.java#L43)

@@ -7,7 +7,6 @@ categories:
 tags:
     - Scrapy
     - Spider
-    - python
 ---
 
 ## 安装Scrapy

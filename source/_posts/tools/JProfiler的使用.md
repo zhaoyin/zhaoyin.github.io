@@ -7,7 +7,7 @@ categories:
     - tools
 tags:
     - JProfile
-    - 性能分析
+    - 性能优化
 ---
 
 ## JProfiler介绍

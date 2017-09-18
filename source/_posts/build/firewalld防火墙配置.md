@@ -8,7 +8,6 @@ categories:
 tags:
     - centos7
     - firewalld
-    - 防火墙
 ---
 ## firewalld介绍
 firewalld 提供了支持网络/防火墙区域(zone)定义网络链接以及接口安全等级的动态防火墙管理工具。

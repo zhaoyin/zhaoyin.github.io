@@ -6,7 +6,6 @@ categories:
     - code
 tags:
     - javascript
-    - toFixed
 ---
 
 ```markdown

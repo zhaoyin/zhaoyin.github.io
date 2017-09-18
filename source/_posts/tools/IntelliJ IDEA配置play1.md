@@ -7,7 +7,6 @@ categories:
     - tools
 tags:
     - IntelliJ Idea
-    - play1
     - playframework
 ---
 

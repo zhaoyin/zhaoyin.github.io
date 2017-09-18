@@ -7,7 +7,6 @@ categories:
     - tools
 tags:
     - Mybatis
-    - mapper
 ---
 
 ![mybatis](http://oqcey66z7.bkt.clouddn.com/public/resource/mybatis.png)

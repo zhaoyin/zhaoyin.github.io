@@ -6,7 +6,6 @@ reward: true
 categories:
     - tuning
 tags: 
-    - 性能
     - QPS
     - 吞吐量
     - 并发请求数

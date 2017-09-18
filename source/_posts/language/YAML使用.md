@@ -7,7 +7,6 @@ categories:
     - language
 tags:
     - YAML
-    - yml
 ---
 
 ![img](http://oqcey66z7.bkt.clouddn.com/public/images/timg.png)

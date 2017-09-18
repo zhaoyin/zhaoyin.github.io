@@ -7,7 +7,7 @@ categories:
     - build
 tags:
     - JAVA
-    - 证书
+    - SSL
 ---
 
 General SSL Problem 

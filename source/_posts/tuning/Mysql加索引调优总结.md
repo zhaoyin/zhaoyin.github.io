@@ -5,7 +5,7 @@ date: 2017-06-05 22:40:56
 categories:
     - tuning
 tags:
-    - mysql
+    - MySQL
     - 性能优化
 ---
 

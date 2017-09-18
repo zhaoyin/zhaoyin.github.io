@@ -6,7 +6,6 @@ reward: true
 categories:
     - tools
 tags:
-    - JetBrains
     - IntelliJ Idea
     - IDE
 ---

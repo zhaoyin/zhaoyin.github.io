@@ -6,8 +6,7 @@ categories:
     - build
 tags:
     - centos7
-    - git
-    - yum
+    - GIT
 ---
 
 ## 查看系统是否已经安装git

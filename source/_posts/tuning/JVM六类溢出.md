@@ -6,7 +6,7 @@ categories:
     - tuning
 tags: 
     - 性能优化
-    - JAVA
+    - JVM
 ---
 
 ## java heap space
