@@ -9,13 +9,13 @@ tags:
 ---
 
 ## Git pull 强制覆盖本地文件
-<!--more-->
+
 ```angular2html
 git fetch --all  
 git reset --hard origin/master 
 git pull
 ```
-
+<!--more-->
 ## Git 强制回退版本
 
 1.``git log``找到想回退的版本
