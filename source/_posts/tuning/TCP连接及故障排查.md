@@ -95,6 +95,22 @@ usage: netstat [-vWeenNcCF] [<Af>] -r         netstat {-V|--version|-h|--help}
 
 ```
 
+#### too many open files 问题查找
+
+ ```
+ lsof -n|awk '{print$2}'|sort|uniq -c |sort -nr|more 
+ ```
+ 此命令可以检测打开的文件句柄数
+
+ ```
+ps -aef|grep pid 
+ ```
+打印一个进程的运行信息
+
+```
+lsof -p pid
+```
+
 ### sar用法
 * sar -n SOCK 查看tcp创建的连接数
 ```markdown

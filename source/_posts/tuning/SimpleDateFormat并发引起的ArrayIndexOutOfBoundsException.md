@@ -13,6 +13,8 @@ tags:
 
 线上系统偶尔报出一行错误信息``java.lang.ArrayIndexOutOfBoundsException``。通过分析定位，打印出错误的详细堆栈如下。
 
+<!--more-->
+
 ```angularjs
 java.lang.ArrayIndexOutOfBoundsException: 20
 	at sun.util.calendar.BaseCalendar.getCalendarDateFromFixedDate(BaseCalendar.java:453)
