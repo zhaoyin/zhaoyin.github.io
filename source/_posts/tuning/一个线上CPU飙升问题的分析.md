@@ -9,7 +9,7 @@ tags:
     - CPU
 ---
 
-![cpu100%](http://oqcey66z7.bkt.clouddn.com/public/resource/cpu100%25.png)
+![cpu100%](http://static.xcoder.ren/public/resource/cpu100%25.png)
 ## 问题
 今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容
 ```markdown
@@ -194,7 +194,7 @@ for(Entity entity : entities){
 每100条清理一次缓存。行百里者半九十，每一步都做好才能写出经得起考验的程序。
 
 ## 扩展:Hibernate三态转换
-![三态转换](http://oqcey66z7.bkt.clouddn.com/public/resource/hibernate-three-states.jpg)
+![三态转换](http://static.xcoder.ren/public/resource/hibernate-three-states.jpg)
 
 Hibernate有三种状态：transient(瞬时状态)，persistent(持久化状态)以及detached(游离状态)。
 

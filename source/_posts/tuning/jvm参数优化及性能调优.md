@@ -10,7 +10,7 @@ tags:
 ---
 
 由于Java字节码是运行在JVM虚拟机上的，同样的字节码使用不同的JVM虚拟机参数运行，其性能表现可能各不相同。为了能使系统性能最优，就需要对JVM参数进行调整以达到应用程序运行的最佳效果。
-![JVM结构](http://oqcey66z7.bkt.clouddn.com/public/resource/5e937446bd287857-af65270862aa1d4b-4217e4e9a77a4ed6808c89a303261dc9.jpg)
+![JVM结构](http://static.xcoder.ren/public/resource/5e937446bd287857-af65270862aa1d4b-4217e4e9a77a4ed6808c89a303261dc9.jpg)
 
 ## 写在前面
 GC调优就像分布式系统的C[Consistency(一致性)]A[ Availability(可用性)]P[Partition tolerance(分区容错性) 可靠性]一样,也有自己的原则。
@@ -248,14 +248,14 @@ http://fastthread.io
 
 ## 评估堆大小和内存占用
 ### JVM内存模型
-![JVM内存模型](http://oqcey66z7.bkt.clouddn.com/public/resource/jvm-gc-memory.jpg)
+![JVM内存模型](http://static.xcoder.ren/public/resource/jvm-gc-memory.jpg)
 
 HotSpot VM有3个主要的空间：young代、old代以及permanent代
 当Java应用分配Java对象时，这些对象被分配到young代。在经历过几次minor GC之后，如果对象还是存活的，就会被转移到old代空间。permanent代空间存储了VM和Java类的元数据比如内置的字符串和类的静态变量。
 
 ### 常用内存参数
 参数说明:
-![JVM主要参数](http://oqcey66z7.bkt.clouddn.com/public/resource/3948988f79c560be-d390ef13d3ebc1ed-98f2ce20f8dd5f395a695bf41bb92fc7.jpg)
+![JVM主要参数](http://static.xcoder.ren/public/resource/3948988f79c560be-d390ef13d3ebc1ed-98f2ce20f8dd5f395a695bf41bb92fc7.jpg)
 Java应用程序运行时，首先会分配-Xms指定的内存大小，并尽可能尝试在这个空间段运行。最大不会超过-Xmx指定的内存大小，它是Java应用程序的堆上限，超过就会内存溢出（OutofMemoryError）。
 如果-Xms的数值太小，JVM为了保证系统尽可能的运行在指定内存范围内，就会更加频繁的GC以便释放内存空间。频繁的MinorGC和FullGC次数，对系统会有性能损耗。
 所以一般情况下会保持-Xms -Xmx一致，以减少系统运行初期的GC次数和耗时。
@@ -293,7 +293,7 @@ JDK1.8
 -XX:MetaspaceSize=<n>[g|m|k] 
 -XX:MaxMetaspaceSize=<n>[g|m|k] 
 ```
-![JDK8新增参数](http://oqcey66z7.bkt.clouddn.com/public/resource/5e937446bd287857-af65270862aa1d4b-2d0b9dc6f2913667ad01fe76add46404.jpg)
+![JDK8新增参数](http://static.xcoder.ren/public/resource/5e937446bd287857-af65270862aa1d4b-2d0b9dc6f2913667ad01fe76add46404.jpg)
 
 对于64位的服务器端JVM，-XX：MetaspaceSize的默认大小是21M。这是初始的限制值(the initial high watermark)。一旦达到这个限制值，FullGC将会被触发进行类卸载(当这些类的类加载器不再存活时)，然后这个high watermark被重置。新的high watermark的值依赖于空余Metaspace的容量。如果没有足够的空间被释放，high watermark的值将会上升；如果释放了大量的空间，那么high watermark的值将会下降。如果初始的watermark设置的太低，这个过程将会进行多次。你可以通过垃圾收集日志来显示的查看这个垃圾收集的过程。所以，一般建议在命令行设置一个较大的值给XX:MetaspaceSize来避免初始时的垃圾收集。
 

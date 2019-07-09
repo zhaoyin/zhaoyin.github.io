@@ -37,5 +37,5 @@ tags:
 
 适用于Linux，不适用于macOS
 
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/JVM-CPU-Threads.png)
+![img](http://static.xcoder.ren/public/images/JVM-CPU-Threads.png)
 

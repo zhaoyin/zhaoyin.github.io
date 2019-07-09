@@ -7,6 +7,6 @@ tags:
     - DDD
 ---
 
-![DDD架构图](http://oqcey66z7.bkt.clouddn.com/public/resource/DDD/DDD-architecture.png)
+![DDD架构图](http://static.xcoder.ren/public/resource/DDD/DDD-architecture.png)
 
-![koala架构图](http://oqcey66z7.bkt.clouddn.com/public/resource/DDD/DDD-koala.jpg)
+![koala架构图](http://static.xcoder.ren/public/resource/DDD/DDD-koala.jpg)

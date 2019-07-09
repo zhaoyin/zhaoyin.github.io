@@ -10,7 +10,7 @@ tags:
 ---
 
 事情从这张图开始
-![应用内存报警](http://oqcey66z7.bkt.clouddn.com/public/resource/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-08-25%2013.09.52.png)
+![应用内存报警](http://static.xcoder.ren/public/resource/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-08-25%2013.09.52.png)
 
 <!--more-->
 

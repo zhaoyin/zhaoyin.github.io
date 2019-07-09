@@ -13,7 +13,7 @@ tags:
 
 我们使用crawler在github上搜索 most stars我们会看到Scrapy这个热门的开源项目
 
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/crawler-most-stars.png)
+![img](http://static.xcoder.ren/public/images/crawler-most-stars.png)
 
 Scrapy，Python开发的一个快速,高层次的屏幕抓取和web抓取框架，用于抓取web站点并从页面中提取结构化的数据。Scrapy用途广泛，可以用于数据挖掘、监测和自动化测试。
 
@@ -45,21 +45,21 @@ Scrapy吸引人的地方在于它是一个框架，任何人都可以根据需�
     ```
     pip install Scrapy
     ```
-    ![img](http://oqcey66z7.bkt.clouddn.com/public/images/success-install-scrapy.png)
+    ![img](http://static.xcoder.ren/public/images/success-install-scrapy.png)
     上面就说明安装成功了
 
 ## 创建一个爬虫项目
     
 通过scrapy --help我们可以看到scrapy的基本命令
     
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-help.png)
+![img](http://static.xcoder.ren/public/images/scrapy-help.png)
 
 ```
 scrapy startproject project名称
 ```
 创建一个项目可以看到它的目录结构
 
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/directory-struct.png)
+![img](http://static.xcoder.ren/public/images/directory-struct.png)
 
 * scrapy.cfg: 配置文件
 * tutorial/: 该项目的python模块.
@@ -141,7 +141,7 @@ scrapy crawl spider名称 -o spider.json
 
 
 最终输出一个完整的json数据
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/scrapy-spider-export-json.png)
+![img](http://static.xcoder.ren/public/images/scrapy-spider-export-json.png)
 ```
 [
 {"url": "https://news.cnblogs.com/n/570434/", "title": "传软银欲成印度打车应用Ola控股股东", "author": "itwriter", "summary": "腾讯科技讯，据外电报道，软银目前正在巩固所有的印度投资。有消息称，继操刀推动其投资的印度第三大电商 Snapdeal 与该国第一大电商 Flipkart 进行合并之后，软银当前又计划通过交易买下该国乘车分享应用 Ola 大股东老虎环球基金（Tiger Global）所持的股份，欲成为 Ola..."},

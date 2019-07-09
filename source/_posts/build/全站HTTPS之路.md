@@ -11,7 +11,7 @@ tags:
 ---
 
 想让您的站点在[ssllabs](https://www.ssllabs.com/ssltest/)上评A+吗？
-![ssllabs-A+](http://oqcey66z7.bkt.clouddn.com/public/resource/ssllab-a.png)
+![ssllabs-A+](http://static.xcoder.ren/public/resource/ssllab-a.png)
 下面的内容也许能帮到你
 
 ## 什么是HTTPS？
@@ -21,7 +21,7 @@ HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是�
 
 ## 启用HTTPS
 有不少网站只通过HTTPS对外提供服务，但用户在访问某个网站的时候，在浏览器里却往往直接输入网站域名（例如www.example.com），而不是输入完整的URL（例如https://www.example.com），不过浏览器依然能正确的使用HTTPS发起请求。这背后多亏了服务器和浏览器的协作
-![强制全站https](http://oqcey66z7.bkt.clouddn.com/public/resource/http-https.png)
+![强制全站https](http://static.xcoder.ren/public/resource/http-https.png)
 
 以nginx为例配置
 ```markdown
@@ -87,7 +87,7 @@ server {
 
 通常情况下，我们将用户的 HTTP 请求 301或302 跳转到 HTTPS，这会存在两个问题：
 * 不够安全，302 跳转会暴露用户访问站点，也容易被劫持
-![http跳转中被劫持](http://oqcey66z7.bkt.clouddn.com/public/resource/http-unsafe.png)
+![http跳转中被劫持](http://static.xcoder.ren/public/resource/http-unsafe.png)
 * 拖慢访问速度，302 跳转需要一个 RTT（The role of packet loss and round-trip time），浏览器执行跳转也需要时间
 
 ## HSTS解决跳转不安全的问题
@@ -200,4 +200,4 @@ ssl_dhparam /path/to/dhparam.pem; //在 .conf 中配置
 
 
 最后，盗张阿里的图
-![阿里HTTPS](http://oqcey66z7.bkt.clouddn.com/public/resource/alibaba-https.jpeg)
+![阿里HTTPS](http://static.xcoder.ren/public/resource/alibaba-https.jpeg)

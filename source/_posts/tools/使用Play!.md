@@ -11,7 +11,7 @@ tags:
 
 ## 请求的生命周期
 
-![请求的生命周期](http://oqcey66z7.bkt.clouddn.com/public/resource/%E8%AF%B7%E6%B1%82%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png)
+![请求的生命周期](http://static.xcoder.ren/public/resource/%E8%AF%B7%E6%B1%82%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.png)
 
 Play框架是一个完全的stateless框架，而且只面向request/response。所有的http请求都遵循以下过程：
 一个http请求被框架接收。

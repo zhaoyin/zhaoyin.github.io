@@ -17,7 +17,7 @@ DDD是一种设计思想，它本身不绑定到任何一种具体的架构风�
 
 在《领域驱动设计——软件核心复杂性的应对之道》一书中，DDD范式的创始人Evans提出下图所示的这样一种分层架构：
 
-![分层架构](http://oqcey66z7.bkt.clouddn.com/public/DDD/resource/layered-architecture.png)
+![分层架构](http://static.xcoder.ren/public/DDD/resource/layered-architecture.png)
 
 整个系统划分为基础设施层（Infrastructure）、领域层（Domain）、应用层（Application）和用户接口层（User Interface，也称为表示层）。下面从各个维度分别讨论之。
 
@@ -134,11 +134,11 @@ DDD是一种设计思想，它本身不绑定到任何一种具体的架构风�
 
 各层在运行时对象调用关系如下图所示：
 
-![各逻辑层的运行时对象调用关系](http://oqcey66z7.bkt.clouddn.com/public/DDD/resource/layered-call.jpg)
+![各逻辑层的运行时对象调用关系](http://static.xcoder.ren/public/DDD/resource/layered-call.jpg)
 
 各层在编译时的类依赖关系如下图所示：
 
-![各逻辑层的编译时类依赖关系](http://oqcey66z7.bkt.clouddn.com/public/DDD/resource/layered-dependency.jpg)
+![各逻辑层的编译时类依赖关系](http://static.xcoder.ren/public/DDD/resource/layered-dependency.jpg)
 
 图中infrastructure是基础设施层，domain是领域层，application是应用层，facade和facade-impl是门面层（前者是门面接口层，后者是门面实现层），webapp是用户接口层（采用web形式）。
 

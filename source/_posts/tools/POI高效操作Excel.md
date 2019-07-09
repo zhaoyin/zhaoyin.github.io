@@ -22,7 +22,7 @@ POI提供两种读写API模型：事件模型（eventmodel）和用户模型（u
 <!--more-->
 对于2007版excel，POI还提供了可缓存流的用户模型API，使用滑动窗口（sliding window）的方法控制缓存区的大小，实现对海量数据的读写。
 
-![POI操作性能对比](http://oqcey66z7.bkt.clouddn.com/public/images/ss-features.png)
+![POI操作性能对比](http://static.xcoder.ren/public/images/ss-features.png)
 
 很明显，2007版excel在读写方面POI做的更好，2003版在海量数据写入方面支持不够，所以在设计系统的导入、导出功能时，应该优先考虑2007版。
 

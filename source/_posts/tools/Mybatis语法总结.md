@@ -9,7 +9,7 @@ tags:
     - Mybatis
 ---
 
-![mybatis](http://oqcey66z7.bkt.clouddn.com/public/resource/mybatis.png)
+![mybatis](http://static.xcoder.ren/public/resource/mybatis.png)
 
 ## 动态传入查询字段和where
 

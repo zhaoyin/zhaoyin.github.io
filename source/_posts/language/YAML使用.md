@@ -9,7 +9,7 @@ tags:
     - YAML
 ---
 
-![img](http://oqcey66z7.bkt.clouddn.com/public/images/timg.png)
+![img](http://static.xcoder.ren/public/images/timg.png)
 
 YAML是“另一种标记语言”的外语缩写，但为了强调这种语言以数据做为中心，而不是以置标语言为重点，而用返璞词重新命名。它是一种直观的能够被电脑识别的数据序列化格式，是一个可读性高并且容易被人类阅读，容易和脚本语言交互，用来表达资料序列的编程语言。它是类似于标准通用标记语言的子集XML的数据描述语言，语法比XML简单很多。
 

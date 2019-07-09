@@ -24,13 +24,13 @@ WHERE ub.iBusiObjectId= a.id  AND ub.iUserId=?1  AND ub.iBusiEntityId=?2  AND a.
 ```
 这个原来对userbusientity表是单独建索引的，即iUserId和iBusiEntityId分别建索引
 所以原来的执行计划如下：
-![MySQL单独建立索引执行计划](http://oqcey66z7.bkt.clouddn.com/public/resource/mysql/mysql-tuning-1-explain-original.png)
+![MySQL单独建立索引执行计划](http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-original.png)
 
 可以看到EXTRA里面有using intersect，它的意思简单的说就是and，就是说mysql会分别按照两个索引来扫描，然后取并集。所以预计会扫描1808行。
 
 查看UserBusientity这个类的dao发现，sql中iUserID一般都是和iBusiEntityID联合使用的。所以删除索引iUserID和iBusiEntityId。建立联合索引(iUserId,iBusiEntityId),优化后效果如下，变成扫描135行了
 
-![MySQL单独建立索引优化后执行计划](http://oqcey66z7.bkt.clouddn.com/public/resource/mysql/mysql-tuning-1-explain-result.png)
+![MySQL单独建立索引优化后执行计划](http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-result.png)
 
 * 索引区分度不高引发的问题
 ```
@@ -72,7 +72,7 @@ SELECT bulletinus1_.iBulletinId
  LIMIT 3
 ```
 执行计划
-![MySQL索引区分度不高执行计划](http://oqcey66z7.bkt.clouddn.com/public/resource/mysql/mysql-tuning-2-explain-original.png)
+![MySQL索引区分度不高执行计划](http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-original.png)
 
 很多时候用 exists 代替 in 是一个好的选择：``select num from a where num in(select num from b)``
 
@@ -82,7 +82,7 @@ SELECT bulletinus1_.iBulletinId
 
 替换后的执行计划
 
-![MySQL索引区分度不高用exist替代in后的执行计划](http://oqcey66z7.bkt.clouddn.com/public/resource/mysql/mysql-tuning-2-explain-exist.png)
+![MySQL索引区分度不高用exist替代in后的执行计划](http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-exist.png)
 
 可以从执行计划上看出用exist替代in是有效果的，但是仍然要扫描16万行。所以我们需要从业务实际出发分析，表面上看这个是在查Bulletin表的数据，其实分析这个sql的本质会发现，它的数据主要依赖于BulletinUser，其实BulletinUser表才是真正意义上的主表，虽然两边索引都命中了，但是由于BulletinUser表数据量巨大，虽然查某一个人的，也需要扫描18万数据。所以这个需要在业务上优化，把外层查询Bulletin表的cType和cBulletinUserTypeCode放到BulletinUser表，这样进一步减少查询的数据，逻辑上也更合理
 
@@ -152,7 +152,7 @@ select productvie0_.id as id1_175_,
 
 我们在iUserId和dViewDate上做组合索引。优化后执行计划
 
-![优化filesort后的效果](http://oqcey66z7.bkt.clouddn.com/public/resource/mysql/mysql-tuning-4-explain-filesort.png)
+![优化filesort后的效果](http://static.xcoder.ren/public/resource/mysql/mysql-tuning-4-explain-filesort.png)
 
 就想我们要根据业务具体问题具体分析``using filesort``是否需要优化一样，这个sql其实也应该再根据业务场景具体分析。
 

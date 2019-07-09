@@ -9,7 +9,7 @@ tags:
     - TCP
 ---
 
-![TCP连接过程](http://oqcey66z7.bkt.clouddn.com/public/resource/TCP.jpg)
+![TCP连接过程](http://static.xcoder.ren/public/resource/TCP.jpg)
 
 ## linux查看tcp的状态命令
 
