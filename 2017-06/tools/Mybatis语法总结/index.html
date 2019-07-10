@@ -1,0 +1,1110 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Mybatis,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="动态传入查询字段和where12345678910111213141516&amp;lt;sql id=&quot;query_columns&quot;&amp;gt;    userName,id,sex,age,phone &amp;lt;/sql&amp;gt; &amp;lt;select id=&quot;queryUsers&quot; resultType=&quot;com.xx.user.User&quot;         parameterType=&quot;java.util">
+<meta name="keywords" content="Mybatis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mybatis语法总结">
+<meta property="og:url" content="http://xcoder.me/2017-06/tools/Mybatis语法总结/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="动态传入查询字段和where12345678910111213141516&amp;lt;sql id=&quot;query_columns&quot;&amp;gt;    userName,id,sex,age,phone &amp;lt;/sql&amp;gt; &amp;lt;select id=&quot;queryUsers&quot; resultType=&quot;com.xx.user.User&quot;         parameterType=&quot;java.util">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mybatis.png">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mybatis语法总结">
+<meta name="twitter:description" content="动态传入查询字段和where12345678910111213141516&amp;lt;sql id=&quot;query_columns&quot;&amp;gt;    userName,id,sex,age,phone &amp;lt;/sql&amp;gt; &amp;lt;select id=&quot;queryUsers&quot; resultType=&quot;com.xx.user.User&quot;         parameterType=&quot;java.util">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/mybatis.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-06/tools/Mybatis语法总结/">
+
+
+
+
+
+  <title>Mybatis语法总结 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-06/tools/Mybatis语法总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Mybatis语法总结</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-13T16:00:00+00:00">
+                2017-06-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-06/tools/Mybatis语法总结/" class="leancloud_visitors" data-flag-title="Mybatis语法总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(Mybatis语法总结)原始地址]<a href="http://xcoder.me/2017-06/tools/Mybatis语法总结/" title="Mybatis语法总结">http://xcoder.me/2017-06/tools/Mybatis语法总结/</a>
+        <p><img src="http://static.xcoder.ren/public/resource/mybatis.png" alt="mybatis"></p>
+<h2 id="动态传入查询字段和where"><a href="#动态传入查询字段和where" class="headerlink" title="动态传入查询字段和where"></a>动态传入查询字段和where</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;sql id="query_columns"&gt;</span><br><span class="line"><span class="code">    userName,id,sex,age,phone</span></span><br><span class="line"> &lt;/sql&gt;</span><br><span class="line"></span><br><span class="line"> &lt;select id="queryUsers" resultType="com.xx.user.User"</span><br><span class="line">         parameterType="java.util.Map"&gt;</span><br><span class="line"><span class="code">     select</span></span><br><span class="line"><span class="code">     &lt;include refid="query_columns"/&gt;</span></span><br><span class="line"><span class="code">     from user</span></span><br><span class="line"><span class="code">     &lt;where&gt;</span></span><br><span class="line"><span class="code">         &lt;if test="null!=phone"&gt;</span></span><br><span class="line"><span class="code">         phone = #&#123;phone&#125;</span></span><br><span class="line"><span class="code">         &lt;/if&gt;</span></span><br><span class="line"><span class="code">     &lt;/where&gt;</span></span><br><span class="line"></span><br><span class="line"> &lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<p>查询条件通过sql标签动态传入<br>通过where节点的处理能防止传入phone为null时出现<code>select userName,id,sex,age,phone from user where</code>导致的尴尬异常.<br><a id="more"></a></p>
+<h2 id="choose"><a href="#choose" class="headerlink" title="choose"></a>choose</h2><p>choose标签是按顺序判断其内部when标签中的test条件出否成立，如果有一个成立，则 choose 结束。当 choose 中所有 when 的条件都不满则时，则执行 otherwise 中的sql。类似于Java 的 switch 语句，choose 为 switch，when 为 case，otherwise 则为 default。<br>因为\<if>…\</if>并没对应的<else>标签，所以要达到\<if>…\<else>…\</else> \</if>的效果，得借助\<choose>、\<when>、\<otherwise>组合使用<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id="queryUsers" resultType="com.xx.user.User" parameterType="java.util.Map"&gt;  </span><br><span class="line"><span class="code">    SELECT *  </span></span><br><span class="line"><span class="code">      FROM User u   </span></span><br><span class="line"><span class="code">    &lt;where&gt;  </span></span><br><span class="line"><span class="code">        &lt;choose&gt;  </span></span><br><span class="line"><span class="code">            &lt;when test="userName !=null "&gt;  </span></span><br><span class="line"><span class="code">                u.userName LIKE CONCAT(CONCAT('%', #&#123;userName, jdbcType=VARCHAR&#125;),'%')  </span></span><br><span class="line"><span class="code">            &lt;/when &gt;  </span></span><br><span class="line"><span class="code">            &lt;when test="sex != null and sex != '' "&gt;  </span></span><br><span class="line"><span class="code">                AND u.sex = #&#123;sex, jdbcType=INTEGER&#125;  </span></span><br><span class="line"><span class="code">            &lt;/when &gt;  </span></span><br><span class="line"><span class="code">            &lt;when test="birthday != null "&gt;  </span></span><br><span class="line"><span class="code">                AND u.birthday = #&#123;birthday, jdbcType=DATE&#125;  </span></span><br><span class="line"><span class="code">            &lt;/when &gt;  </span></span><br><span class="line"><span class="code">            &lt;otherwise&gt;  </span></span><br><span class="line"><span class="code">            &lt;/otherwise&gt;  </span></span><br><span class="line"><span class="code">        &lt;/choose&gt;  </span></span><br><span class="line"><span class="code">    &lt;/where&gt;    </span></span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure></otherwise></when></choose></else></p>
+<h2 id="List参数生成in条件"><a href="#List参数生成in条件" class="headerlink" title="List参数生成in条件"></a>List参数生成in条件</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id="queryUsers" resultType="com.xx.user.User" parameterType="java.util.Map"&gt; </span><br><span class="line">select * from user</span><br><span class="line">&lt;where&gt;</span><br><span class="line">   &lt;if test="null!=ids and ids.size()&gt;0"&gt;</span><br><span class="line"><span class="code">               id in </span></span><br><span class="line"><span class="code">               &lt;foreach item="item" index="index" collection="ids" open="("</span></span><br><span class="line"><span class="code">                        separator="," close=")"&gt;</span></span><br><span class="line"><span class="code">                   #&#123;item&#125;</span></span><br><span class="line"><span class="code">               &lt;/foreach&gt;</span></span><br><span class="line"><span class="code">           &lt;/if&gt;</span></span><br><span class="line"><span class="code">    </span></span><br><span class="line">&lt;/where&gt;</span><br><span class="line">&lt;/select&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="使用-参数化防止SQL注入"><a href="#使用-参数化防止SQL注入" class="headerlink" title="使用#{}参数化防止SQL注入"></a>使用#{}参数化防止SQL注入</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id="queryUsers" resultType="com.xx.user.User"</span><br><span class="line">            parameterType="java.util.Map"&gt;</span><br><span class="line"><span class="code">        select *</span></span><br><span class="line"><span class="code">        from user</span></span><br><span class="line"><span class="code">        &lt;where&gt;</span></span><br><span class="line"><span class="code">            &lt;if test="null!=phone"&gt;</span></span><br><span class="line"><span class="code">            phone = #&#123;phone&#125;</span></span><br><span class="line"><span class="code">            &lt;/if&gt;</span></span><br><span class="line"><span class="code">        &lt;/where&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="code">    &lt;/select&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="和-的区别和使用场景"><a href="#和-的区别和使用场景" class="headerlink" title="#{}和${}的区别和使用场景"></a>#{}和${}的区别和使用场景</h2><ul>
+<li>#将传入的数据都当成一个字符串，会对自动传入的数据加一个双引号。如：order by #user_id#，如果传入的值是111,那么解析成sql时的值为order by “111”, 如果传入的值是id，则解析成的sql为order by “id”.
+　　</li>
+<li>$将传入的数据直接显示生成在sql中。如：order by $user_id$，如果传入的值是111,那么解析成sql时的值为order by user_id,  如果传入的值是id，则解析成的sql为order by id.
+　　</li>
+<li>#方式能够很大程度防止sql注入。
+　　</li>
+<li><p>$方式无法防止Sql注入。</p>
+</li>
+<li><p>$方式一般用于传入数据库对象，例如传入表名.
+　　</p>
+</li>
+<li><p>一般能用#的就别用$.</p>
+</li>
+<li><p>排序时使用order by 动态参数时需要注意，用$而不是#</p>
+</li>
+</ul>
+<h3 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h3><p>默认情况下，使用#{}格式的语法会导致MyBatis创建预处理语句属性并以它为背景设置安全的值（比如?）。这样做很安全，很迅速也是首选做法，有时你只是想直接在SQL语句中插入一个不改变的字符串。比如，像ORDER BY，你可以这样来使用：<br>ORDER BY ${columnName}<br>这里MyBatis不会修改或转义字符串。</p>
+<p>重要：接受从用户输出的内容并提供给语句中不变的字符串，这样做是不安全的。这会导致潜在的SQL注入攻击，因此你不应该允许用户输入这些字段，或者通常自行转义并检查。</p>
+<ol>
+<li>使用#{}格式的语法在mybatis中使用Preparement语句来安全的设置值，执行sql类似下面的：<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PreparedStatement ps = conn.prepareStatement(sql);</span><br><span class="line">ps.setInt(1,id);</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这样做的好处是：更安全，更迅速，通常也是首选做法。</p>
+<ol start="2">
+<li>不过有时你只是想直接在 SQL 语句中插入一个不改变的字符串。比如，像 ORDER BY，你可以这样来使用：</li>
+</ol>
+<p>ORDER BY ${columnName}<br>此时MyBatis 不会修改或转义字符串。</p>
+<p>这种方式类似于：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Statement st = conn.createStatement();       </span><br><span class="line">ResultSet rs = st.executeQuery(sql);</span><br></pre></td></tr></table></figure></p>
+<p>这种方式的缺点是： 以这种方式接受从用户输出的内容并提供给语句中不变的字符串是不安全的，会导致潜在的 SQL 注入攻击，因此要么不允许用户输入这些字段，要么自行转义并检验。</p>
+<h2 id="statementType属性"><a href="#statementType属性" class="headerlink" title="statementType属性"></a>statementType属性</h2><p>这个属性的作用是告诉mybatis我们写的这个sql到底是预编译（PRESTATEMENT）还是非预编译（STATEMENT）的。有什么区别呢？如果是预编译的，那么系统在初始化时就会读取这段sql代码，将指定的实体类中的字段替换了类似#{}这样的语句，就是形成了类似这样的语句：<br>“select * from tableName where code=?” 这个时候你在系统运行时再想向这句sql中替换tableName或者code，结果可想而知。如果是非预编译呢，结果刚好相反，他会在系统运行时才会去生成这样类似的语句。此时就可以去替换这些动态的字段或者表名之类。这样在结合之前所讲的返回类型的设置，我们的问题就解决了<br>。我们可以不用设定参数和返回类型的实体类，只需要形成一个动态的表名和字段名的列表类。就可以动态对那些未知的物理模型进行操作.<br>注明statementType=”CALLABLE”表示调用存储过程.</p>
+<h2 id="兼容多数据库"><a href="#兼容多数据库" class="headerlink" title="兼容多数据库"></a>兼容多数据库</h2><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;insert id="insert"&gt;</span><br><span class="line"> &lt;selectKey keyProperty="id" resultType="int" order="BEFORE"&gt;</span><br><span class="line"> &lt;if test="_databaseId == 'oracle'"&gt;</span><br><span class="line"> select seq_users.nextval from dual</span><br><span class="line"> &lt;/if&gt;</span><br><span class="line"> &lt;if test="_databaseId == 'db2'"&gt;</span><br><span class="line"> select nextval for seq_users from sysibm.sysdummy1"</span><br><span class="line"> &lt;/if&gt;</span><br><span class="line"> &lt;/selectKey&gt;</span><br><span class="line"> insert into users values (#&#123;id&#125;, #&#123;name&#125;)</span><br><span class="line">&lt;/insert&gt;</span><br></pre></td></tr></table></figure>
+<p>另一种</p>
+<p>mybatis.xml中配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;databaseIdProvider type="DB_VENDOR"&gt;  </span><br><span class="line">  &lt;property name="SQL value="sqlserver"/&gt;  </span><br><span class="line">  &lt;property name="DB2" value="db2"/&gt;          </span><br><span class="line">  &lt;property name="Oracle" value="oracle" /&gt;    </span><br><span class="line">  &lt;property name="Adaptive Server Enterprise" value="sybase"/&gt;     </span><br><span class="line">  &lt;property name="MySQL" value="mysql" /&gt;  </span><br><span class="line">&lt;/databaseIdProvider&gt;&lt;!-- name是数据库厂商名，value是你自己的标识名 --&gt;</span><br></pre></td></tr></table></figure></p>
+<p>mapper的xml中<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;select id="getCountOfSql" resultType="int" useCache="false" statementType="STATEMENT" timeout="5000" databaseId="mysql"&gt;  </span><br><span class="line"><span class="code">        &lt;![CDATA[ </span></span><br><span class="line"><span class="code">            SELECT COUNT(*) FROM user </span></span><br><span class="line"><span class="code">        ]]&gt;  </span></span><br><span class="line"><span class="code">    &lt;/select&gt;  </span></span><br><span class="line"><span class="code">      </span></span><br><span class="line"><span class="code">    &lt;select id="getCountOfSql" resultType="int" useCache="false" statementType="STATEMENT" timeout="5000" databaseId="oracle"&gt;  </span></span><br><span class="line"><span class="code">        &lt;![CDATA[ </span></span><br><span class="line"><span class="code">            SELECT COUNT(*) FROM user </span></span><br><span class="line"><span class="code">        ]]&gt;  </span></span><br><span class="line"><span class="code">    &lt;/select&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>一个运用了其中内容的查询配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br></pre></td><td class="code"><pre><span class="line">&lt;mapper namespace="com.a.b.dao"&gt;</span><br><span class="line"><span class="code">    &lt;sql id="query_other_columns"&gt;</span></span><br><span class="line"><span class="code">        count(id) as srvCount,</span></span><br><span class="line"><span class="code">        sum(settlemoney) as srvSettle,sum(receivedmoney) as srvReceived,sum(settlemoney-receivedmoney) as srvNotReceived,</span></span><br><span class="line"><span class="code">        sum(agentmoney) as srvAgent,</span></span><br><span class="line"><span class="code">        sum(settlemoney+agentmoney) as srvMoney,</span></span><br><span class="line"><span class="code">        sum(case ifNull(bizstatus,0) when 2 then 1 else 0 end) as srvCompleted,sum(case when ifnull(bizstatus,0)!=2 then 1 else 0 end ) as srvNotCompleted,</span></span><br><span class="line"><span class="code">        group_concat(id) as srvIds</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;sql id="query_week_columns"&gt;</span></span><br><span class="line"><span class="code">        week(vouchdate) as srvDate,&lt;include refid="query_other_columns"/&gt;</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;sql id="query_year_columns"&gt;</span></span><br><span class="line"><span class="code">        DATE_FORMAT(vouchdate, '%Y') as srvDate,&lt;include refid="query_other_columns"/&gt;</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;sql id="query_quarter_columns"&gt;</span></span><br><span class="line"><span class="code">        CONCAT(YEAR(vouchdate),'_',QUARTER(vouchdate),'Q') as srvDate,&lt;include refid="query_other_columns"/&gt;</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;sql id="query_month_columns"&gt;</span></span><br><span class="line"><span class="code">        DATE_FORMAT(vouchdate, '%Y-%m月') as srvDate,&lt;include refid="query_other_columns"/&gt;</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;sql id="query_date_columns"&gt;</span></span><br><span class="line"><span class="code">        date(vouchdate) as srvDate,&lt;include refid="query_other_columns"/&gt;</span></span><br><span class="line"><span class="code">    &lt;/sql&gt;</span></span><br><span class="line"><span class="code">    &lt;select id="queryReport" resultType="java.util.Map" parameterType="com.a.b.vo.Report"&gt;</span></span><br><span class="line"><span class="code">        select</span></span><br><span class="line"><span class="code">        &lt;choose&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 1"&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_year_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 2"&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_quarter_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 3"&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_month_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 4"&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_week_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 5"&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_date_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;otherwise&gt;</span></span><br><span class="line"><span class="code">                &lt;include refid="query_date_columns"/&gt;</span></span><br><span class="line"><span class="code">            &lt;/otherwise&gt;</span></span><br><span class="line"><span class="code">        &lt;/choose&gt;</span></span><br><span class="line"><span class="code">        from sr_srvvouch</span></span><br><span class="line"><span class="code">        &lt;where&gt;</span></span><br><span class="line"><span class="code">            tenant=#&#123;tenant&#125;</span></span><br><span class="line"><span class="code">            &lt;choose&gt;</span></span><br><span class="line"><span class="code">                &lt;when test=" ( type == 1 or type == 6)"&gt;</span></span><br><span class="line"><span class="code">                    and DATE_FORMAT(vouchdate, '%Y')=DATE_FORMAT(now(), '%Y')</span></span><br><span class="line"><span class="code">                &lt;/when&gt;</span></span><br><span class="line"><span class="code">                &lt;when test=" ( type == 2 or type == 7)"&gt;</span></span><br><span class="line"><span class="code">                    and CONCAT(YEAR(vouchdate),'_',QUARTER(vouchdate),'Q')=CONCAT(YEAR(now()),'_',QUARTER(now()),'Q')</span></span><br><span class="line"><span class="code">                &lt;/when&gt;</span></span><br><span class="line"><span class="code">                &lt;when test=" ( type == 3 or type ==8)"&gt;</span></span><br><span class="line"><span class="code">                    and DATE_FORMAT(vouchdate, '%Y-%m月')=DATE_FORMAT(now(), '%Y-%m月')</span></span><br><span class="line"><span class="code">                &lt;/when&gt;</span></span><br><span class="line"><span class="code">                &lt;when test=" ( type == 4 or type==9)"&gt;</span></span><br><span class="line"><span class="code">                    and week(vouchdate)=week(now())</span></span><br><span class="line"><span class="code">                &lt;/when&gt;</span></span><br><span class="line"><span class="code">                &lt;when test=" type == 5 and startTime==null and endTime==null"&gt;</span></span><br><span class="line"><span class="code">                    and date(vouchdate)=date(now())</span></span><br><span class="line"><span class="code">                &lt;/when&gt;</span></span><br><span class="line"><span class="code">                &lt;otherwise&gt;</span></span><br><span class="line"><span class="code">                    &lt;if test=" startTime!=null and endTime!=null"&gt;</span></span><br><span class="line"><span class="code">                        and vouchdate between #&#123;startTime&#125; and #&#123;endTime&#125;</span></span><br><span class="line"><span class="code">                    &lt;/if&gt;</span></span><br><span class="line"><span class="code">                &lt;/otherwise&gt;</span></span><br><span class="line"><span class="code">            &lt;/choose&gt;</span></span><br><span class="line"><span class="code">            &lt;if test=" customerName!=null"&gt;</span></span><br><span class="line"><span class="code">                and customer_id in (select id from customer where name like CONCAT(CONCAT('%', #&#123;customerName, jdbcType=VARCHAR&#125;),'%'))</span></span><br><span class="line"><span class="code">            &lt;/if&gt;</span></span><br><span class="line"><span class="code">            &lt;if test=" providerName!=null"&gt;</span></span><br><span class="line"><span class="code">                and corpration_id in (select id from corpration where name like CONCAT(CONCAT('%', #&#123;providerName, jdbcType=VARCHAR&#125;),'%'))</span></span><br><span class="line"><span class="code">            &lt;/if&gt;</span></span><br><span class="line"><span class="code">        &lt;/where&gt;</span></span><br><span class="line"><span class="code">        &lt;choose&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 1"&gt;</span></span><br><span class="line"><span class="code">                group by DATE_FORMAT(vouchdate, '%Y')</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 2"&gt;</span></span><br><span class="line"><span class="code">                group by CONCAT(YEAR(vouchdate),'_',QUARTER(vouchdate),'Q')</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 3"&gt;</span></span><br><span class="line"><span class="code">                group by DATE_FORMAT(vouchdate, '%Y-%m月')</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 4"&gt;</span></span><br><span class="line"><span class="code">                group by week(vouchdate)</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;when test=" type == 5"&gt;</span></span><br><span class="line"><span class="code">                group by date(vouchdate)</span></span><br><span class="line"><span class="code">            &lt;/when&gt;</span></span><br><span class="line"><span class="code">            &lt;otherwise&gt;</span></span><br><span class="line"><span class="code">                group by date(vouchdate)</span></span><br><span class="line"><span class="code">            &lt;/otherwise&gt;</span></span><br><span class="line"><span class="code">        &lt;/choose&gt;</span></span><br><span class="line"><span class="code">        order by vouchdate asc;</span></span><br><span class="line"><span class="code">    &lt;/select&gt;</span></span><br><span class="line"></span><br><span class="line">&lt;/mapper&gt;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-06/tools/Mybatis语法总结/" title="Mybatis语法总结">http://xcoder.me/2017-06/tools/Mybatis语法总结/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mybatis/" rel="tag"># Mybatis</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-06/tools/构建工具总结/" rel="next" title="构建工具总结">
+                <i class="fa fa-chevron-left"></i> 构建工具总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-06/build/全站HTTPS之路/" rel="prev" title="全站HTTPS之路">
+                全站HTTPS之路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#动态传入查询字段和where"><span class="nav-number">1.</span> <span class="nav-text">动态传入查询字段和where</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#choose"><span class="nav-number">2.</span> <span class="nav-text">choose</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#List参数生成in条件"><span class="nav-number">3.</span> <span class="nav-text">List参数生成in条件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用-参数化防止SQL注入"><span class="nav-number">4.</span> <span class="nav-text">使用#{}参数化防止SQL注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#和-的区别和使用场景"><span class="nav-number">5.</span> <span class="nav-text">#{}和${}的区别和使用场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#说明"><span class="nav-number">5.1.</span> <span class="nav-text">说明</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#statementType属性"><span class="nav-number">6.</span> <span class="nav-text">statementType属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#兼容多数据库"><span class="nav-number">7.</span> <span class="nav-text">兼容多数据库</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

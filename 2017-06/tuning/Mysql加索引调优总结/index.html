@@ -1,0 +1,1127 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="MySQL,性能优化,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="索引调优最左前缀匹配原则非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&amp;gt;、&amp;lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &amp;gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整； =和in可以乱序比如a = 1 and b">
+<meta name="keywords" content="MySQL,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql调优总结">
+<meta property="og:url" content="http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="索引调优最左前缀匹配原则非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&amp;gt;、&amp;lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &amp;gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整； =和in可以乱序比如a = 1 and b">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/MySQL-where%E6%9D%A1%E4%BB%B6%E5%89%96%E6%9E%90.jpg">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql调优总结">
+<meta name="twitter:description" content="索引调优最左前缀匹配原则非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&amp;gt;、&amp;lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &amp;gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整； =和in可以乱序比如a = 1 and b">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/MySQL-where%E6%9D%A1%E4%BB%B6%E5%89%96%E6%9E%90.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/">
+
+
+
+
+
+  <title>Mysql调优总结 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Mysql调优总结</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-05T14:40:56+00:00">
+                2017-06-05
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tuning/" itemprop="url" rel="index">
+                    <span itemprop="name">tuning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-06/tuning/Mysql加索引调优总结/" class="leancloud_visitors" data-flag-title="Mysql调优总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(Mysql调优总结)原始地址]<a href="http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/" title="Mysql调优总结">http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/</a>
+        <h1 id="索引调优"><a href="#索引调优" class="headerlink" title="索引调优"></a>索引调优</h1><h2 id="最左前缀匹配原则"><a href="#最左前缀匹配原则" class="headerlink" title="最左前缀匹配原则"></a>最左前缀匹配原则</h2><p>非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整；</p>
+<h2 id="和in可以乱序"><a href="#和in可以乱序" class="headerlink" title="=和in可以乱序"></a>=和in可以乱序</h2><p>比如a = 1 and b = 2 and c = 3 建立(a,b,c)索引可以任意顺序，mysql的查询优化器会帮你优化成索引可以识别的形式；</p>
+<h2 id="尽量选择区分度高的列作为索引"><a href="#尽量选择区分度高的列作为索引" class="headerlink" title="尽量选择区分度高的列作为索引"></a>尽量选择区分度高的列作为索引</h2><p>区分度的公式是count(distinct col)/count(*)，表示字段不重复的比例，比例越大我们扫描的记录数越少，唯一键的区分度是1，而一些状态、性别字段可能在大数据面前区分度就是0，那可能有人会问，这个比例有什么经验值吗？使用场景不同，这个值也很难确定，一般需要join的字段我们都要求是0.1以上，即平均1条扫描10条记录；</p>
+<h2 id="索引列不能参与计算保持列“干净”"><a href="#索引列不能参与计算保持列“干净”" class="headerlink" title="索引列不能参与计算保持列“干净”"></a>索引列不能参与计算保持列“干净”</h2><p>比如from_unixtime(create_time) = ’2014-05-29’就不能使用到索引，原因很简单，b+树中存的都是数据表中的字段值，但进行检索时，需要把所有元素都应用函数才能比较，显然成本太大。所以语句应该写成create_time = unix_timestamp(’2014-05-29’);</p>
+<h2 id="尽量的扩展索引，不要新建索引。"><a href="#尽量的扩展索引，不要新建索引。" class="headerlink" title="尽量的扩展索引，不要新建索引。"></a>尽量的扩展索引，不要新建索引。</h2><p>比如表中已经有a的索引，现在要加(a,b)的索引，那么只需要修改原来的索引即可。</p>
+<h2 id="索引不会包含有NULL值的列"><a href="#索引不会包含有NULL值的列" class="headerlink" title="索引不会包含有NULL值的列"></a>索引不会包含有NULL值的列</h2><p>只要列中包含有NULL值都将不会被包含在索引中，复合索引中只要有一列含有NULL值，那么这一列对于此复合索引就是无效的。所以我们在数据库设计时不要让字段的默认值为NULL。</p>
+<h2 id="不使用NOT-IN"><a href="#不使用NOT-IN" class="headerlink" title="不使用NOT IN"></a>不使用NOT IN</h2><p>NOT IN操作都不会使用索引将进行全表扫描。NOT IN可以NOT EXISTS代替</p>
+<h2 id="in要具体分析"><a href="#in要具体分析" class="headerlink" title="in要具体分析"></a>in要具体分析</h2><p>比如in的字段是唯一键值列比如id或者区分度高的索引列就可以命中索引，如果是建立在非索引列或者区分度不高的列则不能命中索引，当然也要看查询计划具体分析。<br>in 一般用exists代替会有更好的效果.</p>
+<a id="more"></a>
+<h2 id="什么情况下应不建或少建索引"><a href="#什么情况下应不建或少建索引" class="headerlink" title="什么情况下应不建或少建索引"></a>什么情况下应不建或少建索引</h2><ul>
+<li>表记录太少</li>
+<li>经常插入、删除、修改的表</li>
+<li>数据重复且分布平均的表字段</li>
+<li>经常和主字段一块查询但主字段索引值比较多的表字段</li>
+</ul>
+<h1 id="执行计划"><a href="#执行计划" class="headerlink" title="执行计划"></a>执行计划</h1><h2 id="Extra列解析"><a href="#Extra列解析" class="headerlink" title="Extra列解析"></a>Extra列解析</h2><h3 id="using-index"><a href="#using-index" class="headerlink" title="using index"></a><code>using index</code></h3><p>索引覆盖查询：如果查询的时候，用到了索引，并且你最终需要的数据也是这个索引的一部分，那么就出现using index.<br>查询时不需要回表查询，直接通过索引就可以获取查询的数据。<br>user表有索引<code>key(id), key(name)</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">select id from user; </span><br><span class="line">select name from user; </span><br><span class="line">select id from user where id&lt;9;</span><br></pre></td></tr></table></figure></p>
+<p>而<code>select id,name from user where id&lt;9</code>就没有<br>组合索引<code>key(id,name)</code><br><code>select id,name from user where id&gt;9</code>也可以有 </p>
+<h3 id="using-where"><a href="#using-where" class="headerlink" title="using where"></a><code>using where</code></h3><p>会根据查询条件过滤出结果集<br>表示存储引擎返回的记录并不是所有的都满足查询条件，需要在server层进行过滤。查询条件中分为限制条件和检查条件，5.6之前，存储引擎只能根据限制条件扫描数据并返回，然后server层根据检查条件进行过滤再返回真正符合查询的数据。5.6.x之后支持ICP特性，可以把检查条件也下推到存储引擎层，不符合检查条件和限制条件的数据，直接不读取，这样就大大减少了存储引擎扫描的记录数量。extra列显示using index condition</p>
+<h3 id="using-filesort"><a href="#using-filesort" class="headerlink" title="using filesort"></a><code>using filesort</code></h3><p>排序时无法使用到索引时，就会出现这个。常见于order by和group by语句中。<br>表示排序的时候，没有用上索引，不得不采取其他的方式排序。 这里的其他方式有在内存排，在临时文件排，采用双路排序法，或者是采用整行排序等，而using file sort并没有说是其他哪些排序方法。<br>这个 filesort 并不是说通过磁盘文件进行排序，而只是告诉我们进行了一个排序操作。即在MySQL Query Optimizer 所给出的执行计划(通过 EXPLAIN 命令查看)中被称为文件排序（filesort）<br>如果出现这个的sql不频繁没有问题，如果这个查询很频繁就要考虑优化。<br>优化方式是在order by 的字段建立索引<br>由于 Using filesort是使用算法在 内存中进行排序，MySQL对于排序的记录的大小也是有做限制：max_length_for_sort_data，默认为1024<br>当排序查询的数据量在默认值的范围内是，在排序的字段上</p>
+<ul>
+<li>加上索引</li>
+<li>去掉不必要的返回字段</li>
+<li>增大 sort_buffer_size 参数设置</li>
+<li>加大 max_length_for_sort_data 参数的设置<br>可以提升MySQL查询的速度。<h4 id="order-by能命中索引不出现filesort的情况"><a href="#order-by能命中索引不出现filesort的情况" class="headerlink" title="order by能命中索引不出现filesort的情况"></a>order by能命中索引不出现filesort的情况</h4></li>
+<li>返回选择的字段，即只包括在有选择的此列上（select后面的字段），不一定适应*的情况)：</li>
+<li>只有当ORDER BY中所有的列必须包含在相同的索引，并且索引的顺序和order by子句中的顺序完全一致，并且所有列的排序方向（升序或者降序）一样才有，（混合使用ASC模式和DESC模式则不使用索引）</li>
+<li>where 语句与ORDER BY语句组合满足最左前缀</li>
+<li>如果查询联接了多个表，只有在order by子句的所有列引用的是第一个表的列才可以<h4 id="order-by不能命中索引出现filesort的情况"><a href="#order-by不能命中索引出现filesort的情况" class="headerlink" title="order by不能命中索引出现filesort的情况"></a>order by不能命中索引出现filesort的情况</h4></li>
+<li>where语句与order by语句，使用了不同的索引</li>
+<li>检查的行数过多，且没有使用覆盖索引</li>
+<li>ORDER BY中的列不包含在相同的索引，也就是使用了不同的索引</li>
+<li>对索引列同时使用了ASC和DESC</li>
+<li>where语句或者ORDER BY语句中索引列使用了表达式，包括函数表达式</li>
+<li>where 语句与ORDER BY语句组合满足最左前缀，但where语句中使用了条件查询。查见第10句,虽然where与order by构成了索引最左有缀的条件，但是where子句中使用的是条件查询。</li>
+<li>当使用left join，使用右边的表字段排序<h3 id="using-temporary"><a href="#using-temporary" class="headerlink" title="using temporary"></a><code>using temporary</code></h3>表示使用了临时表存储中间结果。临时表可以是内存临时表和磁盘临时表，执行计划中看不出来，需要查看status变量，used_tmp_table，used_tmp_disk_table才能看出来。<h3 id="using-union"><a href="#using-union" class="headerlink" title="using_union"></a><code>using_union</code></h3>表示使用or连接各个使用索引的条件时，该信息表示从处理结果获取并集<h3 id="using-intersect"><a href="#using-intersect" class="headerlink" title="using intersect"></a><code>using intersect</code></h3>表示使用and的各个索引的条件时，该信息表示是从处理结果获取交集<h3 id="using-sort-union和using-sort-intersection"><a href="#using-sort-union和using-sort-intersection" class="headerlink" title="using sort_union和using sort_intersection"></a><code>using sort_union和using sort_intersection</code></h3>与前面两个对应的类似，只是他们是出现在用and和or查询信息量大时，先查询主键，然后进行排序合并后，才能读取记录并返回。<h3 id="firstmatch-tb-name"><a href="#firstmatch-tb-name" class="headerlink" title="firstmatch(tb_name)"></a><code>firstmatch(tb_name)</code></h3>5.6.x开始引入的优化子查询的新特性之一，常见于where字句含有in()类型的子查询。如果内表的数据量比较大，就可能出现这个<h3 id="loosescan-m-n"><a href="#loosescan-m-n" class="headerlink" title="loosescan(m..n)"></a><code>loosescan(m..n)</code></h3>5.6.x之后引入的优化子查询的新特性之一，在in()类型的子查询中，子查询返回的可能有重复记录时，就可能出现这个<h3 id="filtered"><a href="#filtered" class="headerlink" title="filtered"></a><code>filtered</code></h3>使用explain extended时会出现这个列，5.7之后的版本默认就有这个字段，不需要使用explain extended了。这个字段表示存储引擎返回的数据在server层过滤后，剩下多少满足查询的记录数量的比例，注意是百分比，不是具体记录数。<h2 id="key-len解析"><a href="#key-len解析" class="headerlink" title="key_len解析"></a>key_len解析</h2></li>
+</ul>
+<p>key_len 用于表示本次查询中，所选择的索引长度有多少字节，通常我们可借此判断联合索引有多少列被选择了。</p>
+<p>在这里 key_len 大小的计算规则是：</p>
+<p>一般地，key_len 等于索引列类型字节长度，例如int类型为4 bytes，bigint为8 bytes；<br>如果是字符串类型，还需要同时考虑字符集因素，例如：CHAR(30) UTF8则key_len至少是90 bytes；<br>若该列类型定义时允许NULL，其key_len还需要再加 1 bytes；<br>若该列类型为变长类型，例如 VARCHAR（TEXT\BLOB不允许整列创建索引，如果创建部分索引也被视为动态列类型），其key_len还需要再加 2 bytes;<br>key_len只计算where条件用到的索引长度，而排序和分组就算用到了索引，也不会计算到key_len中。</p>
+<h2 id="type"><a href="#type" class="headerlink" title="type"></a>type</h2><p>依次从好到差：system，const，eq_ref，ref，fulltext，ref_or_null，unique_subquery，index_subquery，range，index_merge，index，ALL。<br>除了all之外，其他的type都可以使用到索引，除了index_merge之外，其他的type只可以用到一个索引。</p>
+<ul>
+<li>system：表中只有一行数据或者是空表，且只能用于myisam和memory表。如果是Innodb引擎表，type列在这个情况通常都是all或者index</li>
+<li>const：使用唯一索引或者主键，返回记录一定是1行记录的等值where条件时，通常type是const。其他数据库也叫做唯一索引扫描。</li>
+<li>eq_ref：出现在要连接过个表的查询计划中，驱动表只返回一行数据，且这行数据是第二个表的主键或者唯一索引，且必须为not null，唯一索引和主键是多列时，只有所有的列都用作比较时才会出现eq_ref。</li>
+<li>ref：不像eq_ref那样要求连接顺序，也没有主键和唯一索引的要求，只要使用相等条件检索时就可能出现，常见与辅助索引的等值查找。或者多列主键、唯一索引中，使用第一个列之外的列作为等值查找也会出现，总之，返回数据不唯一的等值查找就可能出现。</li>
+<li>fulltext：全文索引检索，要注意，全文索引的优先级很高，若全文索引和普通索引同时存在时，mysql不管代价，优先选择使用全文索引。</li>
+<li>ref_or_null：与ref方法类似，只是增加了null值的比较。实际用的不多。</li>
+<li>unique_subquery：用于where中的in形式子查询，子查询返回不重复值唯一值。</li>
+<li>index_subquery：用于in形式子查询使用到了辅助索引或者in常数列表，子查询可能返回重复值，可以使用索引将子查询去重。</li>
+<li>range：索引范围扫描，常见于使用&gt;,&lt;,is null,between ,in ,like等运算符的查询中。</li>
+<li>index_merge：表示查询使用了两个以上的索引，最后取交集或者并集，常见and ，or的条件使用了不同的索引，官方排序这个在ref_or_null之后，但是实际上由于要读取所个索引，性能可能都不如range。</li>
+<li>index：索引全表扫描，把索引从头到尾扫一遍，常见于使用索引列就可以处理不需要读取数据文件的查询、可以使用索引排序或者分组的查询。</li>
+<li>all：这个就是全表扫描数据文件，然后再在server层进行过滤返回符合要求的记录。<h2 id="ref"><a href="#ref" class="headerlink" title="ref"></a>ref</h2>如果是使用的常数等值查询，这里会显示const，如果是连接查询，被驱动表的执行计划这里会显示驱动表的关联字段，如果是条件使用了表达式或者函数，或者条件列发生了内部隐式转换，这里可能显示为func。<h2 id="rows"><a href="#rows" class="headerlink" title="rows"></a>rows</h2>这里是执行计划中估算的扫描行数，不是精确值。</li>
+</ul>
+<h1 id="索引命中规则"><a href="#索引命中规则" class="headerlink" title="索引命中规则"></a>索引命中规则</h1><p><img src="http://static.xcoder.ren/public/resource/MySQL-where%E6%9D%A1%E4%BB%B6%E5%89%96%E6%9E%90.jpg" alt="索引命中流程图"></p>
+<ul>
+<li>Index Key<br>MySQL是用来确定扫描的数据范围，实际就是可以利用到的MySQL索引部分，体现在Key Length。</li>
+<li>Index Filter<br>MySQL用来确定哪些数据是可以用索引去过滤，在启用ICP后，可以用上索引的部分。</li>
+<li>Table Filter<br>MySQL无法用索引过滤，回表取回行数据后，到server层进行数据过滤。</li>
+</ul>
+<h2 id="Index-Key"><a href="#Index-Key" class="headerlink" title="Index Key"></a>Index Key</h2><p>Index Key是用来确定MySQL的一个扫描范围，分为上边界和下边界。</p>
+<p>MySQL利用=、&gt;=、&gt; 来确定下边界（first key），利用最左原则，首先判断第一个索引键值在where条件中是否存在，如果存在，则判断比较符号，如果为(=,&gt;=)中的一种，加入下边界的界定，然后继续判断下一个索引键，如果存在且是(&gt;)，则将该键值加入到下边界的界定，停止匹配下一个索引键；如果不存在，直接停止下边界匹配。</p>
+<p>exp:<br>idx_c1_c2_c3(c1,c2,c3)<br>where c1&gt;=1 and c2&gt;2 and c3=1<br>–&gt;  first key (c1,c2)<br>–&gt; c1为 ‘&gt;=’ ，加入下边界界定，继续匹配下一个<br>–&gt;c2 为 ‘&gt;’，加入下边界界定，停止匹配</p>
+<p>上边界（last key）和下边界（first key）类似，首先判断是否是否是(=,&lt;=)中的一种，如果是，加入界定，继续下一个索引键值匹配，如果是(&lt;)，加入界定，停止匹配</p>
+<p>exp:<br>idx_c1_c2_c3(c1,c2,c3)<br>where c1&lt;=1 and c2=2 and c3<3 --> first key (c1,c2,c3)<br>–&gt; c1为 ‘&lt;=’，加入上边界界定，继续匹配下一个<br>–&gt; c2为 ‘=’加入上边界界定，继续匹配下一个<br>–&gt; c3 为 ‘&lt;’，加入上边界界定，停止匹配</3></p>
+<p>注：这里简单的记忆是，如果比较符号中包含’=’号，’&gt;=’也是包含’=’，那么该索引键是可以被利用的，可以继续匹配后面的索引键值；如果不存在’=’，也就是’&gt;’,’&lt;’，这两个，后面的索引键值就无法匹配了。同时，上下边界是不可以混用的，哪个边界能利用索引的的键值多，就是最终能够利用索引键值的个数。</p>
+<h2 id="Index-Filter"><a href="#Index-Filter" class="headerlink" title="Index Filter"></a>Index Filter</h2><p>字面理解就是可以用索引去过滤。也就是字段在索引键值中，但是无法用去确定Index Key的部分。</p>
+<p>exp:<br>idex_c1_c2_c3<br>where c1&gt;=1 and c2&lt;=2 and c3 =1<br>index key –&gt; c1<br>index filter–&gt; c2 c3</p>
+<p>这里为什么index key 只是c1呢？因为c2 是用来确定上边界的，但是上边界的c1没有出现(&lt;=,=)，而下边界中，c1是&gt;=,c2没有出现，因此index key 只有c1字段。c2,c3 都出现在索引中，被当做index filter.</p>
+<h2 id="Table-Filter"><a href="#Table-Filter" class="headerlink" title="Table Filter"></a>Table Filter</h2><p>无法利用索引完成过滤，就只能用table filter。此时引擎层会将行数据返回到server层，然后server层进行table filter。</p>
+<h2 id="Between-和Like-的处理"><a href="#Between-和Like-的处理" class="headerlink" title="Between 和Like 的处理"></a>Between 和Like 的处理</h2><ul>
+<li><code>Between</code></li>
+</ul>
+<p>where c1 between  ‘a’ and ‘b’ 等价于 where c1&gt;=’a’ and c1 &lt;=’b’，所以进行相应的替换，然后带入上层模型，确定上下边界即可</p>
+<ul>
+<li><code>Like</code></li>
+</ul>
+<p>首先需要确认的是%不能是最在最左侧，where c1 like ‘%a’ 这样的查询是无法利用索引的，因为索引的匹配需要符合最左前缀原则</p>
+<p>where c1 like ‘a%’  其实等价于 where c1&gt;=’a’ and c1&lt;’b’ 大家可以仔细思考下。</p>
+<p><a href="http://blog.csdn.net/hguisu/article/details/5731629" target="_blank" rel="noopener">SQL优化大全</a><br><a href="http://blog.csdn.net/hguisu/article/details/5713180" target="_blank" rel="noopener">MySQL优化大全</a><br><a href="http://www.cnblogs.com/liujingyuan789/p/6061188.html" target="_blank" rel="noopener">explain 执行计划详解</a><br><a href="http://fordba.com/spend-10-min-to-understand-how-mysql-use-index.html" target="_blank" rel="noopener">10分钟让你明白MySQL是如何利用索引的</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/" title="Mysql调优总结">http://xcoder.me/2017-06/tuning/Mysql加索引调优总结/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-06/tuning/TCP连接及故障排查/" rel="next" title="TCP命令及故障排查">
+                <i class="fa fa-chevron-left"></i> TCP命令及故障排查
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-06/language/Memcached总结/" rel="prev" title="Memcached总结">
+                Memcached总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#索引调优"><span class="nav-number">1.</span> <span class="nav-text">索引调优</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#最左前缀匹配原则"><span class="nav-number">1.1.</span> <span class="nav-text">最左前缀匹配原则</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#和in可以乱序"><span class="nav-number">1.2.</span> <span class="nav-text">=和in可以乱序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尽量选择区分度高的列作为索引"><span class="nav-number">1.3.</span> <span class="nav-text">尽量选择区分度高的列作为索引</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引列不能参与计算保持列“干净”"><span class="nav-number">1.4.</span> <span class="nav-text">索引列不能参与计算保持列“干净”</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#尽量的扩展索引，不要新建索引。"><span class="nav-number">1.5.</span> <span class="nav-text">尽量的扩展索引，不要新建索引。</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#索引不会包含有NULL值的列"><span class="nav-number">1.6.</span> <span class="nav-text">索引不会包含有NULL值的列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不使用NOT-IN"><span class="nav-number">1.7.</span> <span class="nav-text">不使用NOT IN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#in要具体分析"><span class="nav-number">1.8.</span> <span class="nav-text">in要具体分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么情况下应不建或少建索引"><span class="nav-number">1.9.</span> <span class="nav-text">什么情况下应不建或少建索引</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#执行计划"><span class="nav-number">2.</span> <span class="nav-text">执行计划</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Extra列解析"><span class="nav-number">2.1.</span> <span class="nav-text">Extra列解析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#using-index"><span class="nav-number">2.1.1.</span> <span class="nav-text">using index</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-where"><span class="nav-number">2.1.2.</span> <span class="nav-text">using where</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-filesort"><span class="nav-number">2.1.3.</span> <span class="nav-text">using filesort</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#order-by能命中索引不出现filesort的情况"><span class="nav-number">2.1.3.1.</span> <span class="nav-text">order by能命中索引不出现filesort的情况</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#order-by不能命中索引出现filesort的情况"><span class="nav-number">2.1.3.2.</span> <span class="nav-text">order by不能命中索引出现filesort的情况</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-temporary"><span class="nav-number">2.1.4.</span> <span class="nav-text">using temporary</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-union"><span class="nav-number">2.1.5.</span> <span class="nav-text">using_union</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-intersect"><span class="nav-number">2.1.6.</span> <span class="nav-text">using intersect</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#using-sort-union和using-sort-intersection"><span class="nav-number">2.1.7.</span> <span class="nav-text">using sort_union和using sort_intersection</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#firstmatch-tb-name"><span class="nav-number">2.1.8.</span> <span class="nav-text">firstmatch(tb_name)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loosescan-m-n"><span class="nav-number">2.1.9.</span> <span class="nav-text">loosescan(m..n)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#filtered"><span class="nav-number">2.1.10.</span> <span class="nav-text">filtered</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#key-len解析"><span class="nav-number">2.2.</span> <span class="nav-text">key_len解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#type"><span class="nav-number">2.3.</span> <span class="nav-text">type</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ref"><span class="nav-number">2.4.</span> <span class="nav-text">ref</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#rows"><span class="nav-number">2.5.</span> <span class="nav-text">rows</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#索引命中规则"><span class="nav-number">3.</span> <span class="nav-text">索引命中规则</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-Key"><span class="nav-number">3.1.</span> <span class="nav-text">Index Key</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Index-Filter"><span class="nav-number">3.2.</span> <span class="nav-text">Index Filter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Table-Filter"><span class="nav-number">3.3.</span> <span class="nav-text">Table Filter</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Between-和Like-的处理"><span class="nav-number">3.4.</span> <span class="nav-text">Between 和Like 的处理</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

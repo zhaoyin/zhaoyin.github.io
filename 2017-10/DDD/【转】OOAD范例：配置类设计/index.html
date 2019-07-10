@@ -1,0 +1,1144 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="DDD,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="来自OOAD范例：配置类设计 大师做，转载记录用 在很多应用程序中，我们都需要一个配置类Configuration，通常从一个文本文件中读入配置信息，根据配置调整应用的行为。通过这样的方式，我们可以用相同的代码来适应不同的环境，达到灵活性的目标。 本文探索如何设计好这样的配置类。我们的重点不在于设计的产物——配置类——本身，而是在设计中的权衡取舍，以及取舍的原则。 这里我们以从一个conf.pro">
+<meta name="keywords" content="DDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转】OOAD范例：配置类设计">
+<meta property="og:url" content="http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="来自OOAD范例：配置类设计 大师做，转载记录用 在很多应用程序中，我们都需要一个配置类Configuration，通常从一个文本文件中读入配置信息，根据配置调整应用的行为。通过这样的方式，我们可以用相同的代码来适应不同的环境，达到灵活性的目标。 本文探索如何设计好这样的配置类。我们的重点不在于设计的产物——配置类——本身，而是在设计中的权衡取舍，以及取舍的原则。 这里我们以从一个conf.pro">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转】OOAD范例：配置类设计">
+<meta name="twitter:description" content="来自OOAD范例：配置类设计 大师做，转载记录用 在很多应用程序中，我们都需要一个配置类Configuration，通常从一个文本文件中读入配置信息，根据配置调整应用的行为。通过这样的方式，我们可以用相同的代码来适应不同的环境，达到灵活性的目标。 本文探索如何设计好这样的配置类。我们的重点不在于设计的产物——配置类——本身，而是在设计中的权衡取舍，以及取舍的原则。 这里我们以从一个conf.pro">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/">
+
+
+
+
+
+  <title>【转】OOAD范例：配置类设计 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【转】OOAD范例：配置类设计</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-19T12:45:56+00:00">
+                2017-10-19
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DDD/" itemprop="url" rel="index">
+                    <span itemprop="name">DDD</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-10/DDD/【转】OOAD范例：配置类设计/" class="leancloud_visitors" data-flag-title="【转】OOAD范例：配置类设计">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(【转】OOAD范例：配置类设计)原始地址]<a href="http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/" title="【转】OOAD范例：配置类设计">http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/</a>
+        <p>来自<a href="http://www.yyang.io/2016/06/30/design-a-configuration-class/" target="_blank" rel="noopener">OOAD范例：配置类设计</a></p>
+<p><strong>大师做，转载记录用</strong></p>
+<p>在很多应用程序中，我们都需要一个配置类Configuration，通常从一个文本文件中读入配置信息，根据配置调整应用的行为。通过这样的方式，我们可以用相同的代码来适应不同的环境，达到灵活性的目标。</p>
+<p>本文探索如何设计好这样的配置类。我们的重点不在于设计的产物——配置类——本身，而是在设计中的权衡取舍，以及取舍的原则。</p>
+<p>这里我们以从一个conf.properties文件中读取配置信息为例，以不同的方式读取配置信息。</p>
+<p>这个文件的内容如下：</p>
+<p>conf.properties<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">birthday=2002-05-11</span><br><span class="line">size=15</span><br><span class="line">closed=true</span><br><span class="line">locked = false</span><br><span class="line">salary=12.5</span><br><span class="line">name=张三</span><br><span class="line">noneValue=</span><br></pre></td></tr></table></figure></p>
+<p>配置文件是一个标准的属性文件，在一个配置文件中有一系列的配置项，每个配置项的形式是key=value，其中key为配置项的名称，value为配置项的值。配置项有字符串、数值、布尔、日期等多种类型。</p>
+<p>为了方便,本文直接使用单元测试作为配置类的客户代码,即配置类的消费者。</p>
+<p>如何在应用代码中获取配置信息？以下提供三种方法，我们随后将分析各自的优缺点。</p>
+<h1 id="通过JDK自带的Properties类读取配置"><a href="#通过JDK自带的Properties类读取配置" class="headerlink" title="通过JDK自带的Properties类读取配置"></a>通过JDK自带的Properties类读取配置</h1><p>JDK中，已经提供了一个Properties类，可以用于从属性文件中读取配置信息。</p>
+<p>客户代码如下：</p>
+<p>PropertiesTest.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line">package yang.yu.configuration;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import java.io.InputStream;</span><br><span class="line">import java.io.UnsupportedEncodingException;</span><br><span class="line">import java.util.Properties;</span><br><span class="line">import static org.assertj.core.api.Assertions.assertThat;</span><br><span class="line">public class PropertiesTest &#123;</span><br><span class="line">    private String confFile = &quot;/conf.properties&quot;;</span><br><span class="line">    private Properties properties;</span><br><span class="line">    @Before</span><br><span class="line">    public void setUp() throws Exception &#123;</span><br><span class="line">        properties = new Properties();</span><br><span class="line">        try(InputStream in = getClass().getResourceAsStream(confFile)) &#123;</span><br><span class="line">            properties.load(in);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetString() &#123;</span><br><span class="line">        String name = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            String temp = properties.getProperty(&quot;name&quot;);</span><br><span class="line">            name = new String(temp.getBytes(&quot;iso-8859-1&quot;), &quot;utf-8&quot;);</span><br><span class="line">            System.out.println(name);</span><br><span class="line">        &#125; catch (UnsupportedEncodingException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        assertThat(name).isEqualTo(&quot;张三&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetStringWithDefault() &#123;</span><br><span class="line">        String defaultValue = &quot;abc&quot;;</span><br><span class="line">        String temp = properties.getProperty(&quot;notExists&quot;);</span><br><span class="line">        String name = null;</span><br><span class="line">        if (temp == null) &#123;</span><br><span class="line">            name = defaultValue;</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                name = new String(temp.getBytes(&quot;iso-8859-1&quot;), &quot;utf-8&quot;);</span><br><span class="line">            &#125; catch (UnsupportedEncodingException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        assertThat(name).isEqualTo(&quot;abc&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetInt() &#123;</span><br><span class="line">        String temp = properties.getProperty(&quot;size&quot;);</span><br><span class="line">        if (temp == null) &#123;</span><br><span class="line">            throw new ConfigurationKeyNotFoundException();</span><br><span class="line">        &#125;</span><br><span class="line">        int value = -1;</span><br><span class="line">        try &#123;</span><br><span class="line">            value = Integer.parseInt(temp);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;Cannot parse string &apos;&quot; + temp + &quot;&apos; to int&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        assertThat(value).isEqualTo(15);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void testGetIntWithDefault() &#123;</span><br><span class="line">        int defaultValue = 0;</span><br><span class="line">        int value = -1;</span><br><span class="line">        String temp = properties.getProperty(&quot;size&quot;);</span><br><span class="line">        if (temp == null) &#123;</span><br><span class="line">            value = defaultValue;</span><br><span class="line">        &#125;</span><br><span class="line">        try &#123;</span><br><span class="line">            value = Integer.parseInt(temp);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            throw new RuntimeException(&quot;Cannot parse string &apos;&quot; + temp + &quot;&apos; to int&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        assertThat(value).isEqualTo(15);</span><br><span class="line">    &#125;</span><br><span class="line">    ......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这里，我们用单元测试作为配置的客户代码。我们通过Properties类从类路径下的conf.properties文件中读取配置信息，然后通过Properties类的getProperty()方法获取相应的配置项。</p>
+<p>虽然从功能上来说，通过Properties类访问配置项没有任何问题，但是客户代码却非常复杂，下面一一讨论。</p>
+<ol>
+<li>繁琐</li>
+</ol>
+<p>为了获取一个配置值，必须像下面这样输入很多行代码:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">public void testGetIntWithDefault() &#123;</span><br><span class="line">    int defaultValue = 0;</span><br><span class="line">    int value = -1;</span><br><span class="line">    String temp = properties.getProperty(&quot;size&quot;);</span><br><span class="line">    if (temp == null) &#123;</span><br><span class="line">        value = defaultValue;</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        value = Integer.parseInt(temp);</span><br><span class="line">    &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">        throw new RuntimeException(&quot;Cannot parse string &apos;&quot; + temp + &quot;&apos; to int&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    assertThat(value).isEqualTo(15);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为我们在获取配置值时，必须进行下面的工作：</p>
+<ul>
+<li>检索key是否存在</li>
+<li>检索value是否存在</li>
+<li>如果配置项是字符串类型，必须进行字符集转换</li>
+<li>如果配置项不是字符串类型，必须进行类型转换</li>
+<li>如果需要类型转换，必须处理转换异常</li>
+<li>必须分别处理有缺省值和无缺省值两种情况</li>
+<li>当有缺省值，但转换失败时，是返回缺省值，还是抛出解析异常？必须灵活应对这两种情况。</li>
+</ul>
+<ol start="2">
+<li>重复</li>
+</ol>
+<p>由于没有封装，每次访问属性值时都必须输入类似上面的一大段代码，而不只是一行方法调用。因此，系统中充满着重复的代码。业界已经公认，重复是万恶之源。</p>
+<ol start="3">
+<li>僵化</li>
+</ol>
+<p>我们不能灵活应对多种情况，例如是否有缺省值，日期格式是什么，解析失败时是返回缺省值，还是抛出解析异常等等决策，都直接硬编码到代码之中，不能根据现实需要灵活调整。</p>
+<ol start="4">
+<li>脆弱</li>
+</ol>
+<p>由于代码复杂，多个关注点相互缠绕，系统非常脆弱，时刻可能因为考虑不周而产生逻辑错误。</p>
+<p>直接使用Properties，我们得到的是一个可读性差、可维护性差、复杂、僵化而脆弱的系统。</p>
+<h1 id="设计一个通用的Configuration类"><a href="#设计一个通用的Configuration类" class="headerlink" title="设计一个通用的Configuration类"></a>设计一个通用的Configuration类</h1><p>针对直接采用Properties做配置类的问题，封装是一个非常有效的解决办法。我们可以设计一个通用的Configuration类，在该类中封装了异常处理、字符集编码转换、类型转换、缺省值处理等等方面，使得客户代码可以非常简单、直接，系统的可读性、可维护性和可靠性都得到大幅提升。</p>
+<p>配置类的代码如下：</p>
+<p>Configuration.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br></pre></td><td class="code"><pre><span class="line">package yang.yu.configuration;</span><br><span class="line">import org.apache.commons.lang3.StringUtils;</span><br><span class="line">import org.slf4j.Logger;</span><br><span class="line">import org.slf4j.LoggerFactory;</span><br><span class="line">import yang.yu.configuration.internal.PropertiesFileUtils;</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.text.ParseException;</span><br><span class="line">import java.text.SimpleDateFormat;</span><br><span class="line">import java.util.Date;</span><br><span class="line">import java.util.Hashtable;</span><br><span class="line">import java.util.Properties;</span><br><span class="line">public class Configuration &#123;</span><br><span class="line">	private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);</span><br><span class="line">	private static final String DEFAULT_DATE_FORMAT = &quot;yyyy-MM-dd&quot;;</span><br><span class="line">	private Hashtable&lt;String, String&gt; hashtable;</span><br><span class="line">	private String dateFormat = DEFAULT_DATE_FORMAT;</span><br><span class="line">	private boolean defaultWhenParseFailed = false;	//当类型转换失败时是否返回缺省值</span><br><span class="line">	public static Builder builder() &#123;</span><br><span class="line">		return new Builder();</span><br><span class="line">	&#125;</span><br><span class="line">	private Configuration(Hashtable&lt;String, String&gt; hashtable) &#123;</span><br><span class="line">		this.hashtable = hashtable;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setDateFormat(String dateFormat) &#123;</span><br><span class="line">		this.dateFormat = dateFormat;</span><br><span class="line">	&#125;</span><br><span class="line">	public void setDefaultWhenParseFailed(boolean defaultWhenParseFailed) &#123;</span><br><span class="line">		this.defaultWhenParseFailed = defaultWhenParseFailed;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getString(String key, String defaultValue) &#123;</span><br><span class="line">		Assert.notBlank(key, &quot;Key is null or empty!&quot;);</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        return StringUtils.isBlank(value) ? defaultValue : value;</span><br><span class="line">	&#125;</span><br><span class="line">	public String getString(String key) &#123;</span><br><span class="line">		Assert.notBlank(key, &quot;Key is null or empty!&quot;);</span><br><span class="line">		if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">			throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		return hashtable.get(key);</span><br><span class="line">	&#125;</span><br><span class="line">	public int getInt(String key, int defaultValue) &#123;</span><br><span class="line">		if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">			return defaultValue;</span><br><span class="line">		&#125;</span><br><span class="line">		String value = hashtable.get(key);</span><br><span class="line">		try &#123;</span><br><span class="line">			return Integer.parseInt(value);</span><br><span class="line">		&#125; catch (NumberFormatException e) &#123;</span><br><span class="line">			if (defaultWhenParseFailed) &#123;</span><br><span class="line">				return defaultValue;</span><br><span class="line">			&#125;</span><br><span class="line">			throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to int&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	public int getInt(String key) &#123;</span><br><span class="line">		if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">			throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">		String value = hashtable.get(key);</span><br><span class="line">		try &#123;</span><br><span class="line">			return Integer.parseInt(value);</span><br><span class="line">		&#125; catch (NumberFormatException e) &#123;</span><br><span class="line">			throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to int&quot;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">    public long getLong(String key, long defaultValue) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            return defaultValue;</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return Long.parseLong(value);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            if (defaultWhenParseFailed) &#123;</span><br><span class="line">                return defaultValue;</span><br><span class="line">            &#125;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to long&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public long getLong(String key) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return Long.parseLong(value);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to long&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public double getDouble(String key, double defaultValue) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            return defaultValue;</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return Double.parseDouble(value);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            if (defaultWhenParseFailed) &#123;</span><br><span class="line">                return defaultValue;</span><br><span class="line">            &#125;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to double&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public double getDouble(String key) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return Double.parseDouble(value);</span><br><span class="line">        &#125; catch (NumberFormatException e) &#123;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to double&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean getBoolean(String key, boolean defaultValue) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            return defaultValue;</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        if (&quot;true&quot;.equalsIgnoreCase(value)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        if (&quot;false&quot;.equalsIgnoreCase(value)) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        if (defaultWhenParseFailed) &#123;</span><br><span class="line">            return Boolean.parseBoolean(value);</span><br><span class="line">        &#125;</span><br><span class="line">        throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to boolean&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean getBoolean(String key) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        if (&quot;true&quot;.equalsIgnoreCase(value)) &#123;</span><br><span class="line">            return true;</span><br><span class="line">        &#125;</span><br><span class="line">        if (&quot;false&quot;.equalsIgnoreCase(value)) &#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to boolean&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    public Date getDate(String key, Date defaultValue) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            return defaultValue;</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return new SimpleDateFormat(dateFormat).parse(value);</span><br><span class="line">        &#125; catch (ParseException e) &#123;</span><br><span class="line">            if (defaultWhenParseFailed) &#123;</span><br><span class="line">                return defaultValue;</span><br><span class="line">            &#125;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to date&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public Date getDate(String key) &#123;</span><br><span class="line">        if (!hashtable.containsKey(key)) &#123;</span><br><span class="line">            throw new ConfigurationKeyNotFoundException(&quot;Configuration key &apos;&quot; + key + &quot;&apos; not found!&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        String value = hashtable.get(key);</span><br><span class="line">        try &#123;</span><br><span class="line">            return new SimpleDateFormat(dateFormat).parse(value);</span><br><span class="line">        &#125; catch (ParseException e) &#123;</span><br><span class="line">            throw new ConfigurationValueParseException(&quot;&apos;&quot; + value + &quot;&apos; cannot be parsed to date&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">	public static class Builder &#123;</span><br><span class="line">		private boolean defaultWhenParseFailed = false;	//当类型转换失败时是否返回缺省值</span><br><span class="line">		private Hashtable&lt;String, String&gt; hashtable = new Hashtable();</span><br><span class="line">		private String dateFormat = &quot;yyyy-MM-dd&quot;;</span><br><span class="line">		private PropertiesFileUtils pfu = new PropertiesFileUtils(&quot;utf-8&quot;);</span><br><span class="line">		public Builder fromClasspath(String confFile) &#123;</span><br><span class="line">			String path = getClass().getResource(confFile).getFile();</span><br><span class="line">			return fromFile(path);</span><br><span class="line">		&#125;</span><br><span class="line">		public Builder fromFile(String confFile) &#123;</span><br><span class="line">			return fromFile(new File(confFile));</span><br><span class="line">		&#125;</span><br><span class="line">		public Builder fromFile(File confFile) &#123;</span><br><span class="line">			if (!confFile.exists()) &#123;</span><br><span class="line">				throw new ConfigurationFileNotFoundException();</span><br><span class="line">			&#125;</span><br><span class="line">			if (!confFile.canRead()) &#123;</span><br><span class="line">				throw new ConfigurationFileReadException(&quot;Read configuration file is not permitted!&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			InputStream in = null;</span><br><span class="line">			try &#123;</span><br><span class="line">				in = new FileInputStream(confFile);</span><br><span class="line">				Properties props = new Properties();</span><br><span class="line">				props.load(in);</span><br><span class="line">				hashtable = pfu.rectifyProperties(props);</span><br><span class="line">				LOGGER.debug(&quot;Load configuration from &#123;&#125; at &#123;&#125;&quot;, confFile.getAbsolutePath(), new Date());</span><br><span class="line">			&#125; catch (IOException e) &#123;</span><br><span class="line">				throw new ConfigurationFileReadException(&quot;Cannot load config file: &quot; + confFile, e);</span><br><span class="line">			&#125; finally &#123;</span><br><span class="line">				if (in != null) &#123;</span><br><span class="line">					try &#123;</span><br><span class="line">						in.close();</span><br><span class="line">					&#125; catch (IOException e) &#123;</span><br><span class="line">						throw new ConfigurationException(&quot;Cannot close input stream.&quot;, e);</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			return this;</span><br><span class="line">		&#125;</span><br><span class="line">		public Builder dateFormat(String dateFormat) &#123;</span><br><span class="line">			this.dateFormat = dateFormat;</span><br><span class="line">			return this;</span><br><span class="line">		&#125;</span><br><span class="line">		public Builder defaultWhenParseFailed(boolean defaultWhenParseFailed) &#123;</span><br><span class="line">			this.defaultWhenParseFailed = defaultWhenParseFailed;</span><br><span class="line">			return this;</span><br><span class="line">		&#125;</span><br><span class="line">		public Configuration build() &#123;</span><br><span class="line">			if (hashtable.isEmpty()) &#123;</span><br><span class="line">				throw new ConfigurationException(&quot;Configuration source not specified!&quot;);</span><br><span class="line">			&#125;</span><br><span class="line">			Configuration result = new Configuration(hashtable);</span><br><span class="line">			result.setDateFormat(dateFormat);</span><br><span class="line">			result.setDefaultWhenParseFailed(defaultWhenParseFailed);</span><br><span class="line">			return result;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过将异常处理、类型转换、字符编码转换等等功能集中在Configuration类中统一处理，客户端代码卸下这些繁重的、重复性的、易于出错的负担，变得非常简单明了：</p>
+<p>ConfigurationTest.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">package yang.yu.configuration;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import java.io.File;</span><br><span class="line">import java.util.Calendar;</span><br><span class="line">import java.util.Date;</span><br><span class="line">import static org.assertj.core.api.Assertions.assertThat;</span><br><span class="line">import static org.assertj.core.api.Assertions.offset;</span><br><span class="line">public class ConfigurationTest &#123;</span><br><span class="line">    private String confFile = &quot;/conf.properties&quot;;</span><br><span class="line">    private Configuration instance;</span><br><span class="line">    </span><br><span class="line">    //more</span><br><span class="line">    ///////////////////////////////////////////3. Int型配置项</span><br><span class="line">    //////////////////3.1. Int型配置项,无缺省值</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value存在,格式正确,应当返回value</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void get_int_without_defaultValue_happy() &#123;</span><br><span class="line">        assertThat(instance.getInt(&quot;size&quot;)).isEqualTo(15);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value存在,格式不正确,应当抛出ConfigurationValueParseException异常</span><br><span class="line">     */</span><br><span class="line">    @Test(expected = ConfigurationValueParseException.class)</span><br><span class="line">    public void get_int_without_defaultValue_and_with_invalid_value() &#123;</span><br><span class="line">        instance.getInt(&quot;name&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value不存在,应当抛出ConfigurationValueParseException异常</span><br><span class="line">     */</span><br><span class="line">    @Test(expected = ConfigurationValueParseException.class)</span><br><span class="line">    public void get_int_without_defaultValue_and_without_value() &#123;</span><br><span class="line">        instance.getInt(&quot;noneValue&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key不存在,应当抛出ConfigurationKeyNotFoundException异常</span><br><span class="line">     */</span><br><span class="line">    @Test(expected = ConfigurationKeyNotFoundException.class)</span><br><span class="line">    public void get_int_without_defaultValue_and_without_key() &#123;</span><br><span class="line">        instance.getInt(&quot;noneKey&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    /////////////3.2. Int型配置项,有缺省值</span><br><span class="line">    /**</span><br><span class="line">     * key存在, value存在,格式正确,应当返回value</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void get_int_with_defaultValue_and_with_value() &#123;</span><br><span class="line">        assertThat(instance.getInt(&quot;size&quot;, 1000)).isEqualTo(15);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value存在,格式不正确,defaultWhenParseFailed=true,应当返回缺省值</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void get_int_with_defaultValue_and_with_invalid_value_and_defaultWhenParseFailed_is_true() &#123;</span><br><span class="line">        instance.setDefaultWhenParseFailed(true);</span><br><span class="line">        assertThat(instance.getInt(&quot;name&quot;, 1000)).isEqualTo(1000);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value存在,格式不正确,defaultWhenParseFailed=false,应当抛出ConfigurationValueParseException异常</span><br><span class="line">     */</span><br><span class="line">    @Test(expected = ConfigurationValueParseException.class)</span><br><span class="line">    public void get_int_with_defaultValue_and_with_invalid_value_and_defaultWhenParseFailed_is_false() &#123;</span><br><span class="line">        instance.setDefaultWhenParseFailed(false);</span><br><span class="line">        instance.getInt(&quot;name&quot;, 1000);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value不存在,defaultWhenParseFailed=true,应当返回缺省值</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void get_int_with_defaultValue_and_without_value_and_defaultWhenParseFailed_is_true() &#123;</span><br><span class="line">        instance.setDefaultWhenParseFailed(true);</span><br><span class="line">        assertThat(instance.getInt(&quot;noneValue&quot;, 1000)).isEqualTo(1000);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key存在,value不存在,defaultWhenParseFailed=false,应当抛出ConfigurationValueParseException异常</span><br><span class="line">     */</span><br><span class="line">    @Test(expected = ConfigurationValueParseException.class)</span><br><span class="line">    public void get_int_with_defaultValue_and_without_value_and_defaultWhenParseFailed_is_false() &#123;</span><br><span class="line">        instance.setDefaultWhenParseFailed(false);</span><br><span class="line">        instance.getInt(&quot;noneValue&quot;, 1000);</span><br><span class="line">    &#125;</span><br><span class="line">    /**</span><br><span class="line">     * key不存在,应当返回缺省值</span><br><span class="line">     */</span><br><span class="line">    @Test</span><br><span class="line">    public void get_int_with_defaultValue_and_without_key() &#123;</span><br><span class="line">        assertThat(instance.getInt(&quot;noneKey&quot;, 1000)).isEqualTo(1000);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">	//more    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>要获取一个整数值，我们只需要这样调用：</p>
+<p><code>int size = configuration.getInt(&quot;size&quot;);</code></p>
+<p>如果想要在配置项不存在时返回缺省值，我们只需要这样调用：</p>
+<p><code>int size = configuration.getInt(&quot;size&quot;， 0);</code></p>
+<p>读取配置信息是一个通用性的需求，几乎在每个项目中都有这样的需要。抽象出Configuration类之后，我们可以将它作为公司级通用类库，供给所有的项目引用，使得其他项目不再需要编写重复的配置文件读取代码。</p>
+<p>但是，直接使用通用的Configuration类，仍有不尽人意的方面。例如，我要读取Boolean类型的closed配置项，必须这样编写代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (configuration.getBoolean(&quot;closed&quot;)) &#123;</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样的语句仍然与我的领域语言隔了一层，是面向实现而不是面向意图的。我真正需要的是这样的代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (configuration.isClosed()) &#123;</span><br><span class="line">	......</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>closed不再是一个由5个字母组成的字符串，而是领域语言isClosed()的一部分。</p>
+<p>下面说明怎样设计这样的一个面向客户领域的、特化的Configuration类。</p>
+<h1 id="设计一个特化的AppConfiguration类"><a href="#设计一个特化的AppConfiguration类" class="headerlink" title="设计一个特化的AppConfiguration类"></a>设计一个特化的AppConfiguration类</h1><p>特化的AppConfiguration类采用客户领域的语言编写，将配置项中无意义的字符串key转化为方法名称：</p>
+<p>AppConfiguration.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">package yang.yu.configuration;</span><br><span class="line">import java.util.Date;</span><br><span class="line">public class AppConfiguration &#123;</span><br><span class="line">    private static String confFile = &quot;/conf.properties&quot;;</span><br><span class="line">    private static final String KEY_BIRTHDAY = &quot;birthday&quot;;</span><br><span class="line">    private static final String KEY_SIZE = &quot;size&quot;;</span><br><span class="line">    private static final String KEY_CLOSED = &quot;closed&quot;;</span><br><span class="line">    private static final String KEY_LOCKED = &quot;locked&quot;;</span><br><span class="line">    private static final String KEY_SALARY = &quot;salary&quot;;</span><br><span class="line">    private static final String KEY_NAME = &quot;name&quot;;</span><br><span class="line">    private static final double HIGH_SALARY_THRESHOLD = 10000;</span><br><span class="line">    private Configuration configuration;</span><br><span class="line">    public AppConfiguration() &#123;</span><br><span class="line">        this.configuration = Configuration.builder()</span><br><span class="line">                .fromClasspath(confFile)</span><br><span class="line">                .dateFormat(&quot;yyyy-MM-dd&quot;)</span><br><span class="line">                .defaultWhenParseFailed(true)</span><br><span class="line">                .build();</span><br><span class="line">    &#125;</span><br><span class="line">    public AppConfiguration(Configuration configuration) &#123;</span><br><span class="line">        this.configuration = configuration;</span><br><span class="line">    &#125;</span><br><span class="line">    public Date birthday() &#123;</span><br><span class="line">        return configuration.getDate(KEY_BIRTHDAY);</span><br><span class="line">    &#125;</span><br><span class="line">    public int size() &#123;</span><br><span class="line">        return configuration.getInt(KEY_SIZE);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean isClosed() &#123;</span><br><span class="line">        return configuration.getBoolean(KEY_CLOSED);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean isLocked() &#123;</span><br><span class="line">        return configuration.getBoolean(KEY_LOCKED);</span><br><span class="line">    &#125;</span><br><span class="line">    public double salary() &#123;</span><br><span class="line">        return configuration.getDouble(KEY_SALARY);</span><br><span class="line">    &#125;</span><br><span class="line">    public boolean isHighSalaryLevel() &#123;</span><br><span class="line">        return salary() &gt;= HIGH_SALARY_THRESHOLD;</span><br><span class="line">    &#125;</span><br><span class="line">    public String name() &#123;</span><br><span class="line">        return configuration.getString(&quot;name&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>客户端代码更加简单、直接，可读性更强：</p>
+<p>AppConfigurationTest.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">package yang.yu.configuration;</span><br><span class="line">import org.junit.Before;</span><br><span class="line">import org.junit.Test;</span><br><span class="line">import java.util.Calendar;</span><br><span class="line">import static org.assertj.core.api.Assertions.assertThat;</span><br><span class="line">import static org.assertj.core.api.Assertions.offset;</span><br><span class="line">public class AppConfigurationTest &#123;</span><br><span class="line">    private AppConfiguration instance;</span><br><span class="line">    @Before</span><br><span class="line">    public void setUp() throws Exception &#123;</span><br><span class="line">        instance = new AppConfiguration();</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void birthday() throws Exception &#123;</span><br><span class="line">        Date expected = DateUtils.createDate(2002, Calendar.MAY, 11);</span><br><span class="line">        assertThat(instance.birthday()).isEqualTo(expected);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void size() throws Exception &#123;</span><br><span class="line">        assertThat(instance.size()).isEqualTo(15);</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void isClosed() throws Exception &#123;</span><br><span class="line">        assertThat(instance.isClosed()).isTrue();</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void isLocked() throws Exception &#123;</span><br><span class="line">        assertThat(instance.isLocked()).isFalse();</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void salary() throws Exception &#123;</span><br><span class="line">        assertThat(instance.salary()).isCloseTo(12.5, offset(0.00001));</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void isHighSalaryLevel() throws Exception &#123;</span><br><span class="line">        assertThat(instance.isHighSalaryLevel()).isFalse();</span><br><span class="line">    &#125;</span><br><span class="line">    @Test</span><br><span class="line">    public void name() throws Exception &#123;</span><br><span class="line">        assertThat(instance.name()).isEqualTo(&quot;张三&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>提供应用特定的配置类好处很明显：</p>
+<ol>
+<li>通过将配置项从字符串转换成方法名，减少了错误录入的可能</li>
+</ol>
+<p>如果我们这些读取配置：</p>
+<p><code>boolean closed = configuration.getBoolean(&quot;closed&quot;);</code></p>
+<p>如果不小心，很容易把字符串closed写错。要命的是，这个错误IDE和编译器都无法捕获，只有在运行时才会发现。</p>
+<p>这样的配置：</p>
+<p><code>boolean closed = configuration.isClosed();</code></p>
+<p>就不太可能写错，即使写错了，IDE和编译器会替你发现。</p>
+<ol start="2">
+<li>面向领域编程</li>
+</ol>
+<p>在分析设计的时候，我们应该通过在软件中采用问题域的词汇来作为软件类、方法、属性、变量的名称来缩小问题域和解决方案域之间的语义距离。</p>
+<p><code>configuration.isClosed();</code></p>
+<p>比起</p>
+<p><code>configuration.getBoolean(&quot;closed&quot;);</code></p>
+<p>更接近问题域的语言。</p>
+<ol start="3">
+<li>支持衍生配置项</li>
+</ol>
+<p>在AppConfiguration类中，我创建了一个衍生配置项：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">public boolean isHighSalaryLevel() &#123;</span><br><span class="line">    return salary() &gt;= HIGH_SALARY_THRESHOLD;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>该配置项并不直接存储于conf.properties中。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在这个项目中主要应用了两个设计技巧:</p>
+<ul>
+<li>封装</li>
+<li>泛化与特化</li>
+</ul>
+<h2 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h2><p>在这个项目中,我们在两个地方基于不同的目的应用了封装。</p>
+<ol>
+<li>通过Configuration封装Properties, 目的是隐藏技术复杂性，减轻客户端代码的负担。</li>
+<li>通过AppConfiguration封装Configuration，目的是更契合特定领域的需要，面向意图编程。</li>
+</ol>
+<h2 id="泛化（generalization）与特化（specialization）"><a href="#泛化（generalization）与特化（specialization）" class="headerlink" title="泛化（generalization）与特化（specialization）"></a>泛化（generalization）与特化（specialization）</h2><p>在本项目中,我们同时提供了通用的配置类Configuration和专门领域的配置类AppConfiguration。Configuration是AppConfiguration的泛化，AppConfiguration是Configuration的特化。</p>
+<p>Configuration的目标是重用，因此必须更一般化，可以提供任意多个设置项，提供更多的可配置内容（例如dateFormat, defaultWhenParseFailed等），以便可以灵活应用于多种不同的环境；AppConfiguration的目标是紧密契合当前项目的需要，因此有一个固定的设置项集合，并且剔除了不必要的灵活性（dateFormat直接设置为yyyy-MM-dd，defaultWhenParseFailed直接设置为true）。</p>
+<p>最重要的是记住：</p>
+<p><code>泛化以扩大外延——在大多数项目中得到重用；</code><br><code>特化以增加内涵——高度契合当前项目的需要。</code></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/" title="【转】OOAD范例：配置类设计">http://xcoder.me/2017-10/DDD/【转】OOAD范例：配置类设计/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-10/DDD/【转】函数式编程与行为参数化/" rel="next" title="【转】函数式编程与行为参数化">
+                <i class="fa fa-chevron-left"></i> 【转】函数式编程与行为参数化
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-10/DDD/【转】DDD与分层架构/" rel="prev" title="【转】DDD与分层架构">
+                【转】DDD与分层架构 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#通过JDK自带的Properties类读取配置"><span class="nav-number">1.</span> <span class="nav-text">通过JDK自带的Properties类读取配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计一个通用的Configuration类"><span class="nav-number">2.</span> <span class="nav-text">设计一个通用的Configuration类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设计一个特化的AppConfiguration类"><span class="nav-number">3.</span> <span class="nav-text">设计一个特化的AppConfiguration类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#封装"><span class="nav-number">4.1.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#泛化（generalization）与特化（specialization）"><span class="nav-number">4.2.</span> <span class="nav-text">泛化（generalization）与特化（specialization）</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

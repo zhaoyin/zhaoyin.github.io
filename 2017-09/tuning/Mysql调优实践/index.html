@@ -1,0 +1,1139 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="不是一定要有索引，也不是索引越多越好，当然也不是组合索引一定比单索引好。">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql调优实践">
+<meta property="og:url" content="http://xcoder.me/2017-09/tuning/Mysql调优实践/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="不是一定要有索引，也不是索引越多越好，当然也不是组合索引一定比单索引好。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-original.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-result.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-original.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-exist.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-4-explain-filesort.png">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.787Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mysql调优实践">
+<meta name="twitter:description" content="不是一定要有索引，也不是索引越多越好，当然也不是组合索引一定比单索引好。">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-original.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-09/tuning/Mysql调优实践/">
+
+
+
+
+
+  <title>Mysql调优实践 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-09/tuning/Mysql调优实践/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Mysql调优实践</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-21T13:40:46+00:00">
+                2017-09-21
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tuning/" itemprop="url" rel="index">
+                    <span itemprop="name">tuning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-09/tuning/Mysql调优实践/" class="leancloud_visitors" data-flag-title="Mysql调优实践">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(Mysql调优实践)原始地址]<a href="http://xcoder.me/2017-09/tuning/Mysql调优实践/" title="Mysql调优实践">http://xcoder.me/2017-09/tuning/Mysql调优实践/</a>
+        <p>不是一定要有索引，也不是索引越多越好，当然也不是组合索引一定比单索引好。</p>
+<a id="more"></a>
+<h2 id="优化实践"><a href="#优化实践" class="headerlink" title="优化实践"></a>优化实践</h2><ul>
+<li>单独分别建索引引发的问题</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT COUNT(ub.id) AS size </span><br><span class="line">FROM userbusientity ub, Product a </span><br><span class="line">WHERE ub.iBusiObjectId= a.id  AND ub.iUserId=?1  AND ub.iBusiEntityId=?2  AND a.ideleted= 0  AND ub.ideleted= 0</span><br></pre></td></tr></table></figure>
+<p>这个原来对userbusientity表是单独建索引的，即iUserId和iBusiEntityId分别建索引<br>所以原来的执行计划如下：<br><img src="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-original.png" alt="MySQL单独建立索引执行计划"></p>
+<p>可以看到EXTRA里面有using intersect，它的意思简单的说就是and，就是说mysql会分别按照两个索引来扫描，然后取并集。所以预计会扫描1808行。</p>
+<p>查看UserBusientity这个类的dao发现，sql中iUserID一般都是和iBusiEntityID联合使用的。所以删除索引iUserID和iBusiEntityId。建立联合索引(iUserId,iBusiEntityId),优化后效果如下，变成扫描135行了</p>
+<p><img src="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-1-explain-result.png" alt="MySQL单独建立索引优化后执行计划"></p>
+<ul>
+<li>索引区分度不高引发的问题<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">SELECT bulletin0_.id AS id1_47_,</span><br><span class="line">       bulletin0_.iDeleted AS iDeleted2_47_,</span><br><span class="line">       bulletin0_.pubuts AS pubuts3_47_,</span><br><span class="line">       bulletin0_.cCreator AS cCreator4_47_,</span><br><span class="line">       bulletin0_.cModifier AS cModifie5_47_,</span><br><span class="line">       bulletin0_.dCreatedTime AS dCreated6_47_,</span><br><span class="line">       bulletin0_.dModifyTime AS dModifyT7_47_,</span><br><span class="line">       bulletin0_.iCorpId AS iCorpId8_47_,</span><br><span class="line">       bulletin0_.iOrgId AS iOrgId9_47_,</span><br><span class="line">       bulletin0_.bEnable AS bEnable10_47_,</span><br><span class="line">       bulletin0_.cBulletinTypeCode AS cBullet11_47_,</span><br><span class="line">       bulletin0_.cBulletinUserTypeCode AS cBullet12_47_,</span><br><span class="line">       bulletin0_.cTitle AS cTitle13_47_,</span><br><span class="line">       bulletin0_.cType AS cType14_47_,</span><br><span class="line">       bulletin0_.cVoucherNo AS cVouche15_47_,</span><br><span class="line">       bulletin0_.cVoucherType AS cVouche16_47_,</span><br><span class="line">       bulletin0_.dCreated AS dCreate17_47_,</span><br><span class="line">       bulletin0_.dRescinded AS dRescin18_47_,</span><br><span class="line">       bulletin0_.iAgentId AS iAgentI19_47_,</span><br><span class="line">       bulletin0_.iOrder AS iOrder20_47_</span><br><span class="line">  FROM Bulletin bulletin0_</span><br><span class="line"> WHERE bulletin0_.iDeleted= 0</span><br><span class="line">   AND bulletin0_.iCorpId= ?1</span><br><span class="line">   AND bulletin0_.cType= ?2</span><br><span class="line">   AND bulletin0_.id IN(</span><br><span class="line">SELECT bulletinus1_.iBulletinId</span><br><span class="line">  FROM BulletinUser bulletinus1_</span><br><span class="line"> WHERE bulletinus1_.bReaded= 0</span><br><span class="line">   AND bulletinus1_.iUserId= ?3</span><br><span class="line">   AND bulletinus1_.iCorpId= ?4</span><br><span class="line">   AND bulletinus1_.iDeleted= 0)</span><br><span class="line">   AND bulletin0_.cBulletinUserTypeCode= ?5</span><br><span class="line">   AND(1= 1</span><br><span class="line">    OR bulletin0_.iAgentId= 0)</span><br><span class="line"> ORDER BY bulletin0_.dCreated DESC</span><br><span class="line"> LIMIT 3</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>执行计划<br><img src="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-original.png" alt="MySQL索引区分度不高执行计划"></p>
+<p>很多时候用 exists 代替 in 是一个好的选择：<code>select num from a where num in(select num from b)</code></p>
+<p>用下面的语句替换：</p>
+<p><code>select num from a where exists(select 1 from b where num=a.num)</code></p>
+<p>替换后的执行计划</p>
+<p><img src="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-2-explain-exist.png" alt="MySQL索引区分度不高用exist替代in后的执行计划"></p>
+<p>可以从执行计划上看出用exist替代in是有效果的，但是仍然要扫描16万行。所以我们需要从业务实际出发分析，表面上看这个是在查Bulletin表的数据，其实分析这个sql的本质会发现，它的数据主要依赖于BulletinUser，其实BulletinUser表才是真正意义上的主表，虽然两边索引都命中了，但是由于BulletinUser表数据量巨大，虽然查某一个人的，也需要扫描18万数据。所以这个需要在业务上优化，把外层查询Bulletin表的cType和cBulletinUserTypeCode放到BulletinUser表，这样进一步减少查询的数据，逻辑上也更合理</p>
+<ul>
+<li>所建索引价值不大的问题</li>
+</ul>
+<p>我们来看看这个sql<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">SELECT orderpayme0_.id AS id1_134_,</span><br><span class="line">       orderpayme0_.iDeleted AS iDeleted2_134_,</span><br><span class="line">       orderpayme0_.pubuts AS pubuts3_134_,</span><br><span class="line">       orderpayme0_.cCreator AS cCreator4_134_,</span><br><span class="line">       orderpayme0_.cModifier AS cModifie5_134_,</span><br><span class="line">       orderpayme0_.dCreatedTime AS dCreated6_134_,</span><br><span class="line">       orderpayme0_.dModifyTime AS dModifyT7_134_,</span><br><span class="line">       orderpayme0_.iCorpId AS iCorpId8_134_,</span><br><span class="line">       orderpayme0_.iOrgId AS iOrgId9_134_,</span><br><span class="line">       orderpayme0_.bEnable AS bEnable10_134_,</span><br><span class="line">       orderpayme0_.bIsCurrent AS bIsCurr11_134_,</span><br><span class="line">       orderpayme0_.cCode AS cCode12_134_,</span><br><span class="line">       orderpayme0_.cMemo AS cMemo13_134_,</span><br><span class="line">       orderpayme0_.cName AS cName14_134_,</span><br><span class="line">       orderpayme0_.dCreated AS dCreate15_134_,</span><br><span class="line">       orderpayme0_.iCreaterId AS iCreate16_134_,</span><br><span class="line">       orderpayme0_.iExpenseOrderId AS iExpens17_134_,</span><br><span class="line">       orderpayme0_.iOrder AS iOrder18_134_,</span><br><span class="line">       orderpayme0_.iOrderId AS iOrderI19_134_</span><br><span class="line">  FROM OrderPaymentStatus orderpayme0_</span><br><span class="line"> WHERE orderpayme0_.iDeleted= 0</span><br><span class="line">   AND orderpayme0_.iCorpId= ?1</span><br><span class="line">   AND orderpayme0_.iExpenseOrderId= ?2</span><br><span class="line">   AND orderpayme0_.iDeleted= 0</span><br></pre></td></tr></table></figure></p>
+<p>这个sql原来在iCorpId上建了索引。这个查询会扫描这个租户的所有支付状态，数据量也不会小</p>
+<p>要分析一个索引合理不合理，先要分析业务，OrderPaymentStatus表是一个字表，它永远也不会以一个主表的身份存在，要从它上面查数据，要么带上iOrderID（订单id），要么带上iExpenseOrderId（费用单id）。再想一下如果有iOrderId或者iExpenseOrderId就意味着一定有iCorpId的索引（从我们的表结构逻辑上说，我们的订单表，费用单表都有iCorpId），就是说iOrderId其实是相当于iOrderId+iCorpId的组合索引的。</p>
+<p>所以这个的方案是去掉iCorpId索引，分别建立iOrderId和iExpenseOrderId的索引。执行计划的结果一定是我们期望的，扫描行数从几千行变成了3行。</p>
+<p>相似的场景还有iUserId或者iAgentId这种类似的情况。</p>
+<ul>
+<li>Order by索引问题导致的using filesort问题</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">select productvie0_.id as id1_175_,</span><br><span class="line">       productvie0_.iDeleted as iDeleted2_175_,</span><br><span class="line">       productvie0_.pubuts as pubuts3_175_,</span><br><span class="line">       productvie0_.cCreator as cCreator4_175_,</span><br><span class="line">       productvie0_.cModifier as cModifie5_175_,</span><br><span class="line">       productvie0_.dCreatedTime as dCreated6_175_,</span><br><span class="line">       productvie0_.dModifyTime as dModifyT7_175_,</span><br><span class="line">       productvie0_.iCorpId as iCorpId8_175_,</span><br><span class="line">       productvie0_.iOrgId as iOrgId9_175_,</span><br><span class="line">       productvie0_.dViewDate as dViewDa10_175_,</span><br><span class="line">       productvie0_.iProductId as iProduc11_175_,</span><br><span class="line">       productvie0_.iUserId as iUserId12_175_</span><br><span class="line">  from ProductViewHistory productvie0_</span><br><span class="line"> where(productvie0_.iDeleted= 0)</span><br><span class="line">   and productvie0_.iUserId= ?1</span><br><span class="line">   and productvie0_.iCorpId= ?2</span><br><span class="line"> order by productvie0_.dViewDate desc</span><br><span class="line"> limit 10,10</span><br></pre></td></tr></table></figure>
+<p>上面这个sql原来是在iUserId和iCorpId上分别建索引。索引区分度不高，其实可以只建iUserId的索引</p>
+<p>但是我们还同时发现执行计划里面Extra是<code>Using where; Using filesort</code>.我们知道<code>Using filesort</code>对于频繁执行的SQL也需要优化。</p>
+<p>我们在iUserId和dViewDate上做组合索引。优化后执行计划</p>
+<p><img src="http://static.xcoder.ren/public/resource/mysql/mysql-tuning-4-explain-filesort.png" alt="优化filesort后的效果"></p>
+<p>就想我们要根据业务具体问题具体分析<code>using filesort</code>是否需要优化一样，这个sql其实也应该再根据业务场景具体分析。</p>
+<p>这个sql想查用户浏览商品的历史记录，可以看到每次都只查10条就行。这样一个需求为什么这个用户从执行计划看会有3万多行数据呢？<br>很显然，从业务上我们应该控制当用户浏览商品时向这个表加数据的同时还需要删除之前加的数据，让这个用户在这个表的数据留存尽量的少，这样也不会存在<code>using filesort</code>的问题。</p>
+<h2 id="如何根据执行计划进行索引优化"><a href="#如何根据执行计划进行索引优化" class="headerlink" title="如何根据执行计划进行索引优化"></a>如何根据执行计划进行索引优化</h2><p>我认为主要看三个指标</p>
+<p>一个是Extra里面using的情况，比如using filesort，using intersect，using temporary这种就需要关注</p>
+<p>一个是扫描行Rows，一个查询扫描十几万行，几十万行肯定值得优化</p>
+<p>一个是看type，命中了什么类型的索引</p>
+<p>当然这些指标的背后一定<strong>不能脱离业务凭空分析优化</strong>，要结合业务分析优化。</p>
+<p>具体用到的基础知识可以查看我之前的文档<a href="http://xcoder.me/2017-06/tuning/Mysql%E5%8A%A0%E7%B4%A2%E5%BC%95%E8%B0%83%E4%BC%98%E6%80%BB%E7%BB%93/">Mysql调优总结</a></p>
+<h2 id="SQL查询优化经验总结"><a href="#SQL查询优化经验总结" class="headerlink" title="SQL查询优化经验总结"></a>SQL查询优化经验总结</h2><ul>
+<li>应尽量避免在where 子句中对字段进行null 值判断，否则将导致引擎放弃使用索引而进行全表扫描<br>  如：<code>select id from t where num is null</code>可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：<code>select id from t where num=0</code></li>
+<li><p>应尽量避免在 where 子句中使用!=或&lt;&gt;操作符，否则引擎将放弃使用索引而进行全表扫描。</p>
+</li>
+<li><p>应尽量避免在 where 子句中使用or来连接条件，否则将导致引擎放弃使用索引而进行全表扫描<br>  如：<code>select id from t where num=10 or num=20</code>可以这样查询：<code>select id from t where num=10 union all select id from t where num=20</code></p>
+</li>
+<li>in 和 not in 也要慎用，否则会导致全表扫描.<br>  如：<code>select id from t where num in(1,2,3)</code> 对于连续的数值，能用between就不要用 in 了：<code>select id from t where num between 1 and 3</code>.<br>  考虑用exist和not exist替代in 和not in</li>
+<li><p>MySQL在5.6.24中支持了InnoDB的全文检索（之前已经支持MyISAM的全文检索），对于频繁的like请求考虑使用全文检索来提高效率。</p>
+</li>
+<li><p>如果在where子句中使用参数，也会导致全表扫描。<br> 因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。然 而，如果在编译时建立访问计划，变量的值还是未知的，因而无法作为索引选择的输入项。如下面语句将进行全表扫描：<code>select id from t where num=@num</code>可以改为强制查询使用索引：<code>select id from t with(index(索引名)) where num=@num</code></p>
+</li>
+<li><p>应尽量避免在 where 子句中对字段进行表达式/函数等操作，这将导致引擎放弃使用索引而进行全表扫描<br>如：select id from t where num/2=100应改为:select id from t where num=100*2。</p>
+<pre><code>select id from t where date_format(时间字段名,&apos;%Y-%m-%d&apos;)=&apos;2017-01-01&apos; 应改为 select id from t where 时间字段名=date(2017-01-01)
+select id from t where substring(name,1,3)=&apos;abc&apos; ，name以abc开头的id应改为:select id from t where name like &apos;abc%&apos;
+</code></pre></li>
+<li><p>在使用索引字段作为条件时，如果该索引是复合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用，并且应尽可能的让字段顺序与索引顺序相一致。</p>
+</li>
+<li><p>尽量使用数字型字段，若只含数值信息的字段尽量不要设计为字符型，这会降低查询和连接的性能，并会增加存储开销。这是因为引擎在处理查询和连接时会逐个比较字符串中每一个字符，而对于数字型而言只需要比较一次就够了。</p>
+</li>
+<li><p>临时表/游标问题<br>  尽量使用表变量来代替临时表。如果表变量包含大量数据，请注意索引非常有限（只有主键索引）。<br>  避免频繁创建和删除临时表，以减少系统表资源的消耗。临时表并不是不可使用，适当地使用它们可以使某些例程更有效，例如，当需要重复引用大型表或常用表中的某个数据集时。但是，对于一次性事件，最好使用导出表。<br>  在新建临时表时，如果一次性插入数据量很大，那么可以使用 select into 代替 create table，避免造成大量 log ，以提高速度；如果数据量不大，为了缓和系统表的资源，应先create table，然后insert。<br>  如果使用到了临时表，在存储过程的最后务必将所有的临时表显式删除，先 truncate table ，然后 drop table ，这样可以避免系统表的较长时间锁定。<br>  尽量避免使用游标，因为游标的效率较差，如果游标操作的数据超过1万行，那么就应该考虑改写。<br>  使用基于游标的方法或临时表方法之前，应先寻找基于集的解决方案来解决问题，基于集的方法通常更有效。<br>  与临时表一样，游标并不是不可使 用。对小型数据集使用 FAST_FORWARD 游标通常要优于其他逐行处理方法，尤其是在必须引用几个表才能获得所需的数据时。在结果集中包括“合计”的例程通常要比使用游标执行的速度快。如果开发时 间允许，基于游标的方法和基于集的方法都可以尝试一下，看哪一种方法的效果更好。</p>
+</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-09/tuning/Mysql调优实践/" title="Mysql调优实践">http://xcoder.me/2017-09/tuning/Mysql调优实践/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-09/tuning/一次各种不顺的解决问题之旅/" rel="next" title="一次各种不顺的解决问题之旅">
+                <i class="fa fa-chevron-left"></i> 一次各种不顺的解决问题之旅
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-09/build/完整卸载gitlab/" rel="prev" title="完整卸载GitLab">
+                完整卸载GitLab <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#优化实践"><span class="nav-number">1.</span> <span class="nav-text">优化实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何根据执行计划进行索引优化"><span class="nav-number">2.</span> <span class="nav-text">如何根据执行计划进行索引优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SQL查询优化经验总结"><span class="nav-number">3.</span> <span class="nav-text">SQL查询优化经验总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

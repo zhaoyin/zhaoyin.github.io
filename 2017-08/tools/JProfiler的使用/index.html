@@ -1,0 +1,1180 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="JProfile,性能优化,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="JProfiler介绍JProfiler是由ej-technologies GmbH公司开发的一款性能瓶颈分析工具。其特点:使用方便,界面操作友好(是VisualVM，MAT合起来的增强版)对被分析的应用影响小CPU,Thread,Memory分析功能尤其强大支持对JDBC,JPA,NoSQL(MongoDB,HBase)servlet,Sockets等进行分析支持多种模式(快照,附加,本地/远程">
+<meta name="keywords" content="JProfile,性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JProfiler的使用">
+<meta property="og:url" content="http://xcoder.me/2017-08/tools/JProfiler的使用/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="JProfiler介绍JProfiler是由ej-technologies GmbH公司开发的一款性能瓶颈分析工具。其特点:使用方便,界面操作友好(是VisualVM，MAT合起来的增强版)对被分析的应用影响小CPU,Thread,Memory分析功能尤其强大支持对JDBC,JPA,NoSQL(MongoDB,HBase)servlet,Sockets等进行分析支持多种模式(快照,附加,本地/远程">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofile-%E5%8E%9F%E7%90%86.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resourceJprofile%E5%90%AF%E5%8A%A8.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E4%B8%89%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler%E5%90%AF%E5%8A%A8jpenable.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler%E9%85%8D%E7%BD%AESSH.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/JProfiler%E9%85%8D%E7%BD%AEremote.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E6%9C%AC%E5%9C%B0%E9%80%9A%E8%BF%87Jprofiler%E5%90%AF%E5%8A%A8%E5%B9%B6%E5%88%86%E6%9E%90%E5%BA%94%E7%94%A8.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-%E5%AE%9A%E4%B9%89%E8%BF%87%E6%BB%A4%E5%99%A8.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E5%BA%94%E7%94%A8%E6%8C%87%E6%A0%87.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-RunGC.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/JProfiler-MarkCurrent.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-RecordedObjects.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E8%AE%B0%E5%BD%95%E5%90%8E%E6%9F%A5%E7%9C%8BLiveObjects.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler%E5%88%B6%E4%BD%9C%E5%BF%AB%E7%85%A7.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E7%BC%A9%E5%B0%8F%E8%8C%83%E5%9B%B4-%E9%80%89%E6%8B%A9%E8%AE%B0%E5%BD%95%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-HeapWalker.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-%E6%89%A7%E8%A1%8CShowInHeapWalker.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler%E5%88%86%E6%9E%90%E5%B7%AE%E5%BC%82%E5%AF%B9%E8%B1%A1.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E6%89%A7%E8%A1%8CShowInHeapWalker%E5%90%8E%E7%9A%84%E6%95%88%E6%9E%9C.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-Allocations.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-ShowInGraph.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-References.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-08-21%2006.31.23.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-CPU%E5%88%86%E6%9E%90.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-CPU%E5%88%86%E6%9E%90%E5%8D%A0%E7%94%A8.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-CPU-CallGraph.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-Threads.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-ThreadsDump.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-DataBasesSettings.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-Databases%20record.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/Jprofiler-DataBases%E5%88%86%E6%9E%90.png">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JProfiler的使用">
+<meta name="twitter:description" content="JProfiler介绍JProfiler是由ej-technologies GmbH公司开发的一款性能瓶颈分析工具。其特点:使用方便,界面操作友好(是VisualVM，MAT合起来的增强版)对被分析的应用影响小CPU,Thread,Memory分析功能尤其强大支持对JDBC,JPA,NoSQL(MongoDB,HBase)servlet,Sockets等进行分析支持多种模式(快照,附加,本地/远程">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/Jprofile-%E5%8E%9F%E7%90%86.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-08/tools/JProfiler的使用/">
+
+
+
+
+
+  <title>JProfiler的使用 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-08/tools/JProfiler的使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JProfiler的使用</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-23T12:50:56+00:00">
+                2017-08-23
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tools/" itemprop="url" rel="index">
+                    <span itemprop="name">tools</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-08/tools/JProfiler的使用/" class="leancloud_visitors" data-flag-title="JProfiler的使用">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(JProfiler的使用)原始地址]<a href="http://xcoder.me/2017-08/tools/JProfiler的使用/" title="JProfiler的使用">http://xcoder.me/2017-08/tools/JProfiler的使用/</a>
+        <h2 id="JProfiler介绍"><a href="#JProfiler介绍" class="headerlink" title="JProfiler介绍"></a>JProfiler介绍</h2><p>JProfiler是由ej-technologies GmbH公司开发的一款性能瓶颈分析工具。<br>其特点:<br>使用方便,界面操作友好(是VisualVM，MAT合起来的增强版)<br>对被分析的应用影响小<br>CPU,Thread,Memory分析功能尤其强大<br>支持对JDBC,JPA,NoSQL(MongoDB,HBase)servlet,Sockets等进行分析<br>支持多种模式(快照,附加,本地/远程)的分析<br>跨平台(支持多种操作系统:windows,Mac,Linux等)</p>
+<a id="more"></a>
+<h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><h3 id="来源"><a href="#来源" class="headerlink" title="来源"></a>来源</h3><ul>
+<li>一部分来自于jvm的分析接口<strong>JVMTI</strong>(JVM Tool Interface) ,JDK必须&gt;=1.6</li>
+</ul>
+<p>JVMTI is an event-based system. The profiling agent library can register handler functions for different events. It can then enable or disable selected events<br>例如: 对象的生命周期，thread的生命周期等信息</p>
+<ul>
+<li>一部分来自于instruments classes(可理解为class的重写,增加JProfiler相关统计功能)<br>例如：方法执行时间，次数，方法栈等信息</li>
+</ul>
+<h3 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h3><p><img src="http://static.xcoder.ren/public/resource/Jprofile-%E5%8E%9F%E7%90%86.png" alt="数据采集原理"></p>
+<ol>
+<li>用户在JProfiler GUI中下达监控的指令(一般就是点击某个按钮)</li>
+<li>JProfiler GUI JVM 通过socket(默认端口8849)，发送指令给被分析的jvm中的JProfile Agent。</li>
+<li>JProfiler Agent(如果不清楚Agent请看文章第三部分”启动模式”) 收到指令后，将该指令转换成相关需要监听的事件或者指令,来注册到JVMTI上或者直接让JVMTI去执行某功能(例如dump jvm内存)</li>
+<li>JVMTI 根据注册的事件，来收集当前jvm的相关信息。 例如: 线程的生命周期; jvm的生命周期;classes的生命周期;对象实例的生命周期;堆内存的实时信息等等</li>
+<li>JProfiler Agent将采集好的信息保存到<strong>内存</strong>中，按照一定规则统计好(如果发送所有数据JProfiler GUI，会对被分析的应用网络产生比较大的影响)</li>
+<li>返回给JProfiler GUI Socket.</li>
+<li>JProfiler GUI Socket 将收到的信息返回 JProfiler GUI Render</li>
+<li>JProfiler GUI Render 渲染成最终的展示效果</li>
+</ol>
+<p><code>以上来自[深入浅出JProfiler](https://yq.aliyun.com/articles/276)</code></p>
+<h2 id="采集方式"><a href="#采集方式" class="headerlink" title="采集方式"></a>采集方式</h2><p>JProfier采集方式分为两种：Sampling(样本采集)和Instrumentation</p>
+<h3 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h3><p>类似于样本统计, 每隔一定时间(5ms)将每个线程栈中方法栈中的信息统计出来。优点是对应用影响小(即使你不配置任何Filter, Filter可参考文章第四部分)，缺点是一些数据/特性不能提供(例如:方法的调用次数)</p>
+<h3 id="Instrumentation"><a href="#Instrumentation" class="headerlink" title="Instrumentation"></a>Instrumentation</h3><p>在class加载之前，JProfier把相关功能代码写入到需要分析的class中，对正在运行的jvm有一定影响。优点: 功能强大，但如果需要分析的class多，那么对应用影响较大，一般配合Filter一起使用。所以一般JRE class和framework的class是在Filter中通常会过滤掉。</p>
+<p>注: JProfiler本身没有指出数据的采集类型，这里的采集类型是针对方法调用的采集类型 。因为JProfiler的绝大多数核心功能都依赖方法调用采集的数据, 所以可以直接认为是JProfiler的数据采集类型。</p>
+<h2 id="启动模式"><a href="#启动模式" class="headerlink" title="启动模式"></a>启动模式</h2><p><img src="http://static.xcoder.ren/public/resourceJprofile%E5%90%AF%E5%8A%A8.png" alt="Jprofiler 启动"></p>
+<h3 id="Attach-mode"><a href="#Attach-mode" class="headerlink" title="Attach mode"></a>Attach mode</h3><p>可直接将本机正在运行的jvm加载JProfiler Agent. 优点是很方便，缺点是一些特性不能支持。如果选择Instrumentation数据采集方式，那么需要花一些额外时间来重写需要分析的class。</p>
+<p><img src="http://static.xcoder.ren/public/resource/%E4%B8%89%E7%A7%8D%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%BC%8F.png" alt="三种模式选择"></p>
+<h3 id="Profile-at-startup"><a href="#Profile-at-startup" class="headerlink" title="Profile at startup"></a>Profile at startup</h3><p>在被分析的jvm启动时，将指定的JProfiler Agent手动加载到该jvm。JProfiler GUI 将收集信息类型和策略等配置信息通过socket发送给JProfiler Agent，收到这些信息后该jvm才会启动。<br>在被分析的jvm 的启动参数增加下面内容：<br>语法: -agentpath:[path to jprofilerti library]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Integration type: [Generic application]</span><br><span class="line">Selected JVM:  1.8.0 (hotspot)</span><br><span class="line">Startup mode: Wait for a connection from the JProfiler GUI</span><br><span class="line"></span><br><span class="line">Please insert</span><br><span class="line"></span><br><span class="line">-agentpath:/opt/jprofiler10/bin/linux-x64/libjprofilerti.so=port=12536 </span><br><span class="line"></span><br><span class="line">into the start command of your remote application right after the java command.</span><br><span class="line"></span><br><span class="line">A remote session named Remote application on xx.xx.xx.xx will be created that connects to a running instance of the remote application that is started with the modified start command.</span><br></pre></td></tr></table></figure>
+<h3 id="Prepare-for-profiling"><a href="#Prepare-for-profiling" class="headerlink" title="Prepare for profiling"></a>Prepare for profiling</h3><p>和Profile at startup的主要区别：被分析的jvm不需要收到JProfiler GUI 的相关配置信息就可以启动。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Integration type: [Generic application]</span><br><span class="line">Selected JVM:  1.8.0 (hotspot)</span><br><span class="line">Startup mode: Startup immediately, connect later with the JProfiler GUI</span><br><span class="line"></span><br><span class="line">Important: The local config file /Users/UOrder/.jprofiler10/config.xml must be copied manually to  on the remote computer when the profiling settings are changed.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please insert</span><br><span class="line"></span><br><span class="line">-agentpath:/opt/jprofiler10/bin/linux-x64/libjprofilerti.so=port=12536,nowait </span><br><span class="line"></span><br><span class="line">into the start command of your remote application right after the java command.</span><br><span class="line"></span><br><span class="line">A remote session named Remote application on xx.xx.xx.xx will be created that connects to a running instance of the remote application that is started with the modified start command.</span><br></pre></td></tr></table></figure>
+<h3 id="Offline-profiling"><a href="#Offline-profiling" class="headerlink" title="Offline profiling"></a>Offline profiling</h3><p>一般用于适用于不能直接调试线上的场景。Offline profiling需要将信息采集内容和策略(一些Trigger)打包成一个配置文件(config.xml)，在线上启动该jvm 加载 JProfiler Agent时，加载该xml。那么JProfiler Agent会根据Trigger的类型会生成不同的信息。例如: heap dump; thread dump; method call record等<br>语法:<br>-agentpath:[path to jprofilerti library]</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Integration type: [Generic application server]</span><br><span class="line">Selected JVM:  1.8.0 (hotspot)</span><br><span class="line">Startup mode: Profile offline, JProfiler GUI cannot connect</span><br><span class="line"></span><br><span class="line">Important: The local config file /Users/xtest/.jprofiler10/config.xml must be copied manually to  on the remote computer when the profiling settings are changed.</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Please insert</span><br><span class="line"></span><br><span class="line">-agentpath:/opt/jprofiler10/bin/linux-x64/libjprofilerti.so=offline,id=114,config=/config.xml </span><br><span class="line"></span><br><span class="line">into the start command of your application server right after the java command.</span><br><span class="line"></span><br><span class="line">A remote session named Application server on xx.xx.xx.xx will be created that is used for loading the profiling settings and triggers. Please add triggers to this session or use the profiling API to record data and save snapshots to disk that can later be analyzed in the JProfiler GUI.</span><br></pre></td></tr></table></figure>
+<h3 id="Snapshots"><a href="#Snapshots" class="headerlink" title="Snapshots"></a>Snapshots</h3><p>快照模式和VisualVm/MemoryAnalyzer(Eclipse)他们的快照分析类似，但是比他们功能强大。将做好的快照导入就可以分析，支持jps，hprof等格式的快照。</p>
+<h2 id="应用分析"><a href="#应用分析" class="headerlink" title="应用分析"></a>应用分析</h2><h3 id="远程启动"><a href="#远程启动" class="headerlink" title="远程启动"></a>远程启动</h3><p>由于是线上环境，为了保证应用尽量少受JProfiler的影响（JProfiler启动要注入agent，必然会造成应用CPU，内存等的变化），找一个线上服务器，打5%流量（保证分析的样本充分同时又少影响线上服务的运行）。</p>
+<h4 id="Linux服务器安装"><a href="#Linux服务器安装" class="headerlink" title="Linux服务器安装"></a>Linux服务器安装</h4><p>下载安装Linux版，这里安装的是RPM格式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wget http://download-keycdn.ej-technologies.com/jprofiler/jprofiler_linux_10_0_3.rpm</span><br><span class="line">rpm -ivh jprofiler_linux_10_0_3.rpm</span><br></pre></td></tr></table></figure></p>
+<h4 id="服务端配置Attach模式"><a href="#服务端配置Attach模式" class="headerlink" title="服务端配置Attach模式"></a>服务端配置Attach模式</h4><p>安装成功后，进到jprofiler的目录/opt/jprofiler10/bin，运行jpenable</p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler%E5%90%AF%E5%8A%A8jpenable.png" alt="启动jpenable"></p>
+<p>为安全考虑，启动传输端口请自定义。本例启动在12536</p>
+<p>这样服务端启动并建立了连接通道</p>
+<p>本地客户端连接后即可分析</p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler%E9%85%8D%E7%BD%AESSH.png" alt="配置SSH"></p>
+<p><img src="http://static.xcoder.ren/public/resource/JProfiler%E9%85%8D%E7%BD%AEremote.png" alt="启动JProfier分析remote server"></p>
+<h4 id="其他启动模式分析"><a href="#其他启动模式分析" class="headerlink" title="其他启动模式分析"></a>其他启动模式分析</h4><p>如上文启动模式一节所讲，<code>Profile at startup</code>,<code>Prepare for profiling</code>,<code>Offline profiling</code>三种模式都提供了相应的agent，在启动java应用时附加相应的<code>-agentpath</code>参数即可</p>
+<p>快照分析则和VisualVM／MemoryAnalyzer(Eclipse)分析快照文件方式相同，即服务端通过<code>jmap -dump:file={file path},format=b pid</code>的方式dump快照文件分析。</p>
+<h3 id="本地启动"><a href="#本地启动" class="headerlink" title="本地启动"></a>本地启动</h3><p><img src="http://static.xcoder.ren/public/resource/%E6%9C%AC%E5%9C%B0%E9%80%9A%E8%BF%87Jprofiler%E5%90%AF%E5%8A%A8%E5%B9%B6%E5%88%86%E6%9E%90%E5%BA%94%E7%94%A8.png" alt="本地通过JProfiler启动应用并分析"></p>
+<p>本地分析和远程分析同样，也支持各种模式，配置上的区别只是没有远程SSH连接的过程，原理是一样的。</p>
+<h3 id="应用分析-1"><a href="#应用分析-1" class="headerlink" title="应用分析"></a>应用分析</h3><h4 id="定义过滤器"><a href="#定义过滤器" class="headerlink" title="定义过滤器"></a>定义过滤器</h4><p><img src="http://static.xcoder.ren/public/resource/Jprofiler-%E5%AE%9A%E4%B9%89%E8%BF%87%E6%BB%A4%E5%99%A8.png" alt="定义过滤器"></p>
+<p>很容易理解，可以设置要分析哪些包／类，不分析哪些，功能强大。</p>
+<h4 id="Telemetries"><a href="#Telemetries" class="headerlink" title="Telemetries"></a>Telemetries</h4><p><img src="http://static.xcoder.ren/public/resource/%E5%BA%94%E7%94%A8%E6%8C%87%E6%A0%87.png" alt="应用指标"></p>
+<p>可以图形化查看应用的各项性能指标，一目了然</p>
+<h4 id="内存泄漏分析"><a href="#内存泄漏分析" class="headerlink" title="内存泄漏分析"></a>内存泄漏分析</h4><h5 id="准备要分析的对象"><a href="#准备要分析的对象" class="headerlink" title="准备要分析的对象"></a>准备要分析的对象</h5><p>如果分析内存泄漏问题，可以在分析前，执行一下工具栏的<code>Run GC</code>按钮，然后执行<code>Mark Current</code>按钮标记为初始内存状态。后面就可以分析内存泄漏问题了<br><img src="http://static.xcoder.ren/public/resource/Jprofiler-RunGC.png" alt="Run GC"></p>
+<p><img src="http://static.xcoder.ren/public/resource/JProfiler-MarkCurrent.png" alt="Mark Current"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90.png" alt="对象分析"></p>
+<h5 id="记录对象"><a href="#记录对象" class="headerlink" title="记录对象"></a>记录对象</h5><p><img src="http://static.xcoder.ren/public/resource/Jprofiler-RecordedObjects.png" alt="记录对象"></p>
+<p><img src="http://static.xcoder.ren/public/resource/%E8%AE%B0%E5%BD%95%E5%90%8E%E6%9F%A5%E7%9C%8BLiveObjects.png" alt="记录后可以查看Live Objects"></p>
+<h5 id="制作快照"><a href="#制作快照" class="headerlink" title="制作快照"></a>制作快照</h5><p><img src="http://static.xcoder.ren/public/resource/Jprofiler%E5%88%B6%E4%BD%9C%E5%BF%AB%E7%85%A7.png" alt="制作快照"></p>
+<p><img src="http://static.xcoder.ren/public/resource/%E7%BC%A9%E5%B0%8F%E8%8C%83%E5%9B%B4-%E9%80%89%E6%8B%A9%E8%AE%B0%E5%BD%95%E7%9A%84%E5%AF%B9%E8%B1%A1%E5%88%86%E6%9E%90.png" alt="缩小范围分析选择的对象"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-HeapWalker.png" alt="Heap Walker"></p>
+<p>可以在应用中对执行了<code>Mark Current</code>后异常的内存溢出对象做分析</p>
+<h5 id="分析内存"><a href="#分析内存" class="headerlink" title="分析内存"></a>分析内存</h5><p>以下可以直接根据Jprofiler的提示做分析</p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-%E6%89%A7%E8%A1%8CShowInHeapWalker.png" alt="执行Show in Heap Walker"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler%E5%88%86%E6%9E%90%E5%B7%AE%E5%BC%82%E5%AF%B9%E8%B1%A1.png" alt="分析泄漏对象"></p>
+<p><img src="http://static.xcoder.ren/public/resource/%E6%89%A7%E8%A1%8CShowInHeapWalker%E5%90%8E%E7%9A%84%E6%95%88%E6%9E%9C.png" alt="执行Show In Heap Walker后的效果"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-Allocations.png" alt="查看Allocations"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-ShowInGraph.png" alt="Show in Graph"></p>
+<p>在References引用页签中，可以看到该对象的的引用关系，可以切换incoming/outcoming，显示引用的类型：<br>incoming  表示显示这个对象被谁引用；<br>outcoming 表示显示这个对象引用的其他对象；</p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-References.png" alt="References"></p>
+<h4 id="CPU分析"><a href="#CPU分析" class="headerlink" title="CPU分析"></a>CPU分析</h4><p>CPU分析和VisualVM执行CPU抽样功能类似，但是比它强大<br><img src="http://static.xcoder.ren/public/resource/%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%202017-08-21%2006.31.23.png" alt="VisalVM CPU抽样"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-CPU%E5%88%86%E6%9E%90.png" alt="CPU录像"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-CPU%E5%88%86%E6%9E%90%E5%8D%A0%E7%94%A8.png" alt="CPU分析"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-CPU-CallGraph.png" alt="CPU Call Graph"></p>
+<p>还有其他更强大的功能在左树菜单，等你发现</p>
+<h4 id="Thread"><a href="#Thread" class="headerlink" title="Thread"></a>Thread</h4><p><img src="http://static.xcoder.ren/public/resource/Jprofiler-Threads.png" alt="Threads"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-ThreadsDump.png" alt="Threads Dump"></p>
+<h4 id="数据库分析"><a href="#数据库分析" class="headerlink" title="数据库分析"></a>数据库分析</h4><p><img src="http://static.xcoder.ren/public/resource/Jprofiler-DataBasesSettings.png" alt="DataBases Settings"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-Databases%20record.png" alt="DataBases Record"></p>
+<p><img src="http://static.xcoder.ren/public/resource/Jprofiler-DataBases%E5%88%86%E6%9E%90.png" alt="DataBases 分析"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-08/tools/JProfiler的使用/" title="JProfiler的使用">http://xcoder.me/2017-08/tools/JProfiler的使用/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JProfile/" rel="tag"># JProfile</a>
+          
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-08/tuning/Java应用内存为什么和堆内存差那么多/" rel="next" title="Java应用内存为什么和堆内存差那么多">
+                <i class="fa fa-chevron-left"></i> Java应用内存为什么和堆内存差那么多
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-09/Spring/Spring Boot Reactive/" rel="prev" title="Spring Boot Reactive 实践">
+                Spring Boot Reactive 实践 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#JProfiler介绍"><span class="nav-number">1.</span> <span class="nav-text">JProfiler介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据采集"><span class="nav-number">2.</span> <span class="nav-text">数据采集</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#来源"><span class="nav-number">2.1.</span> <span class="nav-text">来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理"><span class="nav-number">2.2.</span> <span class="nav-text">原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#采集方式"><span class="nav-number">3.</span> <span class="nav-text">采集方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Sampling"><span class="nav-number">3.1.</span> <span class="nav-text">Sampling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Instrumentation"><span class="nav-number">3.2.</span> <span class="nav-text">Instrumentation</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动模式"><span class="nav-number">4.</span> <span class="nav-text">启动模式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Attach-mode"><span class="nav-number">4.1.</span> <span class="nav-text">Attach mode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Profile-at-startup"><span class="nav-number">4.2.</span> <span class="nav-text">Profile at startup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Prepare-for-profiling"><span class="nav-number">4.3.</span> <span class="nav-text">Prepare for profiling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Offline-profiling"><span class="nav-number">4.4.</span> <span class="nav-text">Offline profiling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Snapshots"><span class="nav-number">4.5.</span> <span class="nav-text">Snapshots</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#应用分析"><span class="nav-number">5.</span> <span class="nav-text">应用分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#远程启动"><span class="nav-number">5.1.</span> <span class="nav-text">远程启动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux服务器安装"><span class="nav-number">5.1.1.</span> <span class="nav-text">Linux服务器安装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#服务端配置Attach模式"><span class="nav-number">5.1.2.</span> <span class="nav-text">服务端配置Attach模式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其他启动模式分析"><span class="nav-number">5.1.3.</span> <span class="nav-text">其他启动模式分析</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#本地启动"><span class="nav-number">5.2.</span> <span class="nav-text">本地启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用分析-1"><span class="nav-number">5.3.</span> <span class="nav-text">应用分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#定义过滤器"><span class="nav-number">5.3.1.</span> <span class="nav-text">定义过滤器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Telemetries"><span class="nav-number">5.3.2.</span> <span class="nav-text">Telemetries</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存泄漏分析"><span class="nav-number">5.3.3.</span> <span class="nav-text">内存泄漏分析</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#准备要分析的对象"><span class="nav-number">5.3.3.1.</span> <span class="nav-text">准备要分析的对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#记录对象"><span class="nav-number">5.3.3.2.</span> <span class="nav-text">记录对象</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#制作快照"><span class="nav-number">5.3.3.3.</span> <span class="nav-text">制作快照</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#分析内存"><span class="nav-number">5.3.3.4.</span> <span class="nav-text">分析内存</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CPU分析"><span class="nav-number">5.3.4.</span> <span class="nav-text">CPU分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thread"><span class="nav-number">5.3.5.</span> <span class="nav-text">Thread</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库分析"><span class="nav-number">5.3.6.</span> <span class="nav-text">数据库分析</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

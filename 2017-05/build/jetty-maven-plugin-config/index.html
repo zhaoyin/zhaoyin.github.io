@@ -1,0 +1,1213 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="jetty,maven,config,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="URL：[http/https]://hostname:port/contextPath/servletPath/pathInfo 如果没有contextPath，则默认使用root上下文，root上下文的路径为”/“。 warName.war在没有XML IoC文件的情况下：  如果WAR文件名是myapp.war，那么上下文路径是：/myapp； 如果WAR文件名是ROOT.war，那么上下文">
+<meta name="keywords" content="jetty,maven,config">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jetty maven plugin config">
+<meta property="og:url" content="http://xcoder.me/2017-05/build/jetty-maven-plugin-config/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="URL：[http/https]://hostname:port/contextPath/servletPath/pathInfo 如果没有contextPath，则默认使用root上下文，root上下文的路径为”/“。 warName.war在没有XML IoC文件的情况下：  如果WAR文件名是myapp.war，那么上下文路径是：/myapp； 如果WAR文件名是ROOT.war，那么上下文">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jetty maven plugin config">
+<meta name="twitter:description" content="URL：[http/https]://hostname:port/contextPath/servletPath/pathInfo 如果没有contextPath，则默认使用root上下文，root上下文的路径为”/“。 warName.war在没有XML IoC文件的情况下：  如果WAR文件名是myapp.war，那么上下文路径是：/myapp； 如果WAR文件名是ROOT.war，那么上下文">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-05/build/jetty-maven-plugin-config/">
+
+
+
+
+
+  <title>jetty maven plugin config | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-05/build/jetty-maven-plugin-config/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">jetty maven plugin config</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-26T14:40:56+00:00">
+                2017-05-26
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/build/" itemprop="url" rel="index">
+                    <span itemprop="name">build</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-05/build/jetty-maven-plugin-config/" class="leancloud_visitors" data-flag-title="jetty maven plugin config">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(jetty maven plugin config)原始地址]<a href="http://xcoder.me/2017-05/build/jetty-maven-plugin-config/" title="jetty maven plugin config">http://xcoder.me/2017-05/build/jetty-maven-plugin-config/</a>
+        <p>URL：[http/https]://hostname:port/contextPath/servletPath/pathInfo</p>
+<p>如果没有contextPath，则默认使用root上下文，root上下文的路径为”/“。</p>
+<p>warName.war<br>在没有XML IoC文件的情况下：</p>
+<ul>
+<li>如果WAR文件名是myapp.war，那么上下文路径是：/myapp；</li>
+<li>如果WAR文件名是ROOT.war，那么上下文路径是：/；</li>
+<li>如果WAR文件名是ROOT-foobar.war，那么上下文路径是/，虚拟host是foobar。</li>
+</ul>
+<p>注意这个contextPath，在下面的设置中设置了url路径会发生变化。</p>
+<p><a href="http://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html" target="_blank" rel="noopener">jetty-maven-plugin-config</a></p>
+<a id="more"></a>
+<p>仅作记录，查字典用。此文从上述网址复制而来。</p>
+<p>The Jetty Maven plugin is useful for rapid development and testing. You can add it to any webapp project that is structured according to the Maven defaults. The plugin can then periodically scan your project for changes and automatically redeploy the webapp if any are found. This makes the development cycle more productive by eliminating the build and deploy steps: you use your IDE to make changes to the project, and the running web container automatically picks them up, allowing you to test them straight away.</p>
+<p><strong>You should use Maven 3.3+ for this plugin.</strong></p>
+<p>While the Jetty Maven Plugin can be very useful for development we do not recommend its use in a production capacity. In order for the plugin to work it needs to leverage many internal Maven apis and Maven itself it not a production deployment tool. We recommend either the traditional distribution deployment approach or using embedded Jetty.</p>
+<h2 id="Quick-Start-Get-Up-and-Running"><a href="#Quick-Start-Get-Up-and-Running" class="headerlink" title="Quick Start: Get Up and Running"></a>Quick Start: Get Up and Running</h2><p>First, add jetty-maven-plugin to your pom.xml definition:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Then, from the same directory as your root pom.xml, type:</p>
+<blockquote>
+<p>mvn jetty:run</p>
+</blockquote>
+<p>This starts Jetty and serves up your project on <a href="http://localhost:8080/" target="_blank" rel="noopener">http://localhost:8080/</a>.</p>
+<p>Jetty will continue to run until you stop it. While it runs it periodically scans for changes to your project files If you save changes and recompile your class files, Jetty redeploys your webapp, and you can instantly test the changes that were just made.</p>
+<p>You can terminate the plugin with a ctrl-c in the terminal window where it is running.</p>
+<p> Note<br>The classpath of the running Jetty instance and its deployed webapp are managed by Maven, and may not be exactly what you expect. For example: a webapp’s dependent jars might be referenced via the local repository, not the WEB-INF/lib directory.</p>
+<h2 id="Supported-Goals"><a href="#Supported-Goals" class="headerlink" title="Supported Goals"></a>Supported Goals</h2><p>The Jetty Maven plugin has a number of distinct Maven goals. Arguably the most useful is the run goal which runs Jetty on an unassembled webapp. There are other goals which help you accomplish different tasks. For example, you might need to run your webapp in a forked instance of Jetty rather than within the process running Maven; or you may need finer grained control over the maven lifecycle stage in which you wish to deploy your webapp. There are different goals to accomplish these tasks, as well as several others.</p>
+<p>To see a list of all goals supported by the Jetty Maven plugin, do:</p>
+<blockquote>
+<p>mvn jetty:help<br>To see the detailed list of parameters that can be configured for a particular goal, in addition to its description, do:</p>
+</blockquote>
+<blockquote>
+<p>mvn jetty:help -Ddetail=true -Dgoal= <goal name></goal></p>
+</blockquote>
+<h2 id="Configuring-the-Jetty-Container"><a href="#Configuring-the-Jetty-Container" class="headerlink" title="Configuring the Jetty Container"></a>Configuring the Jetty Container</h2><p>These configuration elements set up the Jetty environment in which your webapp executes. They are common to most goals:</p>
+<h3 id="httpConnector"><a href="#httpConnector" class="headerlink" title="httpConnector"></a>httpConnector</h3><p>Optional. If not specified, Jetty will create a ServerConnector instance listening on port 8080. You can change this default port number by using the system property jetty.http.port on the command line, for example, mvn -Djetty.http.port=9999 jetty:run. Alternatively, you can use this configuration element to set up the information for the ServerConnector. The following are the valid configuration sub-elements:</p>
+<h4 id="port"><a href="#port" class="headerlink" title="port"></a>port</h4><p>The port number for the connector to listen on. By default it is 8080.</p>
+<h4 id="host"><a href="#host" class="headerlink" title="host"></a>host</h4><p>The particular interface for the connector to listen on. By default, all interfaces.</p>
+<h4 id="name"><a href="#name" class="headerlink" title="name"></a>name</h4><p>The name of the connector, which is useful for configuring contexts to respond only on particular connectors.</p>
+<h4 id="idleTimeout"><a href="#idleTimeout" class="headerlink" title="idleTimeout"></a>idleTimeout</h4><p>Maximum idle time for a connection.</p>
+<h4 id="soLinger"><a href="#soLinger" class="headerlink" title="soLinger"></a>soLinger</h4><p>The socket linger time.</p>
+<p>You could instead configure the connectors in a standard jetty xml config file and put its location into the <code>jettyXml</code> parameter. Note that since jetty-9.0 it is no longer possible to configure a https connector directly in the pom.xml: you need to use jetty xml config files to do it.</p>
+<h3 id="jettyXml"><a href="#jettyXml" class="headerlink" title="jettyXml"></a>jettyXml</h3><p>Optional. A comma separated list of locations of jetty xml files to apply in addition to any plugin configuration parameters. You might use it if you have other webapps, handlers, specific types of connectors etc., to deploy, or if you have other Jetty objects that you cannot configure from the plugin.</p>
+<h3 id="scanIntervalSeconds"><a href="#scanIntervalSeconds" class="headerlink" title="scanIntervalSeconds"></a>scanIntervalSeconds</h3><p>The pause in seconds between sweeps of the webapp to check for changes and automatically hot redeploy if any are detected. By default this is 0, which disables hot deployment scanning. A number greater than 0 enables it.</p>
+<h3 id="reload"><a href="#reload" class="headerlink" title="reload"></a>reload</h3><p>Default value is “automatic”, used in conjunction with a non-zero <code>scanIntervalSeconds</code> causes automatic hot redeploy when changes are detected. Set to “manual” instead to trigger scanning by typing a linefeed in the console running the plugin. This might be useful when you are doing a series of changes that you want to ignore until you’re done. In that use, use the reload parameter.</p>
+<h3 id="dumpOnStart"><a href="#dumpOnStart" class="headerlink" title="dumpOnStart"></a>dumpOnStart</h3><p>Optional. Default value is false. If true, then jetty will dump out the server structure on start.</p>
+<h3 id="loginServices"><a href="#loginServices" class="headerlink" title="loginServices"></a>loginServices</h3><p>Optional. A list of org.eclipse.jetty.security.LoginService implementations. Note that there is no default realm. If you use a realm in your web.xml you can specify a corresponding realm here. You could instead configure the login services in a jetty xml file and add its location to the jettyXml parameter.</p>
+<h3 id="requestLog"><a href="#requestLog" class="headerlink" title="requestLog"></a>requestLog</h3><p>Optional. An implementation of the org.eclipse.jetty.server.RequestLog request log interface. An implementation that respects the NCSA format is available as org.eclipse.jetty.server.NCSARequestLog. There are three other ways to configure the RequestLog:</p>
+<p>In a jetty xml config file, as specified in the jettyXml parameter.<br>In a context xml config file, as specified in the contextXml parameter.<br>In the webApp element.<br>See Configuring Request Logs for more information.</p>
+<h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><p>Optional as of Jetty 9.3.1. This would configure an instance of the org.eclipse.jetty.server.Server for the plugin to use, however it is usually NOT necessary to configure this, as the plugin will automatically configure one for you. In particular, if you use the jettyXml element, then you generally DON’T want to define this element, as you are probably using the jettyXml file to configure up a Server with a special constructor argument, such as a custom threadpool. If you define both a server element AND use a jetty xml element which points to a config file that has a line like <configure id="Server" class="org.eclipse.jetty.server.Server"> then the the xml configuration will override what you configure for the server in the pom.xml.</configure></p>
+<h3 id="stopPort"><a href="#stopPort" class="headerlink" title="stopPort"></a>stopPort</h3><p>Optional. Port to listen on for stop commands. Useful to use in conjunction with the stop or run-forked goals.</p>
+<h3 id="stopKey"><a href="#stopKey" class="headerlink" title="stopKey"></a>stopKey</h3><p>Optional. Used in conjunction with stopPort for stopping jetty. Useful when used in conjunction with the stop or run-forked goals.</p>
+<h3 id="systemProperties"><a href="#systemProperties" class="headerlink" title="systemProperties"></a>systemProperties</h3><p>Optional. Allows you to configure System properties for the execution of the plugin. For more information, see Setting System Properties.</p>
+<h3 id="systemPropertiesFile"><a href="#systemPropertiesFile" class="headerlink" title="systemPropertiesFile"></a>systemPropertiesFile</h3><p>Optional. A file containing System properties to set for the execution of the plugin. By default, settings that you make here do not override any system properties already set on the command line, by the JVM, or in the POM via systemProperties. Read Setting System Properties for how to force overrides.</p>
+<h3 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h3><p>Default is false. If true, the execution of the plugin exits. Same as setting the SystemProperty -Djetty.skip on the command line. This is most useful when configuring Jetty for execution during integration testing and you want to skip the tests.</p>
+<h3 id="useProvidedScope"><a href="#useProvidedScope" class="headerlink" title="useProvidedScope"></a>useProvidedScope</h3><p>Default value is false. If true, the dependencies with <scope>provided</scope> are placed onto the container classpath. Be aware that this is NOT the webapp classpath, as “provided” indicates that these dependencies would normally be expected to be provided by the container. You should very rarely ever need to use this. Instead, you should copy the provided dependencies as explicit dependencies of the plugin instead.</p>
+<h3 id="excludedGoals"><a href="#excludedGoals" class="headerlink" title="excludedGoals"></a>excludedGoals</h3><p>Optional. A list of Jetty plugin goal names that will cause the plugin to print an informative message and exit. Useful if you want to prevent users from executing goals that you know cannot work with your project.</p>
+<h2 id="Configuring-a-Https-Connector"><a href="#Configuring-a-Https-Connector" class="headerlink" title="Configuring a Https Connector"></a>Configuring a Https Connector</h2><p>In order to configure an HTTPS connector, you need to use jetty xml configuration files. This example uses files copied directly from the jetty distribution etc/ directory, although you can of course make up your own xml file or files. We will use the following files:</p>
+<h3 id="jetty-xml"><a href="#jetty-xml" class="headerlink" title="jetty.xml"></a>jetty.xml</h3><p>Sets up various characteristics of the org.eclipse.jetty.server.Server instance for the plugin to use. Importantly, it sets up the org.eclipse.jetty.server.HttpConfiguration element that we can refer to in subsequent xml files that configure the connectors. Here’s the relevant section:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;New id=&quot;httpConfig&quot; class=&quot;org.eclipse.jetty.server.HttpConfiguration&quot;&gt;</span><br><span class="line">  &lt;Set name=&quot;secureScheme&quot;&gt;https&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;securePort&quot;&gt;&lt;Property name=&quot;jetty.secure.port&quot; default=&quot;8443&quot; /&gt;&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;outputBufferSize&quot;&gt;32768&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;requestHeaderSize&quot;&gt;8192&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;responseHeaderSize&quot;&gt;8192&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;sendServerVersion&quot;&gt;true&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;sendDateHeader&quot;&gt;false&lt;/Set&gt;</span><br><span class="line">  &lt;Set name=&quot;headerCacheSize&quot;&gt;512&lt;/Set&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- Uncomment to enable handling of X-Forwarded- style headers</span><br><span class="line">  &lt;Call name=&quot;addCustomizer&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;&lt;New class=&quot;org.eclipse.jetty.server.ForwardedRequestCustomizer&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line">  --&gt;</span><br><span class="line">&lt;/New&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="jetty-ssl-xml"><a href="#jetty-ssl-xml" class="headerlink" title="jetty-ssl.xml"></a>jetty-ssl.xml</h3><p>Set up ssl which will be used by the https connector. Here’s the jetty-ssl.xml file from the jetty-distribution:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE Configure PUBLIC &quot;-//Jetty//Configure//EN&quot; &quot;http://www.eclipse.org/jetty/configure_9_3.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;!-- Base SSL configuration                                        --&gt;</span><br><span class="line">&lt;!-- This configuration needs to be used together with 1 or more   --&gt;</span><br><span class="line">&lt;!-- of jetty-https.xml or jetty-http2.xml                         --&gt;</span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;Configure id=&quot;Server&quot; class=&quot;org.eclipse.jetty.server.Server&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;!-- Add a SSL Connector with no protocol factories              --&gt;</span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;Call  name=&quot;addConnector&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New id=&quot;sslConnector&quot; class=&quot;org.eclipse.jetty.server.ServerConnector&quot;&gt;</span><br><span class="line">        &lt;Arg name=&quot;server&quot;&gt;&lt;Ref refid=&quot;Server&quot; /&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;acceptors&quot; type=&quot;int&quot;&gt;&lt;Property name=&quot;jetty.ssl.acceptors&quot; deprecated=&quot;ssl.acceptors&quot; default=&quot;-1&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;selectors&quot; type=&quot;int&quot;&gt;&lt;Property name=&quot;jetty.ssl.selectors&quot; deprecated=&quot;ssl.selectors&quot; default=&quot;-1&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;factories&quot;&gt;</span><br><span class="line">          &lt;Array type=&quot;org.eclipse.jetty.server.ConnectionFactory&quot;&gt;</span><br><span class="line">            &lt;!-- uncomment to support proxy protocol</span><br><span class="line">            &lt;Item&gt;</span><br><span class="line">              &lt;New class=&quot;org.eclipse.jetty.server.ProxyConnectionFactory&quot;/&gt;</span><br><span class="line">            &lt;/Item&gt;--&gt;</span><br><span class="line">          &lt;/Array&gt;</span><br><span class="line">        &lt;/Arg&gt;</span><br><span class="line"></span><br><span class="line">        &lt;Set name=&quot;host&quot;&gt;&lt;Property name=&quot;jetty.ssl.host&quot; deprecated=&quot;jetty.host&quot; /&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;port&quot;&gt;&lt;Property name=&quot;jetty.ssl.port&quot; deprecated=&quot;ssl.port&quot; default=&quot;8443&quot; /&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;idleTimeout&quot;&gt;&lt;Property name=&quot;jetty.ssl.idleTimeout&quot; deprecated=&quot;ssl.timeout&quot; default=&quot;30000&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;soLingerTime&quot;&gt;&lt;Property name=&quot;jetty.ssl.soLingerTime&quot; deprecated=&quot;ssl.soLingerTime&quot; default=&quot;-1&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;acceptorPriorityDelta&quot;&gt;&lt;Property name=&quot;jetty.ssl.acceptorPriorityDelta&quot; deprecated=&quot;ssl.acceptorPriorityDelta&quot; default=&quot;0&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;acceptQueueSize&quot;&gt;&lt;Property name=&quot;jetty.ssl.acceptQueueSize&quot; deprecated=&quot;ssl.acceptQueueSize&quot; default=&quot;0&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;!-- Create a TLS specific HttpConfiguration based on the        --&gt;</span><br><span class="line">  &lt;!-- common HttpConfiguration defined in jetty.xml               --&gt;</span><br><span class="line">  &lt;!-- Add a SecureRequestCustomizer to extract certificate and    --&gt;</span><br><span class="line">  &lt;!-- session information                                         --&gt;</span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;New id=&quot;sslHttpConfig&quot; class=&quot;org.eclipse.jetty.server.HttpConfiguration&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;&lt;Ref refid=&quot;httpConfig&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">    &lt;Call name=&quot;addCustomizer&quot;&gt;</span><br><span class="line">      &lt;Arg&gt;</span><br><span class="line">        &lt;New class=&quot;org.eclipse.jetty.server.SecureRequestCustomizer&quot;&gt;</span><br><span class="line">          &lt;Arg name=&quot;sniHostCheck&quot; type=&quot;boolean&quot;&gt;&lt;Property name=&quot;jetty.ssl.sniHostCheck&quot; default=&quot;true&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">          &lt;Arg name=&quot;stsMaxAgeSeconds&quot; type=&quot;int&quot;&gt;&lt;Property name=&quot;jetty.ssl.stsMaxAgeSeconds&quot; default=&quot;-1&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">          &lt;Arg name=&quot;stsIncludeSubdomains&quot; type=&quot;boolean&quot;&gt;&lt;Property name=&quot;jetty.ssl.stsIncludeSubdomains&quot; default=&quot;false&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;/New&gt;</span><br><span class="line">      &lt;/Arg&gt;</span><br><span class="line">    &lt;/Call&gt;</span><br><span class="line">  &lt;/New&gt;</span><br><span class="line"></span><br><span class="line">&lt;/Configure&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="jetty-https-xml"><a href="#jetty-https-xml" class="headerlink" title="jetty-https.xml"></a>jetty-https.xml</h3><p>Set up the https connector using the HttpConfiguration from jetty.xml and the ssl configuration from jetty-ssl.xml:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE Configure PUBLIC &quot;-//Jetty//Configure//EN&quot; &quot;http://www.eclipse.org/jetty/configure_9_3.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;!-- Configure a HTTPS connector.                                  --&gt;</span><br><span class="line">&lt;!-- This configuration must be used in conjunction with jetty.xml --&gt;</span><br><span class="line">&lt;!-- and jetty-ssl.xml.                                            --&gt;</span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;Configure id=&quot;sslConnector&quot; class=&quot;org.eclipse.jetty.server.ServerConnector&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;Call name=&quot;addIfAbsentConnectionFactory&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New class=&quot;org.eclipse.jetty.server.SslConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;Arg name=&quot;next&quot;&gt;http/1.1&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;sslContextFactory&quot;&gt;&lt;Ref refid=&quot;sslContextFactory&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line"></span><br><span class="line">  &lt;Call name=&quot;addConnectionFactory&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New class=&quot;org.eclipse.jetty.server.HttpConnectionFactory&quot;&gt;</span><br><span class="line">        &lt;Arg name=&quot;config&quot;&gt;&lt;Ref refid=&quot;sslHttpConfig&quot; /&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;compliance&quot;&gt;&lt;Call class=&quot;org.eclipse.jetty.http.HttpCompliance&quot; name=&quot;valueOf&quot;&gt;&lt;Arg&gt;&lt;Property name=&quot;jetty.http.compliance&quot; default=&quot;RFC7230&quot;/&gt;&lt;/Arg&gt;&lt;/Call&gt;&lt;/Arg&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line"></span><br><span class="line">&lt;/Configure&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Now you need to let the plugin know to apply the files above:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;jettyXml&gt;jetty.xml,jetty-ssl.xml,jetty-https.xml&lt;/jettyXml&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>Just like with an installed distribution of Jetty, the ordering of the xml files is significant.</p>
+</blockquote>
+<p>You can also use Jetty xml files to configure a http connector for the plugin to use. Here we use the same jetty-http.xml file from the Jetty distribution:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot;?&gt;</span><br><span class="line">&lt;!DOCTYPE Configure PUBLIC &quot;-//Jetty//Configure//EN&quot; &quot;http://www.eclipse.org/jetty/configure_9_3.dtd&quot;&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;!-- Configure the Jetty Server instance with an ID &quot;Server&quot;       --&gt;</span><br><span class="line">&lt;!-- by adding a HTTP connector.                                   --&gt;</span><br><span class="line">&lt;!-- This configuration must be used in conjunction with jetty.xml --&gt;</span><br><span class="line">&lt;!-- ============================================================= --&gt;</span><br><span class="line">&lt;Configure id=&quot;Server&quot; class=&quot;org.eclipse.jetty.server.Server&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;!-- Add a HTTP Connector.                                       --&gt;</span><br><span class="line">  &lt;!-- Configure an o.e.j.server.ServerConnector with a single     --&gt;</span><br><span class="line">  &lt;!-- HttpConnectionFactory instance using the common httpConfig  --&gt;</span><br><span class="line">  &lt;!-- instance defined in jetty.xml                               --&gt;</span><br><span class="line">  &lt;!--                                                             --&gt;</span><br><span class="line">  &lt;!-- Consult the javadoc of o.e.j.server.ServerConnector and     --&gt;</span><br><span class="line">  &lt;!-- o.e.j.server.HttpConnectionFactory for all configuration    --&gt;</span><br><span class="line">  &lt;!-- that may be set here.                                       --&gt;</span><br><span class="line">  &lt;!-- =========================================================== --&gt;</span><br><span class="line">  &lt;Call name=&quot;addConnector&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New id=&quot;httpConnector&quot; class=&quot;org.eclipse.jetty.server.ServerConnector&quot;&gt;</span><br><span class="line">        &lt;Arg name=&quot;server&quot;&gt;&lt;Ref refid=&quot;Server&quot; /&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;acceptors&quot; type=&quot;int&quot;&gt;&lt;Property name=&quot;jetty.http.acceptors&quot; deprecated=&quot;http.acceptors&quot; default=&quot;-1&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;selectors&quot; type=&quot;int&quot;&gt;&lt;Property name=&quot;jetty.http.selectors&quot; deprecated=&quot;http.selectors&quot; default=&quot;-1&quot;/&gt;&lt;/Arg&gt;</span><br><span class="line">        &lt;Arg name=&quot;factories&quot;&gt;</span><br><span class="line">          &lt;Array type=&quot;org.eclipse.jetty.server.ConnectionFactory&quot;&gt;</span><br><span class="line">            &lt;Item&gt;</span><br><span class="line">              &lt;New class=&quot;org.eclipse.jetty.server.HttpConnectionFactory&quot;&gt;</span><br><span class="line">                &lt;Arg name=&quot;config&quot;&gt;&lt;Ref refid=&quot;httpConfig&quot; /&gt;&lt;/Arg&gt;</span><br><span class="line">                &lt;Arg name=&quot;compliance&quot;&gt;&lt;Call class=&quot;org.eclipse.jetty.http.HttpCompliance&quot; name=&quot;valueOf&quot;&gt;&lt;Arg&gt;&lt;Property name=&quot;jetty.http.compliance&quot; default=&quot;RFC7230&quot;/&gt;&lt;/Arg&gt;&lt;/Call&gt;&lt;/Arg&gt;</span><br><span class="line">              &lt;/New&gt;</span><br><span class="line">            &lt;/Item&gt;</span><br><span class="line">          &lt;/Array&gt;</span><br><span class="line">        &lt;/Arg&gt;</span><br><span class="line">        &lt;Set name=&quot;host&quot;&gt;&lt;Property name=&quot;jetty.http.host&quot; deprecated=&quot;jetty.host&quot; /&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;port&quot;&gt;&lt;Property name=&quot;jetty.http.port&quot; deprecated=&quot;jetty.port&quot; default=&quot;8080&quot; /&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;idleTimeout&quot;&gt;&lt;Property name=&quot;jetty.http.idleTimeout&quot; deprecated=&quot;http.timeout&quot; default=&quot;30000&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;soLingerTime&quot;&gt;&lt;Property name=&quot;jetty.http.soLingerTime&quot; deprecated=&quot;http.soLingerTime&quot; default=&quot;-1&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;acceptorPriorityDelta&quot;&gt;&lt;Property name=&quot;jetty.http.acceptorPriorityDelta&quot; deprecated=&quot;http.acceptorPriorityDelta&quot; default=&quot;0&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;acceptQueueSize&quot;&gt;&lt;Property name=&quot;jetty.http.acceptQueueSize&quot; deprecated=&quot;http.acceptQueueSize&quot; default=&quot;0&quot;/&gt;&lt;/Set&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line"></span><br><span class="line">&lt;/Configure&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Now we add it to the list of configs for the plugin to apply:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;jettyXml&gt;jetty.xml,jetty-http.xml,jetty-ssl.xml,jetty-https.xml&lt;/jettyXml&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Alternatively, you can use the httpConnector configuration element inside the pom instead as described above.</p>
+<h2 id="Configuring-Your-WebApp"><a href="#Configuring-Your-WebApp" class="headerlink" title="Configuring Your WebApp"></a>Configuring Your WebApp</h2><p>These configuration parameters apply to your webapp. They are common to almost all goals.</p>
+<h3 id="webApp"><a href="#webApp" class="headerlink" title="webApp"></a>webApp</h3><p>This is an instance of org.eclipse.jetty.maven.plugin.JettyWebAppContext, which is an extension to the class org.eclipse.jetty.webapp.WebAppContext. You can use any of the setter methods on this object to configure your webapp. Here are a few of the most useful ones:</p>
+<h4 id="contextPath"><a href="#contextPath" class="headerlink" title="contextPath"></a>contextPath</h4><p>The context path for your webapp. By default, this is set to /. If using a custom value for this parameter, you probably want to include the leading /, example /mycontext.</p>
+<h4 id="descriptor"><a href="#descriptor" class="headerlink" title="descriptor"></a>descriptor</h4><p>The path to the web.xml file for your webapp.</p>
+<h4 id="defaultsDescriptor"><a href="#defaultsDescriptor" class="headerlink" title="defaultsDescriptor"></a>defaultsDescriptor</h4><p>The path to a webdefault.xml file that will be applied to your webapp before the web.xml. If you don’t supply one, Jetty uses a default file baked into the jetty-webapp.jar.</p>
+<h4 id="overrideDescriptor"><a href="#overrideDescriptor" class="headerlink" title="overrideDescriptor"></a>overrideDescriptor</h4><p>The path to a web.xml file that Jetty applies after reading your web.xml. You can use this to replace or add configuration.</p>
+<h4 id="tempDirectory"><a href="#tempDirectory" class="headerlink" title="tempDirectory"></a>tempDirectory</h4><p>The path to a dir that Jetty can use to expand or copy jars and jsp compiles when your webapp is running. The default is ${project.build.outputDirectory}/tmp.</p>
+<h4 id="baseResource"><a href="#baseResource" class="headerlink" title="baseResource"></a>baseResource</h4><p>The path from which Jetty serves static resources. Defaults to src/main/webapp.</p>
+<h4 id="resourceBases"><a href="#resourceBases" class="headerlink" title="resourceBases"></a>resourceBases</h4><p>Use instead of baseResource if you have multiple directories from which you want to serve static content. This is an array of directory names.</p>
+<h4 id="baseAppFirst"><a href="#baseAppFirst" class="headerlink" title="baseAppFirst"></a>baseAppFirst</h4><p>Defaults to “true”. Controls whether any overlaid wars are added before or after the original base resource(s) of the webapp. See the section on overlaid wars for more information.</p>
+<h4 id="containerIncludeJarPattern"><a href="#containerIncludeJarPattern" class="headerlink" title="containerIncludeJarPattern"></a>containerIncludeJarPattern</h4><p>Defaults to .<em>/javax.servlet-[^/]</em>.jar$|.<em>/servlet-api-[^/]</em>.jar$|.<em>javax.servlet.jsp.jstl-[^/]</em>.jar|.<em>taglibs-standard-impl-.</em>.jar. This is a pattern that is applied to the names of the jars on the container’s classpath (ie the classpath of the plugin, not that of the webapp) that should be scanned for fragments, tlds, annotations etc. This is analogous to the context attribute org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern that is documented here. You can define extra patterns of jars that will be included in the scan.</p>
+<h4 id="webInfIncludeJarPattern"><a href="#webInfIncludeJarPattern" class="headerlink" title="webInfIncludeJarPattern"></a>webInfIncludeJarPattern</h4><p>Defaults to matching all of the dependency jars for the webapp (ie the equivalent of WEB-INF/lib). You can make this pattern more restrictive to only match certain jars by using this setter. This is analogous to the context attribute org.eclipse.jetty.server.webapp.WebInfIncludeJarPattern that is documented here.</p>
+<h3 id="contextXml"><a href="#contextXml" class="headerlink" title="contextXml"></a>contextXml</h3><p>The path to a context xml file that is applied to your webapp AFTER the webApp element.</p>
+<h2 id="jetty-run"><a href="#jetty-run" class="headerlink" title="jetty:run"></a>jetty:run</h2><p>The run goal runs on a webapp that does not have to be built into a WAR. Instead, Jetty deploys the webapp from its sources. It looks for the constituent parts of a webapp in the Maven default project locations, although you can override these in the plugin configuration. For example, by default it looks for:</p>
+<ul>
+<li>resources in ${project.basedir}/src/main/webapp</li>
+<li>classes in ${project.build.outputDirectory}</li>
+<li>web.xml in ${project.basedir}/src/main/webapp/WEB-INF/<br>The plugin automatically ensures the classes are rebuilt and up-to-date before deployment. If you change the source of a class and your IDE automatically compiles it in the background, the plugin picks up the changed class.</li>
+</ul>
+<p>You do not need to assemble the webapp into a WAR, saving time during the development cycle. Once invoked, you can configure the plugin to run continuously, scanning for changes in the project and automatically performing a hot redeploy when necessary. Any changes you make are immediately reflected in the running instance of Jetty, letting you quickly jump from coding to testing, rather than going through the cycle of: code, compile, reassemble, redeploy, test.</p>
+<p>Here is an example, which turns on scanning for changes every ten seconds, and sets the webapp context path to /test:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;scanIntervalSeconds&gt;10&lt;/scanIntervalSeconds&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h3><p>In addition to the webApp element that is common to most goals, the jetty:run goal supports:</p>
+<h4 id="classesDirectory"><a href="#classesDirectory" class="headerlink" title="classesDirectory"></a>classesDirectory</h4><p>Location of your compiled classes for the webapp. You should rarely need to set this parameter. Instead, you should set build outputDirectory in your pom.xml.</p>
+<h4 id="testClassesDirectory"><a href="#testClassesDirectory" class="headerlink" title="testClassesDirectory"></a>testClassesDirectory</h4><p>Location of the compiled test classes for your webapp. By default this is ${project.build.testOutputDirectory}.</p>
+<h4 id="useTestScope"><a href="#useTestScope" class="headerlink" title="useTestScope"></a>useTestScope</h4><p>If true, the classes from testClassesDirectory and dependencies of scope “test” are placed first on the classpath. By default this is false.</p>
+<h4 id="webAppSourceDirectory"><a href="#webAppSourceDirectory" class="headerlink" title="webAppSourceDirectory"></a>webAppSourceDirectory</h4><p>By default, this is set to ${project.basedir}/src/main/webapp. If your static sources are in a different location, set this parameter accordingly.</p>
+<h4 id="jettyEnvXml"><a href="#jettyEnvXml" class="headerlink" title="jettyEnvXml"></a>jettyEnvXml</h4><p>Optional. Location of a jetty-env.xml file, which allows you to make JNDI bindings that satisfy env-entry, resource-env-ref, and resource-ref linkages in the web.xml that are scoped only to the webapp and not shared with other webapps that you might be deploying at the same time (for example, by using a <code>jettyConfig</code> file).</p>
+<h4 id="scanTargets"><a href="#scanTargets" class="headerlink" title="scanTargets"></a>scanTargets</h4><p>Optional. A list of files and directories to periodically scan in addition to those the plugin automatically scans.</p>
+<h4 id="scanTargetPatterns"><a href="#scanTargetPatterns" class="headerlink" title="scanTargetPatterns"></a>scanTargetPatterns</h4><p>Optional. If you have a long list of extra files you want scanned, it is more convenient to use pattern matching expressions to specify them instead of enumerating them with the scanTargetsList of scanTargetPatterns, each consisting of a directory, and including and/or excluding parameters to specify the file matching patterns.</p>
+<h4 id="scanClassesPattern"><a href="#scanClassesPattern" class="headerlink" title="scanClassesPattern"></a>scanClassesPattern</h4><p>Since 9.3.0. Optional. Include and exclude patterns that can be applied to the classesDirectory for the purposes of scanning, it does not affect the classpath. If a file or directory is excluded by the patterns then a change in that file (or subtree in the case of a directory) is ignored and will not cause the webapp to redeploy. Patterns are specified as a relative path using a glob-like syntax as described in the javadoc for FileSystem.getPathMatcher.</p>
+<h4 id="scanTestClassesPattern"><a href="#scanTestClassesPattern" class="headerlink" title="scanTestClassesPattern"></a>scanTestClassesPattern</h4><p>Since 9.3.0. Optional. Include and exclude patterns that can be applied to the testClassesDirectory for the purposes of scanning, it does not affect the classpath. If a file or directory is excluded by the patterns then a change in that file (or subtree in the case of a directory) is ignored and will not cause the webapp to redeploy. Patterns are specified as a relative path using a glob-like syntax as described in the javadoc for FileSystem.getPathMatcher.<br>Here’s an example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">&lt;project&gt;</span><br><span class="line">...</span><br><span class="line">  &lt;plugins&gt;</span><br><span class="line">...</span><br><span class="line">    &lt;plugin&gt;</span><br><span class="line">      &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">      &lt;configuration&gt;</span><br><span class="line">        &lt;webAppSourceDirectory&gt;$&#123;project.basedir&#125;/src/staticfiles&lt;/webAppSourceDirectory&gt;</span><br><span class="line">        &lt;webApp&gt;</span><br><span class="line">          &lt;contextPath&gt;/&lt;/contextPath&gt;</span><br><span class="line">          &lt;descriptor&gt;$&#123;project.basedir&#125;/src/over/here/web.xml&lt;/descriptor&gt;</span><br><span class="line">          &lt;jettyEnvXml&gt;$&#123;project.basedir&#125;/src/over/here/jetty-env.xml&lt;/jettyEnvXml&gt;</span><br><span class="line">        &lt;/webApp&gt;</span><br><span class="line">        &lt;classesDirectory&gt;$&#123;project.basedir&#125;/somewhere/else&lt;/classesDirectory&gt;</span><br><span class="line">        &lt;scanClassesPattern&gt;</span><br><span class="line">          &lt;excludes&gt;</span><br><span class="line">             &lt;exclude&gt;**/Foo.class&lt;/exclude&gt;</span><br><span class="line">          &lt;/excludes&gt;</span><br><span class="line">        &lt;/scanClassesPattern&gt;</span><br><span class="line">        &lt;scanTargets&gt;</span><br><span class="line">          &lt;scanTarget&gt;src/mydir&lt;/scanTarget&gt;</span><br><span class="line">          &lt;scanTarget&gt;src/myfile.txt&lt;/scanTarget&gt;</span><br><span class="line">        &lt;/scanTargets&gt;</span><br><span class="line">        &lt;scanTargetPatterns&gt;</span><br><span class="line">          &lt;scanTargetPattern&gt;</span><br><span class="line">            &lt;directory&gt;src/other-resources&lt;/directory&gt;</span><br><span class="line">            &lt;includes&gt;</span><br><span class="line">              &lt;include&gt;**/*.xml&lt;/include&gt;</span><br><span class="line">              &lt;include&gt;**/*.properties&lt;/include&gt;</span><br><span class="line">            &lt;/includes&gt;</span><br><span class="line">            &lt;excludes&gt;</span><br><span class="line">              &lt;exclude&gt;**/myspecial.xml&lt;/exclude&gt;</span><br><span class="line">              &lt;exclude&gt;**/myspecial.properties&lt;/exclude&gt;</span><br><span class="line">            &lt;/excludes&gt;</span><br><span class="line">          &lt;/scanTargetPattern&gt;</span><br><span class="line">        &lt;/scanTargetPatterns&gt;</span><br><span class="line">      &lt;/configuration&gt;</span><br><span class="line">    &lt;/plugin&gt;</span><br><span class="line">  &lt;/plugins&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<p>If, for whatever reason, you cannot run on an unassembled webapp, the goals run-war and run-exploded work on unassembled webapps.</p>
+<h2 id="jetty-run-war"><a href="#jetty-run-war" class="headerlink" title="jetty:run-war"></a>jetty:run-war</h2><p>This goal first packages your webapp as a WAR file and then deploys it to Jetty. If you set a non-zero scanInterval, Jetty watches your pom.xml and the WAR file; if either changes, it redeploys the war.</p>
+<h3 id="Configuration-1"><a href="#Configuration-1" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="war"><a href="#war" class="headerlink" title="war"></a>war</h4><p>The location of the built WAR file. This defaults to ${project.build.directory}/${project.build.finalName}.war. If this is not sufficient, set it to your custom location.<br>Here’s how to set it:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;project&gt;</span><br><span class="line">...</span><br><span class="line">  &lt;plugins&gt;</span><br><span class="line">...</span><br><span class="line">    &lt;plugin&gt;</span><br><span class="line">      &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">      &lt;configuration&gt;</span><br><span class="line">        &lt;war&gt;$&#123;project.basedir&#125;/target/mycustom.war&lt;/war&gt;</span><br><span class="line">      &lt;/configuration&gt;</span><br><span class="line">    &lt;/plugin&gt;</span><br><span class="line">  &lt;/plugins&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="jetty-run-exploded"><a href="#jetty-run-exploded" class="headerlink" title="jetty:run-exploded"></a>jetty:run-exploded</h2><p>The run-exploded goal first assembles your webapp into an exploded WAR file and then deploys it to Jetty. If you set a non-zero scanInterval, Jetty watches your pom.xml,`WEB-INF/lib, WEB-INF/ and WEB-INF/web.xml for changes and redeploys when necessary.</p>
+<h3 id="Configuration-2"><a href="#Configuration-2" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="war-1"><a href="#war-1" class="headerlink" title="war"></a>war</h4><p>The location of the exploded WAR. This defaults to ${project.build.directory}/${project.build.finalName}, but you can override the default by setting this parameter.<br>Here’s how to set it:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;project&gt;</span><br><span class="line">...</span><br><span class="line">  &lt;plugins&gt;</span><br><span class="line">...</span><br><span class="line">    &lt;plugin&gt;</span><br><span class="line">      &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;maven-jetty-plugin&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">      &lt;configuration&gt;</span><br><span class="line">        &lt;war&gt;$&#123;project.basedir&#125;/target/myfunkywebapp&lt;/war&gt;</span><br><span class="line">      &lt;/configuration&gt;</span><br><span class="line">    &lt;/plugin&gt;</span><br><span class="line">  &lt;/plugins&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="jetty-deploy-war"><a href="#jetty-deploy-war" class="headerlink" title="jetty:deploy-war"></a>jetty:deploy-war</h2><p>This is basically the same as jetty:run-war, but without assembling the WAR of the current module - you can nominate the location of any war to run. Unlike run-war, the phase in which this plugin executes is not bound to the “package” phase - you may bind it to any phase to use it.</p>
+<h3 id="Configuration-3"><a href="#Configuration-3" class="headerlink" title="Configuration"></a>Configuration</h3><h4 id="war-2"><a href="#war-2" class="headerlink" title="war"></a>war</h4><p>The location of the WAR file. This defaults to ${project.build.directory}/${project.build.finalName}, but you can override the default by setting this parameter.</p>
+<h4 id="daemon"><a href="#daemon" class="headerlink" title="daemon"></a>daemon</h4><p>If true, this plugin will start Jetty but let the build continue. This is useful if you want to start jetty as an execution binding in a particular phase and then stop it in another. Alternatively, you can set this parameter to false, in which case Jetty will block and you will need to use a ctrl-c to stop it.<br>Here’s the configuration:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">&lt;project&gt;</span><br><span class="line">...</span><br><span class="line">  &lt;plugins&gt;</span><br><span class="line">...</span><br><span class="line">  &lt;plugin&gt;</span><br><span class="line">    &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">    &lt;configuration&gt;</span><br><span class="line">      &lt;war&gt;/opt/special/some-app.war&lt;/war&gt;</span><br><span class="line">      &lt;stopKey&gt;alpha&lt;/stopKey&gt;</span><br><span class="line">      &lt;stopPort&gt;9099&lt;/stopPort&gt;</span><br><span class="line">    &lt;/configuration&gt;</span><br><span class="line">    &lt;executions&gt;</span><br><span class="line">      &lt;execution&gt;</span><br><span class="line">        &lt;id&gt;start-jetty&lt;/id&gt;</span><br><span class="line">        &lt;phase&gt;test-compile&lt;/phase&gt;</span><br><span class="line">        &lt;goals&gt;</span><br><span class="line">          &lt;goal&gt;deploy-war&lt;/goal&gt;</span><br><span class="line">        &lt;/goals&gt;</span><br><span class="line">      &lt;/execution&gt;</span><br><span class="line">      &lt;execution&gt;</span><br><span class="line">        &lt;id&gt;stop-jetty&lt;/id&gt;</span><br><span class="line">        &lt;phase&gt;test&lt;/phase&gt;</span><br><span class="line">        &lt;goals&gt;</span><br><span class="line">          &lt;goal&gt;stop&lt;/goal&gt;</span><br><span class="line">        &lt;/goals&gt;</span><br><span class="line">      &lt;/execution&gt;</span><br><span class="line">     &lt;/executions&gt;</span><br><span class="line">    &lt;/plugin&gt;</span><br><span class="line">  &lt;/plugins&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="jetty-run-forked"><a href="#jetty-run-forked" class="headerlink" title="jetty:run-forked"></a>jetty:run-forked</h2><p>This goal allows you to start the webapp in a new JVM, optionally passing arguments to that new JVM. This goal supports the same configuration parameters as the jetty:run goal with a couple of extras to help configure the forked process.</p>
+<h3 id="Configuration-4"><a href="#Configuration-4" class="headerlink" title="Configuration"></a>Configuration</h3><p>The available configuration parameters - in addition to those for the jetty:run goal - are:</p>
+<h4 id="jvmArgs"><a href="#jvmArgs" class="headerlink" title="jvmArgs"></a>jvmArgs</h4><p>Optional. A string representing arbitrary arguments to pass to the forked JVM.</p>
+<h4 id="waitForChild"><a href="#waitForChild" class="headerlink" title="waitForChild"></a>waitForChild</h4><p>Default is true. This causes the parent process to wait for the forked process to exit. In this case you can use ctrl-c to terminate both processes. It is more useful to set it to false, in which case the parent process terminates whilst leaving the child process running. You use the jetty:stop goal to stop the child process.</p>
+<h4 id="maxStartupLines"><a href="#maxStartupLines" class="headerlink" title="maxStartupLines"></a>maxStartupLines</h4><p>Default is 50. This is maximum number of lines the parent process reads from the child process to receive an indication that the child has started. If the child process produces an excessive amount of output on stdout you may need to increase this number.<br>Some of the container configuration parameters are NOT available with this goal:</p>
+<h4 id="scanIntervalSeconds-1"><a href="#scanIntervalSeconds-1" class="headerlink" title="scanIntervalSeconds"></a>scanIntervalSeconds</h4><p>Not supported. The forked jetty will not monitor and redeploy the webapp.</p>
+<h4 id="reload-1"><a href="#reload-1" class="headerlink" title="reload"></a>reload</h4><p>Not supported. The forked jetty will not redeploy the webapp.</p>
+<h4 id="httpConnector-1"><a href="#httpConnector-1" class="headerlink" title="httpConnector"></a>httpConnector</h4><p>Not supported. To define custom connectors use a jetty xml file instead.</p>
+<h4 id="loginServices-1"><a href="#loginServices-1" class="headerlink" title="loginServices"></a>loginServices</h4><p>Not supported. To define LoginServices use a jetty xml or context xml file instead.</p>
+<h4 id="requestLog-1"><a href="#requestLog-1" class="headerlink" title="requestLog"></a>requestLog</h4><p>Not supported. To define a RequestLog setup, use a jetty xml or context xml file instead.</p>
+<h4 id="systemProperties-1"><a href="#systemProperties-1" class="headerlink" title="systemProperties"></a>systemProperties</h4><p>Not supported. Use the jvmArgs parameter to pass system properties to the forked process.<br>To deploy your unassembled web app to Jetty running in a new JVM:</p>
+<h2 id="mvn-jetty-run-forked"><a href="#mvn-jetty-run-forked" class="headerlink" title="mvn jetty:run-forked"></a>mvn jetty:run-forked</h2><p>Jetty continues to execute until you either:</p>
+<p>Press ctrl-c in the terminal window to stop the plugin, which also stops the forked JVM (only if you started with waitForChild=true)<br>Use jetty:stop to stop the forked JVM, which also stops the plugin.</p>
+<p>If you want to set a custom port for the Jetty connector you need to specify it in a jetty xml file rather than setting the connector and port tags. You can specify the location of the jetty.xml using the jettyXml parameter.</p>
+<h2 id="jetty-start"><a href="#jetty-start" class="headerlink" title="jetty:start"></a>jetty:start</h2><p>This goal is for use with an execution binding in your pom.xml. It is similar to the jetty:run goal, however it does NOT first execute the build up until the test-compile phase to ensure that all necessary classes and files of the webapp have been generated. This is most useful when you want to control the start and stop of Jetty via execution bindings in your pom.xml.</p>
+<p>For example, you can configure the plugin to start your webapp at the beginning of your unit tests and stop at the end. To do this, you need to set up a couple of execution scenarios for the Jetty plugin. You use the pre-integration-test and post-integration-test Maven build phases to trigger the execution and termination of Jetty:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;scanIntervalSeconds&gt;10&lt;/scanIntervalSeconds&gt;</span><br><span class="line">    &lt;stopKey&gt;foo&lt;/stopKey&gt;</span><br><span class="line">    &lt;stopPort&gt;9999&lt;/stopPort&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">  &lt;executions&gt;</span><br><span class="line">    &lt;execution&gt;</span><br><span class="line">      &lt;id&gt;start-jetty&lt;/id&gt;</span><br><span class="line">      &lt;phase&gt;pre-integration-test&lt;/phase&gt;</span><br><span class="line">      &lt;goals&gt;</span><br><span class="line">        &lt;goal&gt;start&lt;/goal&gt;</span><br><span class="line">      &lt;/goals&gt;</span><br><span class="line">      &lt;configuration&gt;</span><br><span class="line">        &lt;scanIntervalSeconds&gt;0&lt;/scanIntervalSeconds&gt;</span><br><span class="line">      &lt;/configuration&gt;</span><br><span class="line">    &lt;/execution&gt;</span><br><span class="line">    &lt;execution&gt;</span><br><span class="line">      &lt;id&gt;stop-jetty&lt;/id&gt;</span><br><span class="line">      &lt;phase&gt;post-integration-test&lt;/phase&gt;</span><br><span class="line">       &lt;goals&gt;</span><br><span class="line">         &lt;goal&gt;stop&lt;/goal&gt;</span><br><span class="line">       &lt;/goals&gt;</span><br><span class="line">     &lt;/execution&gt;</span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="jetty-stop"><a href="#jetty-stop" class="headerlink" title="jetty:stop"></a>jetty:stop</h2><p>The stop goal stops a running instance of Jetty. To use it, you need to configure the plugin with a special port number and key. That same port number and key will also be used by the other goals that start jetty.</p>
+<h3 id="stopPort-1"><a href="#stopPort-1" class="headerlink" title="stopPort"></a>stopPort</h3><p>A port number for Jetty to listen on to receive a stop command to cause it to shutdown.</p>
+<h3 id="stopKey-1"><a href="#stopKey-1" class="headerlink" title="stopKey"></a>stopKey</h3><p>A string value sent to the stopPort to validate the stop command.</p>
+<h3 id="stopWait"><a href="#stopWait" class="headerlink" title="stopWait"></a>stopWait</h3><p>The maximum time in seconds that the plugin will wait for confirmation that Jetty has stopped. If false or not specified, the plugin does not wait for confirmation but exits after issuing the stop command.<br>Here’s a configuration example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;stopPort&gt;9966&lt;/stopPort&gt;</span><br><span class="line">    &lt;stopKey&gt;foo&lt;/stopKey&gt;</span><br><span class="line">    &lt;stopWait&gt;10&lt;/stopWait&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Then, while Jetty is running (in another window), type:</p>
+<h2 id="mvn-jetty-stop"><a href="#mvn-jetty-stop" class="headerlink" title="mvn jetty:stop"></a>mvn jetty:stop</h2><p>The stopPort must be free on the machine you are running on. If this is not the case, you will get an “Address already in use” error message after the “Started ServerConnector …​” message.</p>
+<h2 id="jetty-effective-web-xml"><a href="#jetty-effective-web-xml" class="headerlink" title="jetty:effective-web-xml"></a>jetty:effective-web-xml</h2><p>This goal calculates a synthetic web.xml (the “effective web.xml”) according to the rules of the Servlet Specification taking into account all sources of discoverable configuration of web components in your application: descriptors (webdefault.xml, web.xml, web-fragment.xml<code>s,</code>web-override.xml) and discovered annotations (@WebServlet, @WebFilter, @WebListener). Note that no programmatic declarations of servlets, filters and listeners can be taken into account. The effective web.xml from these combined sources is generated and displayed as maven log output. Other useful information about your webapp that is produced as part of the analysis is also stored as context parameters in the effective-web.xml. The effective-web.xml can be used in conjunction with the Quickstart feature to quickly start your webapp (note that Quickstart is not appropriate for the mvn jetty goals).</p>
+<p>The following configuration parameters allow you to save the file:</p>
+<h3 id="deleteOnExit"><a href="#deleteOnExit" class="headerlink" title="deleteOnExit"></a>deleteOnExit</h3><p>By default this is true. If set to false, the effective web.xml is generated into a file called effective-web.xml in the build target directory.</p>
+<h3 id="effectiveWebXml"><a href="#effectiveWebXml" class="headerlink" title="effectiveWebXml"></a>effectiveWebXml</h3><p>The full path name of a file into which you would like the effective web xml generated.<br>You can also generate the origin of each element into the effective web.xml file. The origin is either a descriptor eg web.xml,web-fragment.xml,override-web.xml file, or an annotation eg @WebServlet. Some examples of elements with origin attribute information are:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;listener origin=&quot;DefaultsDescriptor(file:///path/to/distro/etc/webdefault.xml):21&quot;&gt;</span><br><span class="line">&lt;listener origin=&quot;WebDescriptor(file:///path/to/base/webapps/test-spec/WEB-INF/web.xml):22&quot;&gt;</span><br><span class="line">&lt;servlet-class origin=&quot;FragmentDescriptor(jar:file:///path/to/base/webapps/test-spec/WEB-INF/lib/test-web-fragment.jar!/META-INF/web-fragment.xml):23&quot;&gt;</span><br><span class="line">&lt;servlet-class origin=&quot;@WebServlet(com.acme.test.TestServlet):24&quot;&gt;</span><br></pre></td></tr></table></figure></p>
+<p>To generate origin informatino, use the following configuration parameters on the webApp element:</p>
+<h3 id="originAttribute"><a href="#originAttribute" class="headerlink" title="originAttribute"></a>originAttribute</h3><p>The name of the attribute that will contain the origin. By default it is origin.</p>
+<h3 id="generateOrigin"><a href="#generateOrigin" class="headerlink" title="generateOrigin"></a>generateOrigin</h3><p>False by default. If true, will force the generation of the originAttribute onto each element.</p>
+<h2 id="Using-Overlaid-wars"><a href="#Using-Overlaid-wars" class="headerlink" title="Using Overlaid wars"></a>Using Overlaid wars</h2><p>If your webapp depends on other war files, thejetty:run and jetty:run-forked goals are able to merge resources from all of them. It can do so based on the settings of the maven-war-plugin, or if your project does not use the maven-war-plugin to handle the overlays, it can fall back to a simple algorithm to determine the ordering of resources.</p>
+<h2 id="With-maven-war-plugin"><a href="#With-maven-war-plugin" class="headerlink" title="With maven-war-plugin"></a>With maven-war-plugin</h2><p>The maven-war-plugin has a rich set of capabilities for merging resources. The jetty:run and jetty:run-forked goals are able to interpret most of them and apply them during execution of your unassembled webapp. This is probably best seen by looking at a concrete example.</p>
+<p>Suppose your webapp depends on the following wars:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;X&lt;/artifactId&gt;</span><br><span class="line">  &lt;type&gt;war&lt;/type&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;Y&lt;/artifactId&gt;</span><br><span class="line">  &lt;type&gt;war&lt;/type&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Containing:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WebAppX:</span><br><span class="line"></span><br><span class="line"> /foo.jsp</span><br><span class="line"> /bar.jsp</span><br><span class="line"> /WEB-INF/web.xml</span><br><span class="line"></span><br><span class="line">WebAppY:</span><br><span class="line"></span><br><span class="line"> /bar.jsp</span><br><span class="line"> /baz.jsp</span><br><span class="line"> /WEB-INF/web.xml</span><br><span class="line"> /WEB-INF/special.xml</span><br></pre></td></tr></table></figure></p>
+<p>They are configured for the maven-war-plugin:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;maven-war-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;overlays&gt;</span><br><span class="line">      &lt;overlay&gt;</span><br><span class="line">        &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;X&lt;/artifactId&gt;</span><br><span class="line">        &lt;excludes&gt;</span><br><span class="line">          &lt;exclude&gt;bar.jsp&lt;/exclude&gt;</span><br><span class="line">        &lt;/excludes&gt;</span><br><span class="line">      &lt;/overlay&gt;</span><br><span class="line">      &lt;overlay&gt;</span><br><span class="line">        &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;Y&lt;/artifactId&gt;</span><br><span class="line">        &lt;excludes&gt;</span><br><span class="line">          &lt;exclude&gt;baz.jsp&lt;/exclude&gt;</span><br><span class="line">        &lt;/excludes&gt;</span><br><span class="line">      &lt;/overlay&gt;</span><br><span class="line">      &lt;overlay&gt;</span><br><span class="line">      &lt;/overlay&gt;</span><br><span class="line">    &lt;/overlays&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Then executing jetty:run would yield the following ordering of resources: com.acme.X.war : com.acme.Y.war: ${project.basedir}/src/main/webapp. Note that the current project’s resources are placed last in the ordering due to the empty <overlay> element in the maven-war-plugin. You can either use that, or specify the <baseappfirst>false</baseappfirst> parameter to the jetty-maven-plugin.</overlay></p>
+<p>Moreover, due to the exclusions specified above, a request for the resource <code>bar.jsp</code> would only be satisfied from com.acme.Y.war. Similarly as baz.jsp is excluded, a request for it would result in a 404 error.</p>
+<h2 id="Without-maven-war-plugin"><a href="#Without-maven-war-plugin" class="headerlink" title="Without maven-war-plugin"></a>Without maven-war-plugin</h2><p>The algorithm is fairly simple, is based on the ordering of declaration of the dependent wars, and does not support exclusions. The configuration parameter <baseappfirst> (see the section on Configuring Your Webapp for more information) can be used to control whether your webapp’s resources are placed first or last on the resource path at runtime.</baseappfirst></p>
+<p>For example, suppose our webapp depends on these two wars:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;X&lt;/artifactId&gt;</span><br><span class="line">  &lt;type&gt;war&lt;/type&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;com.acme&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;Y&lt;/artifactId&gt;</span><br><span class="line">  &lt;type&gt;war&lt;/type&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Suppose the webapps contain:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">WebAppX:</span><br><span class="line"></span><br><span class="line"> /foo.jsp</span><br><span class="line"> /bar.jsp</span><br><span class="line"> /WEB-INF/web.xml</span><br><span class="line"></span><br><span class="line">WebAppY:</span><br><span class="line"></span><br><span class="line"> /bar.jsp</span><br><span class="line"> /baz.jsp</span><br><span class="line"> /WEB-INF/web.xml</span><br><span class="line"> /WEB-INF/special.xml</span><br></pre></td></tr></table></figure></p>
+<p>Then our webapp has available these additional resources:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">/foo.jsp (X)</span><br><span class="line">/bar.jsp (X)</span><br><span class="line">/baz.jsp (Y)</span><br><span class="line">/WEB-INF/web.xml (X)</span><br><span class="line">/WEB-INF/special.xml (Y)</span><br></pre></td></tr></table></figure></p>
+<h2 id="Configuring-Security-Settings"><a href="#Configuring-Security-Settings" class="headerlink" title="Configuring Security Settings"></a>Configuring Security Settings</h2><p>You can configure LoginServices in the plugin. Here’s an example of setting up the HashLoginService for a webapp:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;scanIntervalSeconds&gt;10&lt;/scanIntervalSeconds&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">    &lt;loginServices&gt;</span><br><span class="line">      &lt;loginService implementation=&quot;org.eclipse.jetty.security.HashLoginService&quot;&gt;</span><br><span class="line">        &lt;name&gt;Test Realm&lt;/name&gt;</span><br><span class="line">        &lt;config&gt;$&#123;project.basedir&#125;/src/etc/realm.properties&lt;/config&gt;</span><br><span class="line">      &lt;/loginService&gt;</span><br><span class="line">    &lt;/loginServices&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Using-Multiple-Webapp-Root-Directories"><a href="#Using-Multiple-Webapp-Root-Directories" class="headerlink" title="Using Multiple Webapp Root Directories"></a>Using Multiple Webapp Root Directories</h2><p>If you have external resources that you want to incorporate in the execution of a webapp, but which are not assembled into war files, you can’t use the overlaid wars method described above, but you can tell Jetty the directories in which these external resources are located. At runtime, when Jetty receives a request for a resource, it searches all the locations to retrieve the resource. It’s a lot like the overlaid war situation, but without the war.</p>
+<p>Here is a configuration example:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">  &lt;webApp&gt;</span><br><span class="line">    &lt;contextPath&gt;/$&#123;build.finalName&#125;&lt;/contextPath&gt;</span><br><span class="line">    &lt;baseResource implementation=&quot;org.eclipse.jetty.util.resource.ResourceCollection&quot;&gt;</span><br><span class="line">      &lt;resourcesAsCSV&gt;src/main/webapp,/home/johndoe/path/to/my/other/source,/yet/another/folder&lt;/resourcesAsCSV&gt;</span><br><span class="line">    &lt;/baseResource&gt;</span><br><span class="line">  &lt;/webApp&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Running-More-than-One-Webapp"><a href="#Running-More-than-One-Webapp" class="headerlink" title="Running More than One Webapp"></a>Running More than One Webapp</h2><p>You can use either a jetty.xml file to configure extra (pre-compiled) webapps that you want to deploy, or you can use the <contexthandlers> configuration element to do so. If you want to deploy webapp A, and webapps B and C in the same Jetty instance:</contexthandlers></p>
+<p>Putting the configuration in webapp A’s pom.xml:</p>
+<p><plugin><br>  <groupid>org.eclipse.jetty</groupid><br>  <artifactid>jetty-maven-plugin</artifactid><br>  <version>9.4.5.v20170502</version><br>  <configuration><br>    <scanintervalseconds>10</scanintervalseconds><br>    <webapp><br>      <contextpath>/test</contextpath><br>    </webapp><br>    <contexthandlers><br>      <contexthandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext"><br>        <war>${project.basedir}../../B.war</war><br>        <contextpath>/B</contextpath><br>      </contexthandler><br>      <contexthandler implementation="org.eclipse.jetty.maven.plugin.JettyWebAppContext"><br>        <war>${project.basedir}../../C.war</war><br>        <contextpath>/C</contextpath><br>      </contexthandler><br>    </contexthandlers><br>  </configuration><br></plugin><br> Important<br>If the ContextHandler you are deploying is a webapp, it is essential that you use an org.eclipse.jetty.maven.plugin.JettyWebAppContext instance rather than a standard org.eclipse.jetty.webapp.WebAppContext instance. Only the former will allow the webapp to function correctly in the maven environment.</p>
+<p>Alternatively, add a jetty.xml file to webapp A. Copy the jetty.xml file from the Jetty distribution, and then add WebAppContexts for the other 2 webapps:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;Ref refid=&quot;Contexts&quot;&gt;</span><br><span class="line">  &lt;Call name=&quot;addHandler&quot;&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New class=&quot;org.eclipse.jetty.maven.plugin.JettyWebAppContext&quot;&gt;</span><br><span class="line">        &lt;Set name=&quot;contextPath&quot;&gt;/B&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;war&quot;&gt;../../B.war&lt;/Set&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line">  &lt;Call&gt;</span><br><span class="line">    &lt;Arg&gt;</span><br><span class="line">      &lt;New class=&quot;org.eclipse.jetty.maven.plugin.JettyWebAppContext&quot;&gt;</span><br><span class="line">        &lt;Set name=&quot;contextPath&quot;&gt;/C&lt;/Set&gt;</span><br><span class="line">        &lt;Set name=&quot;war&quot;&gt;../../C.war&lt;/Set&gt;</span><br><span class="line">      &lt;/New&gt;</span><br><span class="line">    &lt;/Arg&gt;</span><br><span class="line">  &lt;/Call&gt;</span><br><span class="line">&lt;/Ref&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Then configure the location of this jetty.xml file into webapp A’s jetty plugin:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;9.4.5.v20170502&lt;/version&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;scanIntervalSeconds&gt;10&lt;/scanIntervalSeconds&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">    &lt;jettyXml&gt;src/main/etc/jetty.xml&lt;/jettyXml&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>For either of these solutions, the other webapps must already have been built, and they are not automatically monitored for changes. You can refer either to the packed WAR file of the pre-built webapps or to their expanded equivalents.</p>
+<h2 id="Setting-System-Properties"><a href="#Setting-System-Properties" class="headerlink" title="Setting System Properties"></a>Setting System Properties</h2><p>You can specify property name/value pairs that Jetty sets as System properties for the execution of the plugin. This feature is useful to tidy up the command line and save a lot of typing.</p>
+<p>However, sometimes it is not possible to use this feature to set System properties - sometimes the software component using the System property is already initialized by the time that maven runs (in which case you will need to provide the System property on the command line), or by the time that Jetty runs. In the latter case, you can use the maven properties plugin to define the system properties instead. Here’s an example that configures the logback logging system as the Jetty logger:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;properties-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.0-alpha-2&lt;/version&gt;</span><br><span class="line">  &lt;executions&gt;</span><br><span class="line">    &lt;execution&gt;</span><br><span class="line">      &lt;goals&gt;</span><br><span class="line">        &lt;goal&gt;set-system-properties&lt;/goal&gt;</span><br><span class="line">      &lt;/goals&gt;</span><br><span class="line">      &lt;configuration&gt;</span><br><span class="line">        &lt;properties&gt;</span><br><span class="line">          &lt;property&gt;</span><br><span class="line">            &lt;name&gt;logback.configurationFile&lt;/name&gt;</span><br><span class="line">            &lt;value&gt;$&#123;project.baseUri&#125;/resources/logback.xml&lt;/value&gt;</span><br><span class="line">          &lt;/property&gt;</span><br><span class="line">        &lt;/properties&gt;</span><br><span class="line">      &lt;/configuration&gt;</span><br><span class="line">    &lt;/execution&gt;</span><br><span class="line">  &lt;/executions&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p> Note<br>If a System property is already set (for example, from the command line or by the JVM itself), then by default these configured properties DO NOT override them (see below for use of the <force> parameter).</force></p>
+<h2 id="Specifying-System-Properties-in-the-POM"><a href="#Specifying-System-Properties-in-the-POM" class="headerlink" title="Specifying System Properties in the POM"></a>Specifying System Properties in the POM</h2><p>Here’s an example of how to specify System properties in the POM:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;systemProperties&gt;</span><br><span class="line">      &lt;systemProperty&gt;</span><br><span class="line">        &lt;name&gt;fooprop&lt;/name&gt;</span><br><span class="line">        &lt;value&gt;222&lt;/value&gt;</span><br><span class="line">      &lt;/systemProperty&gt;</span><br><span class="line">    &lt;/systemProperties&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+<p>To change the default behavior so that these system properties override those on the command line, use the <force> parameter:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;systemProperties&gt;</span><br><span class="line">      &lt;force&gt;true&lt;/force&gt;</span><br><span class="line">      &lt;systemProperty&gt;</span><br><span class="line">       &lt;name&gt;fooprop&lt;/name&gt;</span><br><span class="line">       &lt;value&gt;222&lt;/value&gt;</span><br><span class="line">     &lt;/systemProperty&gt;</span><br><span class="line">    &lt;/systemProperties&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></force></p>
+<p>Specifying System Properties in a File</p>
+<p>You can also specify your System properties in a file. System properties you specify in this way do not override System properties that set on the command line, by the JVM, or directly in the POM via systemProperties.</p>
+<p>Suppose we have a file called mysys.props which contains the following:</p>
+<blockquote>
+<p>fooprop=222<br>This can be configured on the plugin like so:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;plugin&gt;</span><br><span class="line">  &lt;groupId&gt;org.eclipse.jetty&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jetty-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">  &lt;configuration&gt;</span><br><span class="line">    &lt;systemPropertiesFile&gt;$&#123;project.basedir&#125;/mysys.props&lt;/systemPropertiesFile&gt;</span><br><span class="line">    &lt;webApp&gt;</span><br><span class="line">      &lt;contextPath&gt;/test&lt;/contextPath&gt;</span><br><span class="line">    &lt;/webApp&gt;</span><br><span class="line">  &lt;/configuration&gt;</span><br><span class="line">&lt;/plugin&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>You can instead specify the file by setting the System property jetty.systemPropertiesFile on the command line.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-05/build/jetty-maven-plugin-config/" title="jetty maven plugin config">http://xcoder.me/2017-05/build/jetty-maven-plugin-config/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/jetty/" rel="tag"># jetty</a>
+          
+            <a href="/tags/maven/" rel="tag"># maven</a>
+          
+            <a href="/tags/config/" rel="tag"># config</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-05/tools/IntelliJ IDEA使用总结/" rel="next" title="IntelliJ IDEA使用总结">
+                <i class="fa fa-chevron-left"></i> IntelliJ IDEA使用总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-05/Spider/Scrapy-Install/" rel="prev" title="Scrapy之新手上路">
+                Scrapy之新手上路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start-Get-Up-and-Running"><span class="nav-number">1.</span> <span class="nav-text">Quick Start: Get Up and Running</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Supported-Goals"><span class="nav-number">2.</span> <span class="nav-text">Supported Goals</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-the-Jetty-Container"><span class="nav-number">3.</span> <span class="nav-text">Configuring the Jetty Container</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#httpConnector"><span class="nav-number">3.1.</span> <span class="nav-text">httpConnector</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#port"><span class="nav-number">3.1.1.</span> <span class="nav-text">port</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#host"><span class="nav-number">3.1.2.</span> <span class="nav-text">host</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#name"><span class="nav-number">3.1.3.</span> <span class="nav-text">name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#idleTimeout"><span class="nav-number">3.1.4.</span> <span class="nav-text">idleTimeout</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#soLinger"><span class="nav-number">3.1.5.</span> <span class="nav-text">soLinger</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jettyXml"><span class="nav-number">3.2.</span> <span class="nav-text">jettyXml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#scanIntervalSeconds"><span class="nav-number">3.3.</span> <span class="nav-text">scanIntervalSeconds</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reload"><span class="nav-number">3.4.</span> <span class="nav-text">reload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dumpOnStart"><span class="nav-number">3.5.</span> <span class="nav-text">dumpOnStart</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#loginServices"><span class="nav-number">3.6.</span> <span class="nav-text">loginServices</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#requestLog"><span class="nav-number">3.7.</span> <span class="nav-text">requestLog</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#server"><span class="nav-number">3.8.</span> <span class="nav-text">server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stopPort"><span class="nav-number">3.9.</span> <span class="nav-text">stopPort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stopKey"><span class="nav-number">3.10.</span> <span class="nav-text">stopKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemProperties"><span class="nav-number">3.11.</span> <span class="nav-text">systemProperties</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#systemPropertiesFile"><span class="nav-number">3.12.</span> <span class="nav-text">systemPropertiesFile</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#skip"><span class="nav-number">3.13.</span> <span class="nav-text">skip</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useProvidedScope"><span class="nav-number">3.14.</span> <span class="nav-text">useProvidedScope</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#excludedGoals"><span class="nav-number">3.15.</span> <span class="nav-text">excludedGoals</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-a-Https-Connector"><span class="nav-number">4.</span> <span class="nav-text">Configuring a Https Connector</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jetty-xml"><span class="nav-number">4.1.</span> <span class="nav-text">jetty.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jetty-ssl-xml"><span class="nav-number">4.2.</span> <span class="nav-text">jetty-ssl.xml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#jetty-https-xml"><span class="nav-number">4.3.</span> <span class="nav-text">jetty-https.xml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-Your-WebApp"><span class="nav-number">5.</span> <span class="nav-text">Configuring Your WebApp</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#webApp"><span class="nav-number">5.1.</span> <span class="nav-text">webApp</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#contextPath"><span class="nav-number">5.1.1.</span> <span class="nav-text">contextPath</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#descriptor"><span class="nav-number">5.1.2.</span> <span class="nav-text">descriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#defaultsDescriptor"><span class="nav-number">5.1.3.</span> <span class="nav-text">defaultsDescriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#overrideDescriptor"><span class="nav-number">5.1.4.</span> <span class="nav-text">overrideDescriptor</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#tempDirectory"><span class="nav-number">5.1.5.</span> <span class="nav-text">tempDirectory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#baseResource"><span class="nav-number">5.1.6.</span> <span class="nav-text">baseResource</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resourceBases"><span class="nav-number">5.1.7.</span> <span class="nav-text">resourceBases</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#baseAppFirst"><span class="nav-number">5.1.8.</span> <span class="nav-text">baseAppFirst</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#containerIncludeJarPattern"><span class="nav-number">5.1.9.</span> <span class="nav-text">containerIncludeJarPattern</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webInfIncludeJarPattern"><span class="nav-number">5.1.10.</span> <span class="nav-text">webInfIncludeJarPattern</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#contextXml"><span class="nav-number">5.2.</span> <span class="nav-text">contextXml</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-run"><span class="nav-number">6.</span> <span class="nav-text">jetty:run</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration"><span class="nav-number">6.1.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#classesDirectory"><span class="nav-number">6.1.1.</span> <span class="nav-text">classesDirectory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#testClassesDirectory"><span class="nav-number">6.1.2.</span> <span class="nav-text">testClassesDirectory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#useTestScope"><span class="nav-number">6.1.3.</span> <span class="nav-text">useTestScope</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#webAppSourceDirectory"><span class="nav-number">6.1.4.</span> <span class="nav-text">webAppSourceDirectory</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jettyEnvXml"><span class="nav-number">6.1.5.</span> <span class="nav-text">jettyEnvXml</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scanTargets"><span class="nav-number">6.1.6.</span> <span class="nav-text">scanTargets</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scanTargetPatterns"><span class="nav-number">6.1.7.</span> <span class="nav-text">scanTargetPatterns</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scanClassesPattern"><span class="nav-number">6.1.8.</span> <span class="nav-text">scanClassesPattern</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scanTestClassesPattern"><span class="nav-number">6.1.9.</span> <span class="nav-text">scanTestClassesPattern</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-run-war"><span class="nav-number">7.</span> <span class="nav-text">jetty:run-war</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-1"><span class="nav-number">7.1.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#war"><span class="nav-number">7.1.1.</span> <span class="nav-text">war</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-run-exploded"><span class="nav-number">8.</span> <span class="nav-text">jetty:run-exploded</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-2"><span class="nav-number">8.1.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#war-1"><span class="nav-number">8.1.1.</span> <span class="nav-text">war</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-deploy-war"><span class="nav-number">9.</span> <span class="nav-text">jetty:deploy-war</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-3"><span class="nav-number">9.1.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#war-2"><span class="nav-number">9.1.1.</span> <span class="nav-text">war</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#daemon"><span class="nav-number">9.1.2.</span> <span class="nav-text">daemon</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-run-forked"><span class="nav-number">10.</span> <span class="nav-text">jetty:run-forked</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Configuration-4"><span class="nav-number">10.1.</span> <span class="nav-text">Configuration</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jvmArgs"><span class="nav-number">10.1.1.</span> <span class="nav-text">jvmArgs</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#waitForChild"><span class="nav-number">10.1.2.</span> <span class="nav-text">waitForChild</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#maxStartupLines"><span class="nav-number">10.1.3.</span> <span class="nav-text">maxStartupLines</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scanIntervalSeconds-1"><span class="nav-number">10.1.4.</span> <span class="nav-text">scanIntervalSeconds</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#reload-1"><span class="nav-number">10.1.5.</span> <span class="nav-text">reload</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#httpConnector-1"><span class="nav-number">10.1.6.</span> <span class="nav-text">httpConnector</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loginServices-1"><span class="nav-number">10.1.7.</span> <span class="nav-text">loginServices</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requestLog-1"><span class="nav-number">10.1.8.</span> <span class="nav-text">requestLog</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#systemProperties-1"><span class="nav-number">10.1.9.</span> <span class="nav-text">systemProperties</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mvn-jetty-run-forked"><span class="nav-number">11.</span> <span class="nav-text">mvn jetty:run-forked</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-start"><span class="nav-number">12.</span> <span class="nav-text">jetty:start</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-stop"><span class="nav-number">13.</span> <span class="nav-text">jetty:stop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#stopPort-1"><span class="nav-number">13.1.</span> <span class="nav-text">stopPort</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stopKey-1"><span class="nav-number">13.2.</span> <span class="nav-text">stopKey</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#stopWait"><span class="nav-number">13.3.</span> <span class="nav-text">stopWait</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mvn-jetty-stop"><span class="nav-number">14.</span> <span class="nav-text">mvn jetty:stop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jetty-effective-web-xml"><span class="nav-number">15.</span> <span class="nav-text">jetty:effective-web-xml</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#deleteOnExit"><span class="nav-number">15.1.</span> <span class="nav-text">deleteOnExit</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#effectiveWebXml"><span class="nav-number">15.2.</span> <span class="nav-text">effectiveWebXml</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#originAttribute"><span class="nav-number">15.3.</span> <span class="nav-text">originAttribute</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#generateOrigin"><span class="nav-number">15.4.</span> <span class="nav-text">generateOrigin</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Overlaid-wars"><span class="nav-number">16.</span> <span class="nav-text">Using Overlaid wars</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#With-maven-war-plugin"><span class="nav-number">17.</span> <span class="nav-text">With maven-war-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Without-maven-war-plugin"><span class="nav-number">18.</span> <span class="nav-text">Without maven-war-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Configuring-Security-Settings"><span class="nav-number">19.</span> <span class="nav-text">Configuring Security Settings</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Using-Multiple-Webapp-Root-Directories"><span class="nav-number">20.</span> <span class="nav-text">Using Multiple Webapp Root Directories</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Running-More-than-One-Webapp"><span class="nav-number">21.</span> <span class="nav-text">Running More than One Webapp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Setting-System-Properties"><span class="nav-number">22.</span> <span class="nav-text">Setting System Properties</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Specifying-System-Properties-in-the-POM"><span class="nav-number">23.</span> <span class="nav-text">Specifying System Properties in the POM</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

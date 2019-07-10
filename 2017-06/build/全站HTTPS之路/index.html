@@ -1,0 +1,1130 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="运维,HTTPS,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="想让您的站点在ssllabs上评A+吗？下面的内容也许能帮到你 什么是HTTPS？HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。 采用HTTPS">
+<meta name="keywords" content="运维,HTTPS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全站HTTPS之路">
+<meta property="og:url" content="http://xcoder.me/2017-06/build/全站HTTPS之路/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="想让您的站点在ssllabs上评A+吗？下面的内容也许能帮到你 什么是HTTPS？HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。 采用HTTPS">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/ssllab-a.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/http-https.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/http-unsafe.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/alibaba-https.jpeg">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="全站HTTPS之路">
+<meta name="twitter:description" content="想让您的站点在ssllabs上评A+吗？下面的内容也许能帮到你 什么是HTTPS？HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。 采用HTTPS">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/ssllab-a.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-06/build/全站HTTPS之路/">
+
+
+
+
+
+  <title>全站HTTPS之路 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-06/build/全站HTTPS之路/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">全站HTTPS之路</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T14:12:25+00:00">
+                2017-06-15
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/build/" itemprop="url" rel="index">
+                    <span itemprop="name">build</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-06/build/全站HTTPS之路/" class="leancloud_visitors" data-flag-title="全站HTTPS之路">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(全站HTTPS之路)原始地址]<a href="http://xcoder.me/2017-06/build/全站HTTPS之路/" title="全站HTTPS之路">http://xcoder.me/2017-06/build/全站HTTPS之路/</a>
+        <p>想让您的站点在<a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener">ssllabs</a>上评A+吗？<br><img src="http://static.xcoder.ren/public/resource/ssllab-a.png" alt="ssllabs-A+"><br>下面的内容也许能帮到你</p>
+<h2 id="什么是HTTPS？"><a href="#什么是HTTPS？" class="headerlink" title="什么是HTTPS？"></a>什么是HTTPS？</h2><p>HTTPS（全称：Hyper Text Transfer Protocol over Secure Socket Layer），是以安全为目标的HTTP通道。即HTTP下加入SSL层，HTTPS的安全基础是SSL，因此加密的详细内容就需要SSL。现在它被广泛用于互联网上安全敏感的通讯，例如交易支付等。</p>
+<p>采用HTTPS的服务器必须从CA （Certificate Authority）申请一个用于证明服务器用途类型的证书。该证书只有用于对应的服务器的时候，客户端才信任此主机。所以所有的银行系统网站，关键部分应用都是HTTPS的。客户通过信任该证书，从而信任了该主机。其实这样做效率很低，但是银行更侧重安全。这一点对局域网对内提供服务处的服务器没有任何意义。局域网中的服务器，采用的证书不管是自己发布的还是从公众的地方发布的，其客户端都是自己人，所以该局域网中的客户端也就肯定信任该服务器。</p>
+<h2 id="启用HTTPS"><a href="#启用HTTPS" class="headerlink" title="启用HTTPS"></a>启用HTTPS</h2><p>有不少网站只通过HTTPS对外提供服务，但用户在访问某个网站的时候，在浏览器里却往往直接输入网站域名（例如<a href="http://www.example.com），而不是输入完整的URL（例如https://www.example.com），不过浏览器依然能正确的使用HTTPS发起请求。这背后多亏了服务器和浏览器的协作" target="_blank" rel="noopener">www.example.com），而不是输入完整的URL（例如https://www.example.com），不过浏览器依然能正确的使用HTTPS发起请求。这背后多亏了服务器和浏览器的协作</a><br><img src="http://static.xcoder.ren/public/resource/http-https.png" alt="强制全站https"></p>
+<p>以nginx为例配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line"><span class="code">    listen 80;</span></span><br><span class="line"><span class="code">    server_name www.example.com;</span></span><br><span class="line"><span class="code">    rewrite ^(.*)$  https://$host$1 permanent;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">或者</span><br><span class="line">server&#123;</span><br><span class="line"><span class="code">    listen 80;</span></span><br><span class="line"><span class="code">    server_name www.example.com;</span></span><br><span class="line"><span class="code">    return 301 https://www.example.com;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>nginx的HTTPS配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line"><span class="code">        #开启 SPDY 和 HTTP2 支持，借助多路复用提升传输性能。</span></span><br><span class="line"><span class="code">        listen   443  ssl http2 default_server;</span></span><br><span class="line"><span class="code">        server_name  www.example.com;</span></span><br><span class="line"></span><br><span class="line"><span class="code">        #charset koi8-r;</span></span><br><span class="line"><span class="code">        #配置HSTS</span></span><br><span class="line"><span class="code">        add_header Strict-Transport-Security "max-age=15552000; includeSubdomains; preload" always;</span></span><br><span class="line"><span class="code">        add_header X-Frame-Options "DENY";</span></span><br><span class="line"></span><br><span class="line"><span class="code">        #access_log  logs/host.access.log  main;</span></span><br><span class="line"><span class="code">        ssl on;</span></span><br><span class="line"><span class="code">        ##crt后缀或者pem后缀为证书公钥文件,key为证书私钥文件，一般证书服务商提供</span></span><br><span class="line"><span class="code">        ssl_certificate  /usr/nginx/ssl/example.com.crt;</span></span><br><span class="line"><span class="code">        ssl_certificate_key  /usr/nginx/ssl/example.com.key;</span></span><br><span class="line"><span class="code">        ssl_session_timeout 5m;</span></span><br><span class="line"><span class="code">        #不使用SSLv2,SSLv3等不安全协议</span></span><br><span class="line"><span class="code">        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span></span><br><span class="line"><span class="code">        ssl_ciphers ECDHE-RSA-AES128-GCM-SHA256:ECDHE:ECDH:AES:HIGH:!NULL:!aNULL:!MD5:!ADH:!RC4;</span></span><br><span class="line"><span class="code">        ssl_prefer_server_ciphers on;</span></span><br><span class="line"><span class="code">        </span></span><br><span class="line"><span class="code">        ssl_dhparam /path/to/dhparam.pem;</span></span><br><span class="line"><span class="code">        </span></span><br><span class="line"><span class="code">        location / &#123;</span></span><br><span class="line"><span class="code">            proxy_pass http://127.0.0.1:8080;</span></span><br><span class="line"><span class="code">            proxy_set_header Host $http_host;</span></span><br><span class="line"><span class="code">            proxy_set_header X-Forward-For $remote_addr;</span></span><br><span class="line"><span class="code">            proxy_set_header x-forwarded-ssl on;</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="code">        #error_page  404              /404.html;</span></span><br><span class="line"></span><br><span class="line"><span class="code">        # redirect server error pages to the static page /50x.html</span></span><br><span class="line"><span class="code">        #</span></span><br><span class="line"><span class="code">        error_page   500 502 503 504  /50x.html;</span></span><br><span class="line"><span class="code">        location = /50x.html &#123;</span></span><br><span class="line"><span class="code">            root   html;</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>有了这个配置，您在<a href="https://www.ssllabs.com/ssltest/" target="_blank" rel="noopener">ssllabs</a>上的评级得到下面的结果就so easy了</p>
+<p>通常情况下，我们将用户的 HTTP 请求 301或302 跳转到 HTTPS，这会存在两个问题：</p>
+<ul>
+<li>不够安全，302 跳转会暴露用户访问站点，也容易被劫持<br><img src="http://static.xcoder.ren/public/resource/http-unsafe.png" alt="http跳转中被劫持"></li>
+<li>拖慢访问速度，302 跳转需要一个 RTT（The role of packet loss and round-trip time），浏览器执行跳转也需要时间</li>
+</ul>
+<h2 id="HSTS解决跳转不安全的问题"><a href="#HSTS解决跳转不安全的问题" class="headerlink" title="HSTS解决跳转不安全的问题"></a>HSTS解决跳转不安全的问题</h2><p>HSTS的全称是HTTP Strict-Transport-Security，它是一个Web安全策略机制（web security policy mechanism）。<br>302跳转是由浏览器触发的，服务器无法完全控制，这个需求导致了 HSTS(HTTP Strict Transport Security)的诞生。<br>HSTS就是添加 header 头（add_header Strict-Transport-Security max-age=15768000;includeSubDomains），告诉浏览器网站使用 HTTPS 访问，支持HSTS的浏览器（Chrome, firefox, ie 都支持了 HSTS（<a href="http://caniuse.com/#feat=stricttransportsecurity））就会在后面的请求中直接切换到" target="_blank" rel="noopener">http://caniuse.com/#feat=stricttransportsecurity））就会在后面的请求中直接切换到</a> HTTPS。在 Chrome 中会看到浏览器自己会有个 307 Internal Redirect 的内部重定向。在一段时间内也就是max-age定义的时间，不管用户输入<a href="http://www.example.com还是http://www.example.com，都会默认将请求内部跳转到https://www.example.com。" target="_blank" rel="noopener">www.example.com还是http://www.example.com，都会默认将请求内部跳转到https://www.example.com。</a><br>HSTS最早于2015年被纳入到ThoughtWorks技术雷达，并且目前在“采用（Adopt）“阶段，这意味着ThoughtWorks强烈主张业界积极采用这项安全防御措施，并且ThoughtWorks已经将其应用于自己的项目。<br>HSTS Header的语法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Strict-Transport-Security: &lt;max-age=&gt;[; includeSubDomains][; preload]</span><br></pre></td></tr></table></figure>
+<p>其中：</p>
+<ul>
+<li>max-age是必选参数，是一个以秒为单位的数值，它代表着HSTS Header的过期时间，通常设置为1年，即31536000秒。</li>
+<li>includeSubDomains是可选参数，如果包含它，则意味着当前域名及其子域名均开启HSTS保护。</li>
+<li>preload是可选参数，只有当你申请将自己的域名加入到浏览器内置列表的时候才需要使用到它。关于浏览器内置列表，下文有详细介绍。</li>
+</ul>
+<p>Apache上启用HSTS<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="section"># Optionally load the headers module:</span></span><br><span class="line">LoadModule headers<span class="emphasis">_module modules/mod_</span>headers.so</span><br><span class="line"> </span><br><span class="line">&lt;VirtualHost 0.0.0.0:443&gt;</span><br><span class="line"><span class="code">    Header always set Strict-Transport-Security "max-age=63072000; includeSubdomains; preload"</span></span><br><span class="line">&lt;/VirtualHost&gt;</span><br></pre></td></tr></table></figure></p>
+<p>Nginx上启用HSTS<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">add_header Strict-Transport-Security "max-age=300; includeSubdomains; preload";</span><br><span class="line">add_header X-Frame-Options "DENY";</span><br></pre></td></tr></table></figure></p>
+<p>Lighttpd上启用HSTS<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server.modules += ( "mod_setenv" )</span><br><span class="line">$HTTP["scheme"] == "https" &#123;</span><br><span class="line"><span class="code">    setenv.add-response-header  = ( "Strict-Transport-Security" =&gt; "max-age=63072000; includeSubdomains; preload")</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在生产环境下使用HSTS应当特别谨慎，因为一旦浏览器接收到HSTS Header（假如有效期是1年），但是网站的证书又恰好出了问题，那么用户将在接下来的1年时间内都无法访问到你的网站，直到证书错误被修复，或者用户主动清除浏览器缓存。因此，建议在生产环境开启HSTS的时候，先将max-age的值设置小一些，例如5分钟，然后检查HSTS是否能正常工作，网站能否正常访问，之后再逐步将时间延长，例如1周、1个月，并在这个时间范围内继续检查HSTS是否正常工作，最后才改到1年。</p>
+<h2 id="全站HTTPS必须解决的问题"><a href="#全站HTTPS必须解决的问题" class="headerlink" title="全站HTTPS必须解决的问题"></a>全站HTTPS必须解决的问题</h2><p>然而，HTTPS并非“想上就上”，正式启用之前，必须解决至少三个方面的大问题。</p>
+<p>首先是性能，这也主要分三点。</p>
+<ul>
+<li><p>HTTPS需要多次握手，因此网络耗时变长，用户从HTTP跳转到HTTPS需要一些时间；</p>
+</li>
+<li><p>HTTPS要做RSA校验，这会影响到设备性能；</p>
+</li>
+<li><p>所有CDN节点要支持HTTPS，而且需要有极其复杂的解决方案来面对DDoS的挑战。</p>
+</li>
+</ul>
+<p>其次，兼容性及周边。</p>
+<ul>
+<li><p>页面里所有嵌入的资源(图片/附件/js/css/视频等)都要改成HTTPS的,否则浏览器就会报警(静态资源的URL，采用 // 引用资源，表示遵从当前页面的协议，浏览器会进行自动补全).</p>
+</li>
+<li><p>移动客户端（APP）也需要适配HTTPS，所以必须做调整修改；</p>
+</li>
+<li><p>解决第三方网站看不到Referer的问题；</p>
+</li>
+<li><p>所有的开发、测试环境都要做HTTPS的升级；</p>
+</li>
+</ul>
+<p>最后，为保证上线时的顺利切换，需要提前准备大量的预案，以应对各种可能出现的情况。</p>
+<h2 id="全站HTTPS还可以做的更多"><a href="#全站HTTPS还可以做的更多" class="headerlink" title="全站HTTPS还可以做的更多"></a>全站HTTPS还可以做的更多</h2><h3 id="配置X-Frame-Options"><a href="#配置X-Frame-Options" class="headerlink" title="配置X-Frame-Options"></a>配置X-Frame-Options</h3><p>X-Frame-Options头部添加到HTTPS站点，确保不会嵌入到frame 或 iframe，避免点击劫持，以确保网站的内容不会嵌入到其他网站。</p>
+<p>Apache配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Header always set X-Frame-Options DENY</span><br></pre></td></tr></table></figure></p>
+<p>Nginx配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">add_header X-Frame-Options "DENY";</span><br></pre></td></tr></table></figure></p>
+<p>Lighttpd配置<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server.modules += ( "mod_setenv" )</span><br><span class="line">$HTTP["scheme"] == "https" &#123;</span><br><span class="line"><span class="code">    setenv.add-response-header  = ( "X-Frame-Options" =&gt; "DENY")</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>设置<code>listen   443  ssl http2 default_server;</code>最好将openssl和nginx升级到当前版本的最新版本</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">yum update nginx</span><br><span class="line">yum update openssl</span><br></pre></td></tr></table></figure>
+<h3 id="配置赫尔曼密钥"><a href="#配置赫尔曼密钥" class="headerlink" title="配置赫尔曼密钥"></a>配置赫尔曼密钥</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl dhparam -out dhparam.pem 2048 // 在 ssh 运行， openssl 生成 2048 位的密钥而不是当作参数写入 nginx.conf 文件。</span><br><span class="line"></span><br><span class="line">ssl_dhparam /path/to/dhparam.pem; //在 .conf 中配置</span><br></pre></td></tr></table></figure>
+<h3 id="使用httpsecurityreport网站进一步改进安全性"><a href="#使用httpsecurityreport网站进一步改进安全性" class="headerlink" title="使用httpsecurityreport网站进一步改进安全性"></a>使用httpsecurityreport网站进一步改进安全性</h3><p>推荐使用<a href="https://httpsecurityreport.com/" target="_blank" rel="noopener">httpsecurityreport</a>网站来检测安全性得分，更重要的是它能指导你如何更近一步的改进安全性。</p>
+<p><a href="https://httpsecurityreport.com/best_practice.html" target="_blank" rel="noopener">HTTP安全性最佳实践</a>,安全路上永不止步！</p>
+<p>最后，盗张阿里的图<br><img src="http://static.xcoder.ren/public/resource/alibaba-https.jpeg" alt="阿里HTTPS"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-06/build/全站HTTPS之路/" title="全站HTTPS之路">http://xcoder.me/2017-06/build/全站HTTPS之路/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/运维/" rel="tag"># 运维</a>
+          
+            <a href="/tags/HTTPS/" rel="tag"># HTTPS</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-06/tools/Mybatis语法总结/" rel="next" title="Mybatis语法总结">
+                <i class="fa fa-chevron-left"></i> Mybatis语法总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-06/build/logstash-forwarder安装与配置/" rel="prev" title="logstash-forwarder安装与配置">
+                logstash-forwarder安装与配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是HTTPS？"><span class="nav-number">1.</span> <span class="nav-text">什么是HTTPS？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启用HTTPS"><span class="nav-number">2.</span> <span class="nav-text">启用HTTPS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HSTS解决跳转不安全的问题"><span class="nav-number">3.</span> <span class="nav-text">HSTS解决跳转不安全的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全站HTTPS必须解决的问题"><span class="nav-number">4.</span> <span class="nav-text">全站HTTPS必须解决的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全站HTTPS还可以做的更多"><span class="nav-number">5.</span> <span class="nav-text">全站HTTPS还可以做的更多</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#配置X-Frame-Options"><span class="nav-number">5.1.</span> <span class="nav-text">配置X-Frame-Options</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置赫尔曼密钥"><span class="nav-number">5.2.</span> <span class="nav-text">配置赫尔曼密钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用httpsecurityreport网站进一步改进安全性"><span class="nav-number">5.3.</span> <span class="nav-text">使用httpsecurityreport网站进一步改进安全性</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

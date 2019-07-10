@@ -1,0 +1,1057 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="DDD,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="来自软件开发大图景：两个维度，四个象限 大师做，转载记录用 软件开发，尤其是大型软件开发是非常复杂的，涉及非常多的组件元素，需要作出大大小小的各种决策。软件开发的根本矛盾是不断增长的系统规模和复杂性与开发人员有限的大脑容量和处理速度之间的矛盾。:) 为了了解软件开发的全貌，让我们上升到3万米的高空，对软件开发内容做一个全景式的鸟瞰，对我们要了解和实现的东西进行一个高层的切分。 #两个维度 ##范围">
+<meta name="keywords" content="DDD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【转】软件开发大图景：两个维度，四个象限">
+<meta property="og:url" content="http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="来自软件开发大图景：两个维度，四个象限 大师做，转载记录用 软件开发，尤其是大型软件开发是非常复杂的，涉及非常多的组件元素，需要作出大大小小的各种决策。软件开发的根本矛盾是不断增长的系统规模和复杂性与开发人员有限的大脑容量和处理速度之间的矛盾。:) 为了了解软件开发的全貌，让我们上升到3万米的高空，对软件开发内容做一个全景式的鸟瞰，对我们要了解和实现的东西进行一个高层的切分。 #两个维度 ##范围">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/DDD/resource/Big-Picture.png">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【转】软件开发大图景：两个维度，四个象限">
+<meta name="twitter:description" content="来自软件开发大图景：两个维度，四个象限 大师做，转载记录用 软件开发，尤其是大型软件开发是非常复杂的，涉及非常多的组件元素，需要作出大大小小的各种决策。软件开发的根本矛盾是不断增长的系统规模和复杂性与开发人员有限的大脑容量和处理速度之间的矛盾。:) 为了了解软件开发的全貌，让我们上升到3万米的高空，对软件开发内容做一个全景式的鸟瞰，对我们要了解和实现的东西进行一个高层的切分。 #两个维度 ##范围">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/DDD/resource/Big-Picture.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/">
+
+
+
+
+
+  <title>【转】软件开发大图景：两个维度，四个象限 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【转】软件开发大图景：两个维度，四个象限</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-19T12:45:56+00:00">
+                2017-10-19
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DDD/" itemprop="url" rel="index">
+                    <span itemprop="name">DDD</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/" class="leancloud_visitors" data-flag-title="【转】软件开发大图景：两个维度，四个象限">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(【转】软件开发大图景：两个维度，四个象限)原始地址]<a href="http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/" title="【转】软件开发大图景：两个维度，四个象限">http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/</a>
+        <p>来自<a href="http://www.yyang.io/2015/12/31/Big-Picture-of-Software-Development/" target="_blank" rel="noopener">软件开发大图景：两个维度，四个象限</a></p>
+<p><strong>大师做，转载记录用</strong></p>
+<p>软件开发，尤其是大型软件开发是非常复杂的，涉及非常多的组件元素，需要作出大大小小的各种决策。软件开发的根本矛盾是不断增长的系统规模和复杂性与开发人员有限的大脑容量和处理速度之间的矛盾。:)</p>
+<p>为了了解软件开发的全貌，让我们上升到3万米的高空，对软件开发内容做一个全景式的鸟瞰，对我们要了解和实现的东西进行一个高层的切分。</p>
+<p>#两个维度</p>
+<p>##范围维度</p>
+<p>软件开发的主要目的是为其他行业的业务问题提供技术解决方案，例如为航空公司的飞机实现自动导航，为汽车公司的汽车生产进行产销平衡，等等。从范围上看，软件开发所覆盖的范围可以划分为两个领域：我们要开发的软件系统属于解决方案域，而软件系统来自于和最终服务于的业务领域（例如飞机导航、汽车生产等等）属于问题域。问题域存在问题，软件系统为问题域的问题提供技术上的解决方案。</p>
+<p>这就是我们看待软件开发的第一个维度：范围维度。我们把软件开发的范围划分为问题域和解决方案域。处于问题域中的时候，我们的任务是认识世界，即了解在没有软件系统存在的情况下，现实业务领域是如何运作的；而处于解决方案域中的时候，我们是在改造世界，即通过设计和实现软件系统帮助业务领域运作得更好（更大、更快、更赚钱、更省钱、更透明、更灵活……）。</p>
+<p>在软件开发的术语中，“业务”、“领域”是问题域的同义词，“系统”是解决方案域的同义词（“系统”是“软件系统”的简称）。因此，“业务”分析师、”业务”规则、“业务”用例模型、“领域”模型、“领域”专家聚焦于问题域，而“系统”分析师、“系统”用例模型聚焦于解决方案域。</p>
+<p>##内/外维度</p>
+<p>除了范围维度之外，我们还可以从另外的维度看待软件开发，其中一个非常有用的维度是内/外维度。从内/外视角看，系统在我们面前可以划分为外部视图和内部视图。外部视图是系统的黑盒视图，我们看不到它的内部组成和运作机制，只能够看到它呈现给外界的功能；而内部视图是系统的白盒视图，揭示了系统的内部组成和运作机制。</p>
+<p>#四个象限<br>范围维度和内外维度两者是正交的，你可以把它们看成两条相互垂直相交的数轴——X轴和Y轴，它们把软件开发问题空间分割为四个区域——用数学的术语表示就是四个象限。</p>
+<p><img src="http://static.xcoder.ren/public/DDD/resource/Big-Picture.png" alt="软件开发大图景"></p>
+<p>分别说明如下：</p>
+<p>##问题域的外部视图——业务用例模型</p>
+<p>这个象限从外部视角看待问题域，分析探究业务系统实现了哪些功能，对它的用户提供了哪些业务价值？每一项系统功能体现为一个业务用例。例如银行储蓄业务为储户提供存款、取款、转账和提供对账单等等服务，每一项服务就是一个业务用例。</p>
+<p>开发业务用例模型不是软件开发的必须步骤，但本人强烈建议不要忽略这一方面的工作。一方面，开发软件系统的目标就是实现和改进这些业务用例（或业务用例中的某些环节），业务用例为软件开发设定了目标和验收标准；另一方面，通过业务用例分析可以更有效地支持领域建模和系统用例建模，有助于发现领域对象和机制，防止系统用例遗漏或疏失。</p>
+<p>##问题域的内部视图——领域模型</p>
+<p>这个象限从内部视角看待问题域，研究业务领域中固有的组成、结构、行为、机制和规则等等。这方面的工作称为“领域建模”，其产物称为“领域模型”。我们要重点分析研究的是：业务领域中有哪些关键的概念实体（例如银行储蓄业务中的账户、对账单、信用卡、借记卡等等）、各种概念实体之间的关系（关联、泛化、组合、聚合等等），以及它们之间如何交互以实现业务用例模型中规定的各项功能等等。</p>
+<p>领域建模是软件开发中最核心的活动，领域模型是软件开发中最有价值的工件。领域建模的质量在很大程度上决定了软件的成败。如果由于对问题域分析理解的偏差，产出错误的领域模型，那么，无论多么先进的技术工具、多么高超的技术手段，都无法挽救软件的失败命运。</p>
+<p>##解决方案域的外部视图——系统用例模型</p>
+<p>这个象限从外部视角看待要构建的软件系统，定义了系统所要实现的所有业务功能，即软件系统能够向它的用户提供的业务价值。这方面的工作称为需求分析（通常只包含功能需求），其产物称为“系统用例模型”，简称为“用例模型”（另一个名字是“功能规格说明书”），每一个系统用例描述一项对用户有价值的系统功能。</p>
+<p>系统用例模型定义了软件系统的功能外观，即软件系统能够“干什么”的方面。系统用例模型沟通了两个领域，它定义了要开发的软件系统（解决方案域）必须实现的业务功能（问题域）。</p>
+<p>##解决方案域的内部视图——设计模型</p>
+<p>这个象限从内部视角看待要构建的软件系统，即通过哪些技术组件和怎样的交互手段实现系统用例模型中定义的业务功能？</p>
+<p>领域模型中的对象代表问题域中的概念（如信用卡、账户等等），而设计模型中的对象代表软件实体（如记录集、DAO等等）。正如同业务用例模型会映射到系统用例模型一样（通常一个系统用例实现一个业务用例，或者业务用例中的一个步骤），领域模型中的对象也可以而且应该映射到设计模型中的相应软件对象之上，这意味着设计模型中也应该有信用卡、账户这样的对象，它们和领域模型中的同名对象一样，拥有相同或类似的属性和行为，这就是《领域驱动设计》一书的主张——使用同一种语言（业务语言）和基于同一个模型（领域模型）进行分析和设计，开发软件应用。</p>
+<p>#关系<br>解决方案域以问题域为出发点和依归，即问题决定解决方案（这是理所当然的，不是吗？如果我想求解3乘2这个问题，你却提供3加2这个解决方案，当然是错误的）。开发人员的一个典型的错误是把关注点集中在解决方案域的实现技术上，却忽视了问题分析和问题定义，因此在实现过程中失焦，刻鹄成鹜，画虎类犬。</p>
+<p>内部视图“动于内”，外部视图“形诸外”。系统的外部视图定义了外部可见的行为，而内部视图揭示了系统内部的组织结构和运行机制，系统通过内部视图中的结构和机制实现外部视图中向外界呈现的行为。外部视图表达What，即“做什么”，内部视图表达How，即“怎么做”。</p>
+<p>设计模型从两方面获得指导：从系统用例模型中获得“What”方面的指导，确定需要实现哪些功能；以及从领域模型中获得“How”方面的指导，确定如何实现那些功能。在分层架构中，用例模型和领域模型分别映射到系统的应用层和领域层；在Clean架构（Robert C. Martin，Clean架构）中，用例模型和领域模型分别映射到系统的用例层和实体层。</p>
+<p>#时刻记住你当前所处的位置<br>在软件开发过程中，请时刻记住你当前处于哪一个象限。我们应该严格划分业务（问题域）和技术（解决方案域），意图（外部视角）和实现（内部视角），要防止业务逻辑渗漏到技术组件中（例如在表示层或持久层中维护取款业务规则），也要防止技术逻辑渗漏到业务逻辑中（例如领域层代码依赖Spring或Hibernate，或使用RabbitMQ进行消息通信），还要防止在只应该表示意图的地方直接提供实现方案（例如在应用层中实现业务逻辑）。</p>
+<p>当处于问题域中的时候，我们的任务是“发现”，是“认识世界”；当处于解决方案域的时候，我们的任务是“发明”，是“改造世界”。当处于外部视图中的时候，我们是在描述系统的行为和功能；当处于内部视图中的时候，我们是在描述系统的内部组成、结构和实现机制。具体来说：</p>
+<ul>
+<li>在业务用例模型中，我们识别和建模业务意图和业务行为；</li>
+<li>在领域模型中，我们识别和建模业务实体和业务实现机制；</li>
+<li>在系统用例模型中，我们定义待开发的软件系统要实现的行为和功能；</li>
+<li>在设计模型中，我们定义待开发的软件系统的内部结构和行为实现机制。</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/" title="【转】软件开发大图景：两个维度，四个象限">http://xcoder.me/2017-10/DDD/【转】软件开发大图景：两个维度，四个象限/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/DDD/" rel="tag"># DDD</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-09/language/C3P0相关知识总结/" rel="next" title="C3P0相关知识总结">
+                <i class="fa fa-chevron-left"></i> C3P0相关知识总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-10/DDD/【转】函数式编程与行为参数化/" rel="prev" title="【转】函数式编程与行为参数化">
+                【转】函数式编程与行为参数化 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

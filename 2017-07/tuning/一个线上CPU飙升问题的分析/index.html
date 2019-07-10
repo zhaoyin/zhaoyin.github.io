@@ -1,0 +1,1094 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="CPU,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="问题今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容1234567891011121314151617181920212223Exception:org.hibernate.exception.JDBCConnectionException: could not p">
+<meta name="keywords" content="CPU">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个线上CPU100%(could not prepare statement)问题的分析">
+<meta property="og:url" content="http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="问题今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容1234567891011121314151617181920212223Exception:org.hibernate.exception.JDBCConnectionException: could not p">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/cpu100%25.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/resource/hibernate-three-states.jpg">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个线上CPU100%(could not prepare statement)问题的分析">
+<meta name="twitter:description" content="问题今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容1234567891011121314151617181920212223Exception:org.hibernate.exception.JDBCConnectionException: could not p">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/resource/cpu100%25.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/">
+
+
+
+
+
+  <title>一个线上CPU100%(could not prepare statement)问题的分析 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">一个线上CPU100%(could not prepare statement)问题的分析</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-13T13:40:46+00:00">
+                2017-07-13
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tuning/" itemprop="url" rel="index">
+                    <span itemprop="name">tuning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-07/tuning/一个线上CPU飙升问题的分析/" class="leancloud_visitors" data-flag-title="一个线上CPU100%(could not prepare statement)问题的分析">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(一个线上CPU100%(could not prepare statement)问题的分析)原始地址]<a href="http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/" title="一个线上CPU100%(could not prepare statement)问题的分析">http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/</a>
+        <p><img src="http://static.xcoder.ren/public/resource/cpu100%25.png" alt="cpu100%"></p>
+<h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>今天突然收到线上报警说CPU超过90%，收到短信后我不慌不忙的打开电脑，打开ELK搭的日志服务，查看有没有错误日志，因为根据经验，这种问题很容易是代码有问题造成的。找到了下面的内容<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">Exception:org.hibernate.exception.JDBCConnectionException: could not prepare statement</span><br><span class="line">javax.persistence.PersistenceException: org.hibernate.exception.JDBCConnectionException: could not prepare statement</span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1387)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1310)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1316)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.flush(AbstractEntityManagerImpl.java:999)</span></span><br><span class="line"><span class="code">	at play.db.jpa.JPABase._save(JPABase.java:45)</span></span><br><span class="line"><span class="code">	at play.db.jpa.GenericModel.save(GenericModel.java:232)</span></span><br><span class="line"><span class="code">	....</span></span><br><span class="line"><span class="code">	at java.lang.Thread.run(Thread.java:745)</span></span><br><span class="line">Caused by: org.hibernate.exception.JDBCConnectionException: could not prepare statement</span><br><span class="line"><span class="code">	at org.hibernate.exception.internal.SQLExceptionTypeDelegate.convert(SQLExceptionTypeDelegate.java:67)</span></span><br><span class="line"><span class="code">	.....</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.flush(AbstractEntityManagerImpl.java:996)</span></span><br><span class="line"><span class="code">	... 17 more</span></span><br><span class="line">Caused by: com.mysql.jdbc.exceptions.jdbc4.MySQLNonTransientConnectionException: No operations allowed after connection closed.</span><br><span class="line"><span class="code">	at com.mysql.jdbc.Util.handleNewInstance(Util.java:425)</span></span><br><span class="line"><span class="code">	at com.mysql.jdbc.Util.getInstance(Util.java:408)</span></span><br><span class="line"><span class="code">	at com.mysql.jdbc.SQLError.createSQLException(SQLError.java:918)</span></span><br><span class="line"><span class="code">	.....</span></span><br><span class="line"><span class="code">	at com.mysql.jdbc.ConnectionImpl.prepareStatement(ConnectionImpl.java:4071)</span></span><br><span class="line"><span class="code">	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$1.doPrepare(StatementPreparerImpl.java:96)</span></span><br><span class="line"><span class="code">	at org.hibernate.engine.jdbc.internal.StatementPreparerImpl$StatementPreparationTemplate.prepareStatement(StatementPreparerImpl.java:183)</span></span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>果然，有大量的这种日志。正准备继续分析，又收到了下面的消息<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">主机:xxx.xxxx.xxx.xx</span><br><span class="line">时间:2017.07.13 19:32:41</span><br><span class="line">等级:Warning</span><br><span class="line">信息:Disk I/O is overloaded on xxx.xxx.xxx.xxxx</span><br><span class="line">项目:system.cpu.util[,iowait]</span><br><span class="line">详情:CPU iowait time:79.29 %</span><br><span class="line">状态:PROBLEM:79.29 %</span><br><span class="line">事件ID:2229710</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">主机:xxx.xxx.xxx.xxx</span><br><span class="line">时间:2017.07.13 20:25:37</span><br><span class="line">等级:High</span><br><span class="line">信息:xxxxx is unavailable!!</span><br><span class="line">项目:web.test.rspcode[xx,xxxxxx]</span><br><span class="line">详情:Response code for step "xxxxxxxx.xxx.xx" of scenario "xxxx".:502</span><br><span class="line">状态:PROBLEM:502</span><br><span class="line">事件ID:2230199</span><br></pre></td></tr></table></figure>
+<p>问题已经变得越来越严重了。没有时间分析了，必须马上重启应用，否则会造成更大范围的问题。因为该机器不是该应用实例独享的。一旦该应用实例问题积聚，就会造成CPU持续100%，接着就会造成这个机器无法访问，进而影响该机器上的其他应用实例。<br>果然，接着就收到另一个站点不能访问的短信。已经波及另一个应用了。ssh一试也已经登录不上去了。<br>登录阿里云重启机器后重启该机器的所有服务，过一会看日志服务又有大量的<code>could not prepare statement</code>这种日志了。因为这个是定时任务服务器，出问题的堆栈显示是一个每20分钟执行的JOB。现在要解决问题只能先停掉定时任务的服务，以免重蹈CPU飙升的覆辙。<br>停止后分析问题，该JOB执行是从数据表里面取出数据（其他站点服务存放的未处理数据），然后调用第三方服务处理数据后再将处理结果回写。<br>查看数据表中的数据量，不查不知道，一查吓一跳，里面有3400条未处理数据。这说明当时二十分钟内突然积聚了几百条数据，能短时间内突然积聚上百条数据应该是站点上导入数据造成的。<br>以下是出问题的代码<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">for(Entity entity : entities)&#123;</span><br><span class="line"><span class="code">    //以下是伪代码</span></span><br><span class="line"><span class="code">    try&#123;</span></span><br><span class="line"><span class="code">        ApiResult result = thirdApi.doSomeThing(entity); //第三方api处理并返回结果</span></span><br><span class="line"><span class="code">        entity = decorateEntity(result);  //根据返回结果处理数据</span></span><br><span class="line"><span class="code">        entity.save();  //将处理好的数据执行更新操作</span></span><br><span class="line"><span class="code">        if(result.success)&#123; //返回执行成功的结果同时要处理另外的数据</span></span><br><span class="line"><span class="code">            OtherEntity oEntity = getOtherEntity(entity); </span></span><br><span class="line"><span class="code">            oEntity = decorateOtherEntity(oEntity);</span></span><br><span class="line"><span class="code">            oEntity.save();</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">    &#125;catch(Exception e)&#123;</span></span><br><span class="line"><span class="code">        Logger.error(e);</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>由于我们的应用本身如果不自行处理事务，默认会在每一个http请求开始时启动一个事务，如果不标记readonly=true则不是只读事务。但是JOB操作不会启事务。<br>当JOB中几百条数据,几千条数据过来（循环），会大量请求新的连接（session），最终会耗尽C3P0连接池的最大连接数，导致<code>No operations allowed after connection closed.</code>，进而出现<code>could not prepare statement</code>;<br>而且没有单独处理每一条记录的事务，还会出现entity.save()成功了，但是oEntity.save()失败了，导致数据不一致的情况。<br>找到原因后做如下处理：<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">for(Entity entity : entities)&#123;</span><br><span class="line"><span class="code">    //以下是伪代码</span></span><br><span class="line"><span class="code">    try&#123;     </span></span><br><span class="line"><span class="code">        if (!JPA.isInitialized()) &#123;</span></span><br><span class="line"><span class="code">            JPA.startTx(JPA.DEFAULT, false);</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">        ApiResult result = thirdApi.doSomeThing(entity);</span></span><br><span class="line"><span class="code">        entity = decorateEntity(result);</span></span><br><span class="line"><span class="code">        entity.save();</span></span><br><span class="line"><span class="code">        if(result.success)&#123;</span></span><br><span class="line"><span class="code">            OtherEntity oEntity = getOtherEntity(entity);</span></span><br><span class="line"><span class="code">            oEntity = decorateOtherEntity(oEntity);</span></span><br><span class="line"><span class="code">            oEntity.save();</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">    &#125;catch(Exception e)&#123;</span></span><br><span class="line"><span class="code">        JPA.rollbackTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">        Logger.error(e);</span></span><br><span class="line"><span class="code">    &#125;finally &#123;</span></span><br><span class="line"><span class="code">        JPA.closeTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样的代码够了吗？<br>并不够，每条记录单独加事务，由于要处理的数据多，处理几条数据后就会发现可能会出下面的错误<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Exception:org.hibernate.PersistentObjectException: detached entity passed to persist: models.user.UhtUserShip</span><br><span class="line">javax.persistence.PersistenceException: org.hibernate.PersistentObjectException: detached entity passed to persist: models.user.UhtUserShip</span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1387)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1310)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.convert(AbstractEntityManagerImpl.java:1316)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.persist(AbstractEntityManagerImpl.java:881)</span></span><br><span class="line"><span class="code">	at play.db.jpa.JPABase._save(JPABase.java:35)</span></span><br><span class="line"><span class="code">	at play.db.jpa.GenericModel.save(GenericModel.java:232)</span></span><br><span class="line"><span class="code">	....</span></span><br><span class="line"><span class="code">	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$201(ScheduledThreadPoolExecutor.java:180)</span></span><br><span class="line"><span class="code">	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:293)</span></span><br><span class="line"><span class="code">	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)</span></span><br><span class="line"><span class="code">	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)</span></span><br><span class="line"><span class="code">	at java.lang.Thread.run(Thread.java:745)</span></span><br><span class="line">Caused by: org.hibernate.PersistentObjectException: detached entity passed to persist: models.user.UhtUserShip</span><br><span class="line"><span class="code">	at org.hibernate.event.internal.DefaultPersistEventListener.onPersist(DefaultPersistEventListener.java:141)</span></span><br><span class="line"><span class="code">	....</span></span><br><span class="line"><span class="code">	at org.hibernate.internal.SessionImpl.persist(SessionImpl.java:750)</span></span><br><span class="line"><span class="code">	at org.hibernate.ejb.AbstractEntityManagerImpl.persist(AbstractEntityManagerImpl.java:875)</span></span><br><span class="line"><span class="code">	... 17 more</span></span><br></pre></td></tr></table></figure></p>
+<p>这是因为后面的记录在save时，由于中间连接关闭过，持久化对象已经由持久态转换为游离态，保存一个游离态的对象就可能会出现<code>detached entity passed to persist</code>的错误。<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">for(Entity entity : entities)&#123;</span><br><span class="line"><span class="code">    //以下是伪代码</span></span><br><span class="line"><span class="code">    try&#123;     </span></span><br><span class="line"><span class="code">        if (!JPA.isInitialized()) &#123;</span></span><br><span class="line"><span class="code">            JPA.startTx(JPA.DEFAULT, false);</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">        ApiResult result = thirdApi.doSomeThing(entity);</span></span><br><span class="line"><span class="code">        entity = decorateEntity(result);</span></span><br><span class="line"><span class="code">        entity = entity.merge();</span></span><br><span class="line"><span class="code">        entity.save();</span></span><br><span class="line"><span class="code">        if(result.success)&#123;</span></span><br><span class="line"><span class="code">            OtherEntity oEntity = getOtherEntity(entity);</span></span><br><span class="line"><span class="code">            oEntity = decorateOtherEntity(oEntity);</span></span><br><span class="line"><span class="code">            oEntity = oEntity.merge();</span></span><br><span class="line"><span class="code">            oEntity.save();</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">    &#125;catch(Exception e)&#123;</span></span><br><span class="line"><span class="code">        JPA.rollbackTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">        Logger.error(e);</span></span><br><span class="line"><span class="code">    &#125;finally &#123;</span></span><br><span class="line"><span class="code">        JPA.closeTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过merge将实体转换为持久态再save。由于可能会出现大量数据要处理，你应该处理的尽善尽美<br><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">int index = 0;</span><br><span class="line">for(Entity entity : entities)&#123;</span><br><span class="line"><span class="code">    index +=1;</span></span><br><span class="line"><span class="code">    //以下是伪代码</span></span><br><span class="line"><span class="code">    try&#123;     </span></span><br><span class="line"><span class="code">        if (!JPA.isInitialized()) &#123;</span></span><br><span class="line"><span class="code">            JPA.startTx(JPA.DEFAULT, false);</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">        if (index % 100 == 0) &#123;</span></span><br><span class="line"><span class="code">            JPA.em().flush();</span></span><br><span class="line"><span class="code">            JPA.em().clear();</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">        ApiResult result = thirdApi.doSomeThing(entity);</span></span><br><span class="line"><span class="code">        entity = decorateEntity(result);</span></span><br><span class="line"><span class="code">        entity = entity.merge();</span></span><br><span class="line"><span class="code">        entity.save();</span></span><br><span class="line"><span class="code">        if(result.success)&#123;</span></span><br><span class="line"><span class="code">            OtherEntity oEntity = getOtherEntity(entity);</span></span><br><span class="line"><span class="code">            oEntity = decorateOtherEntity(oEntity);</span></span><br><span class="line"><span class="code">            oEntity = oEntity.merge();</span></span><br><span class="line"><span class="code">            oEntity.save();</span></span><br><span class="line"><span class="code">        &#125;</span></span><br><span class="line"><span class="code">    &#125;catch(Exception e)&#123;</span></span><br><span class="line"><span class="code">        JPA.rollbackTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">        Logger.error(e);</span></span><br><span class="line"><span class="code">    &#125;finally &#123;</span></span><br><span class="line"><span class="code">        JPA.closeTx(JPA.DEFAULT);</span></span><br><span class="line"><span class="code">    &#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>每100条清理一次缓存。行百里者半九十，每一步都做好才能写出经得起考验的程序。</p>
+<h2 id="扩展-Hibernate三态转换"><a href="#扩展-Hibernate三态转换" class="headerlink" title="扩展:Hibernate三态转换"></a>扩展:Hibernate三态转换</h2><p><img src="http://static.xcoder.ren/public/resource/hibernate-three-states.jpg" alt="三态转换"></p>
+<p>Hibernate有三种状态：transient(瞬时状态)，persistent(持久化状态)以及detached(游离状态)。</p>
+<ul>
+<li>transient（瞬时状态）–临时状态</li>
+</ul>
+<p>当new出来一个新对象，还没有保存到数据库中的时候，就是transient状态。</p>
+<ul>
+<li>persistent(持久化状态)</li>
+</ul>
+<p>当临时状态的对象被执行save之后，就会被session托管，在session中有一个map存放着user对象，也就是说user对象被session引用着，被session纳入管理了。此时的user就处于持久状态了。</p>
+<ul>
+<li>detached(游离状态)</li>
+</ul>
+<p>当持久状态的对象user,在session关闭之后就会变成有游离状态。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/" title="一个线上CPU100%(could not prepare statement)问题的分析">http://xcoder.me/2017-07/tuning/一个线上CPU飙升问题的分析/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/CPU/" rel="tag"># CPU</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-07/build/平滑升级Nginx/" rel="next" title="平滑升级Nginx">
+                <i class="fa fa-chevron-left"></i> 平滑升级Nginx
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-07/tuning/JVM六类溢出/" rel="prev" title="JVM内存溢出总结">
+                JVM内存溢出总结 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题"><span class="nav-number">1.</span> <span class="nav-text">问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扩展-Hibernate三态转换"><span class="nav-number">2.</span> <span class="nav-text">扩展:Hibernate三态转换</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

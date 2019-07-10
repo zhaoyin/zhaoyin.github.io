@@ -1,0 +1,1324 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="互联网架构演进,Cloud,DevOps,云应用,架构设计,JAVA,play1,playframework,元数据建模">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="架构演进之旅">
+<meta property="og:url" content="http://xcoder.me/2017/05/19/metadata/领域元数据建模/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/orderpackage.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/ordermeta.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/metastruct.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/association.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/wechat.png">
+<meta property="og:image" content="http://static.xcoder.ren/public/images/alipay.png">
+<meta property="og:image" content="http://xcoder.me/images/avatar.gif">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.779Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="架构演进之旅">
+<meta name="twitter:image" content="http://static.xcoder.ren/public/images/orderpackage.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017/05/19/metadata/领域元数据建模/">
+
+
+
+
+
+  <title> | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left  ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+  <header class="post-header">
+
+	<h2 class="post-title" itemprop="name headline"></h2>
+
+
+
+</header>
+
+    
+    
+      
+<main id="main" class="main">
+    <div class="main-inner">
+        <div class="content-wrap">
+            <div id="content" class="content">
+
+
+                <div id="posts" class="posts-expand">
+
+
+
+
+
+
+
+
+                    <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+                        <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-05/metadata/领域元数据建模/">
+
+                        <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+                        <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+
+                        <header class="post-header">
+
+
+
+                            <h2 class="post-title" itemprop="name headline">领域元数据建模</h2>
+
+
+                            <div class="post-meta">
+          <span class="post-time">
+
+
+
+
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+
+                <span class="post-meta-item-text">更新于</span>
+
+              <time title="更新于" itemprop="dateModified" datetime="2017-05-30T05:16:34+00:00">
+                2017-05-30
+              </time>
+
+          </span>
+
+
+                                <span class="post-category">
+
+              <span class="post-meta-divider">|</span>
+
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+
+                <span class="post-meta-item-text">分类于</span>
+
+
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/metadata/" itemprop="url" rel="index">
+                    <span itemprop="name">metadata</span>
+                  </a>
+                </span>
+
+
+
+
+            </span>
+
+
+
+
+
+
+
+
+                                <span id="/2017/05/19/metadata/领域元数据建模/" class="leancloud_visitors" data-flag-title="领域元数据建模">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+
+                 <span class="post-meta-item-text">阅读次数 </span>
+
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+
+
+
+
+
+
+
+
+                            </div>
+                        </header>
+
+
+                        <div class="post-body" itemprop="articleBody">
+
+
+                            <br>
+                            [本文(领域元数据建模)原始地址]<a href="http://xcoder.me/2017-05/metadata/领域元数据建模/" title="领域元数据建模">http://xcoder.me/2017-05/metadata/领域元数据建模/</a>
+                            <h2 id="意义"><a href="#意义" class="headerlink" title="意义"></a>意义</h2><p>元数据是描述业务模型的数据，是对业务代码的抽象。规范的元数据模型对于业务设计,扩展,重构都有指导性意义，能够提高系统的可维护性。<br><a id="more"></a></p>
+                            <h2 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h2><p>在进行我们的例子之前，我们要进行一些基础数据的准备</p>
+                            <blockquote>
+                                <h3 id="数据类型定义"><a href="#数据类型定义" class="headerlink" title="数据类型定义"></a>数据类型定义</h3><p>我们会有一个基础数据类型描述的xml<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;components&gt;</div><div class="line">  &lt;references/&gt;</div><div class="line">  &lt;component name=&quot;lang&quot; moduleName=&quot;java&quot; title=&quot;系统类型组件&quot; id=&quot;JAVA-BASE-COMPONENT&quot;&gt;</div><div class="line">    &lt;datatype name=&quot;Integer&quot; title=&quot;整数&quot; id=&quot;BS001&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Byte&quot; title=&quot;字节&quot; id=&quot;BS002&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Short&quot; title=&quot;短整数&quot; id=&quot;BS003&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Long&quot; title=&quot;长整数&quot; id=&quot;BS004&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Decimal&quot; title=&quot;十进制数&quot; id=&quot;BS005&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;Boolean&quot; title=&quot;布尔&quot; id=&quot;BS011&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;Date&quot; title=&quot;日期&quot; id=&quot;BS012&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;DateTime&quot; title=&quot;日期时间&quot; id=&quot;BS013&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;Time&quot; title=&quot;时间&quot; id=&quot;BS014&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;Double&quot; title=&quot;浮点&quot; id=&quot;BS015&quot; /&gt;</div><div class="line">    &lt;datatype name=&quot;String&quot; title=&quot;字符串&quot; id=&quot;BS020&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Text&quot; title=&quot;文本&quot; id=&quot;BS021&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Binary&quot; title=&quot;二进制&quot; id=&quot;BS022&quot;/&gt;</div><div class="line">    &lt;!--&lt;datatype name=&quot;Custom&quot; title=&quot;自定义项&quot; id=&quot;BS031&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;CustomItem&quot; title=&quot;自由项&quot; id=&quot;BS032&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;Memo&quot; title=&quot;备注&quot; id=&quot;BS041&quot;/&gt;</div><div class="line">    &lt;datatype name=&quot;I18N&quot; title=&quot;多语文本&quot; id=&quot;BS042&quot;/&gt;--&gt;</div><div class="line">    &lt;datatype name=&quot;T&quot; title=&quot;泛型&quot; id=&quot;BS101&quot;/&gt;</div><div class="line">  &lt;/component&gt;</div><div class="line">&lt;/components&gt;</div></pre></td></tr></table></figure></p>
+                            </blockquote>
+                            <p>数据类型的元数据描述为我们描述了系统支持的基础数据结构</p>
+                            <p> <strong>&gt; xml中节点和属性的具体描述我们会在下面各节中体现</strong> </p>
+                            <blockquote>
+                                <h3 id="基础数据结构定义"><a href="#基础数据结构定义" class="headerlink" title="基础数据结构定义"></a>基础数据结构定义</h3></blockquote>
+                            <p>我们还会定义一个公共的包含系统基础数据结构和接口的元数据描述</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;components xmlns=&quot;http://www.metadata.org/meta&quot;</div><div class="line">    xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">    xsi:schemaLocation=&quot;http://www.metadata.org/meta https://raw.githubusercontent.com/zhaoyin/MetaData/master/meta.xsd&quot;&gt;</div><div class="line">    &lt;references&gt;</div><div class="line">        &lt;reference file=&quot;java.xml&quot;/&gt;</div><div class="line">    &lt;/references&gt;</div><div class="line">    &lt;component name=&quot;itf&quot; moduleName=&quot;base&quot; title=&quot;接口组件&quot;&gt;</div><div class="line">        &lt;interface name=&quot;IAuditInfo&quot; title=&quot;审计信息&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;createTime&quot; columnName=&quot;create_time&quot; title=&quot;创建时间&quot; type=&quot;DateTime&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;modifyTime&quot; columnName=&quot;modify_time&quot; title=&quot;修改时间&quot; type=&quot;DateTime&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;creator&quot; title=&quot;创建人&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;modifier&quot; title=&quot;修改人&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div><div class="line">        &lt;interface name=&quot;IArchive&quot; title=&quot;档案相关&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;name&quot; columnName=&quot;name&quot; title=&quot;档案名称&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;100&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;code&quot; columnName=&quot;code&quot; title=&quot;档案编码&quot; type=&quot;String&quot; iLength=&quot;40&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;isAvailable&quot; columnName=&quot;is_available&quot; title=&quot;是否有效&quot; type=&quot;Boolean&quot; defaultValue=&quot;true&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div><div class="line">        &lt;interface name=&quot;ITree&quot; title=&quot;树型结构&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;parent&quot; columnName=&quot;parent_id&quot; title=&quot;上级分类&quot; type=&quot;Long&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;level&quot; columnName=&quot;level&quot; title=&quot;层级&quot; type=&quot;Integer&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;path&quot; columnName=&quot;path&quot; title=&quot;路径&quot; type=&quot;String&quot; iLength=&quot;255&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;sort&quot; columnName=&quot;sort_num&quot; title=&quot;排序号&quot; type=&quot;Integer&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;lastNode&quot; columnName=&quot;last_node&quot; title=&quot;是否末级节点&quot; type=&quot;Boolean&quot; defaultValue=&quot;true&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div><div class="line">        &lt;interface name=&quot;IDeleted&quot; title=&quot;删除标记&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;isDeleted&quot; columnName=&quot;is_deleted&quot; title=&quot;是否删除&quot; type=&quot;Boolean&quot; defaultValue=&quot;false&quot; isRequired=&quot;true&quot; /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div><div class="line">        &lt;interface name=&quot;IAuditFlow&quot; title=&quot;审批信息&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;auditor&quot; title=&quot;审批人&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;auditTime&quot; columnName=&quot;audit_time&quot; title=&quot;审批时间&quot; type=&quot;DateTime&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;status&quot; title=&quot;状态&quot; type=&quot;AuditStatus&quot; defaultValue=&quot;1&quot; note=&quot;默认未审核,审核状态为“审核不通过”时，允许修改该行记录，修改记录后自动将审核状态更新为空值。允许重新进行审核。&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;opinion&quot; title=&quot;审核意见&quot; type=&quot;String&quot; iLength=&quot;255&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div><div class="line">    &lt;/component&gt;</div><div class="line">    &lt;component name=&quot;entity&quot; moduleName=&quot;base&quot; title=&quot;公用实体组建&quot;&gt;</div><div class="line">        &lt;class name=&quot;BizModel&quot; title=&quot;基类&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;id&quot; title=&quot;ID&quot; type=&quot;Long&quot; isKey=&quot;true&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;pubts&quot; columnName=&quot;pubts&quot; title=&quot;时间戳&quot; type=&quot;DateTime&quot; isSyncKey=&quot;true&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;class name=&quot;OrgModel&quot; title=&quot;组织&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;org&quot; columnName=&quot;org_id&quot; title=&quot;组织机构&quot; type=&quot;credit.org.Org&quot; isRequired=&quot;true&quot; /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;class name=&quot;Vouch&quot; title=&quot;单据&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;voucherNo&quot; columnName=&quot;voucher_no&quot; title=&quot;单据编号&quot; type=&quot;String&quot; iLength=&quot;100&quot; isRequired=&quot;true&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;voucherDate&quot; columnName=&quot;voucher_date&quot; title=&quot;单据日期&quot; type=&quot;Date&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;maker&quot; title=&quot;制单人&quot; type=&quot;String&quot; iLength=&quot;20&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;outSysKey&quot; columnName=&quot;outsys_key&quot; title=&quot;外部系统单据号&quot; type=&quot;String&quot; iLength=&quot;100&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;isVerifyDone&quot; columnName=&quot;is_verifydone&quot; title=&quot;是否已核销完&quot; type=&quot;Boolean&quot; defaultValue=&quot;false&quot; /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;generalizations&gt;</div><div class="line">            &lt;generalization parent=&quot;BizModel&quot; child=&quot;OrgModel&quot; /&gt;</div><div class="line">            &lt;generalization parent=&quot;OrgModel&quot; child=&quot;Voucher&quot; /&gt;</div><div class="line">        &lt;/generalizations&gt;</div><div class="line">    &lt;/component&gt;</div><div class="line">&lt;/components&gt;</div></pre></td></tr></table></figure>
+                            <p>如上，我们定义了三个基类，BizModel/OrgModel/Vouch,用来描述基础数据类型，定义了一些接口，用来描述数据所表现出来的不同行为。请注意是行为！比如审批行为，比如审计行为，比如可存档行为。<br>定义这些基类和基础行为接口方便我们在具体数据结构中复用并清晰描述数据结构<br><img src="http://static.xcoder.ren/public/images/orderpackage.png" alt="包依赖关系" title="包依赖关系"><br>例如上图销售订单包依赖系统用户包，基础单据包和商品档案包。包的依赖关系在xml中不体现，而是通过更细粒度的类中的关系来体现。<br><img src="http://static.xcoder.ren/public/images/ordermeta.png" alt="类之间关系" title="类之间关系"><br>上图中描述的关系，我们通过下面的xml来描述</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt;components xmlns=&quot;http://www.metadata.org/meta&quot;</div><div class="line">            xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">            xsi:schemaLocation=&quot;http://www.metadata.org/meta https://raw.githubusercontent.com/zhaoyin/MetaData/master/meta.xsd&quot;&gt;</div><div class="line">    &lt;references&gt;</div><div class="line">        &lt;reference file=&quot;java.xml&quot; /&gt;</div><div class="line">        &lt;reference file=&quot;base.xml&quot; /&gt;</div><div class="line">    &lt;/references&gt;</div><div class="line">    &lt;component name=&quot;user&quot; moduleName=&quot;aa&quot; title=&quot;用户&quot;&gt;</div><div class="line">        &lt;enum name=&quot;Sex&quot; title=&quot;性别&quot;&gt;</div><div class="line">            &lt;item name=&quot;Male&quot; title=&quot;男&quot; value=&quot;1&quot;/&gt;</div><div class="line">            &lt;item name=&quot;Female&quot; title=&quot;女&quot; value=&quot;2&quot;/&gt;</div><div class="line">            &lt;item name=&quot;Secret&quot; title=&quot;保密&quot; value=&quot;3&quot;/&gt;</div><div class="line">        &lt;/enum&gt;</div><div class="line">        &lt;class name=&quot;User&quot; title=&quot;用户&quot; tableName=&quot;cr_user_User&quot; note=&quot;所有用户都放在这一个表，咨询公司的数据存的时候让org_id为0&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;phone&quot; title=&quot;手机号&quot; type=&quot;String&quot; iLength=&quot;11&quot; validate=&quot;Phone&quot; isUnique=&quot;true&quot; note=&quot;登录账号，唯一&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;password&quot; title=&quot;密码&quot; type=&quot;String&quot; iLength=&quot;32&quot; note=&quot;32位MD5加密&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;salt&quot; title=&quot;盐&quot; type=&quot;String&quot; iLength=&quot;40&quot; note=&quot;每个用户都单独生成自己的盐&quot; isUnique=&quot;true&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;isEnabled&quot; columnName=&quot;is_enabled&quot; title=&quot;是否启用&quot; type=&quot;Boolean&quot; note=&quot;仅影响是否能登录，1真0假，全系统统一约定&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;nickName&quot; columnName=&quot;nick_name&quot; title=&quot;昵称&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;sex&quot; columnName=&quot;sex&quot; title=&quot;性别&quot; type=&quot;Sex&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;realizations&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditInfo&quot; client=&quot;User&quot;/&gt;</div><div class="line">        &lt;/realizations&gt;</div><div class="line">        &lt;generalizations&gt;</div><div class="line">            &lt;generalization parent=&quot;base.entity.OrgModel&quot; child=&quot;User&quot;/&gt;</div><div class="line">        &lt;/generalizations&gt;</div><div class="line">    &lt;/component&gt;</div><div class="line">    &lt;component name=&quot;voucher&quot; moduleName=&quot;sa&quot; title=&quot;单据&quot;&gt;</div><div class="line">        &lt;enum name=&quot;VoucherType&quot; title=&quot;单据类型&quot;&gt;</div><div class="line">            &lt;item name=&quot;PreOrder&quot; title=&quot;销售预定单&quot; value=&quot;1&quot; /&gt;</div><div class="line">            &lt;item name=&quot;Order&quot; title=&quot;销售订单&quot; value=&quot;2&quot; /&gt;</div><div class="line">        &lt;/enum&gt;</div><div class="line">        &lt;class name=&quot;Order&quot; title=&quot;销售订单&quot; tableName=&quot;sa_voucher_order&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;type&quot; title=&quot;订单类型&quot; type=&quot;VoucherType&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;user&quot; columnName=&quot;user_id&quot; title=&quot;提交人&quot; type=&quot;aa.user.User&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;totalMoney&quot; columnName=&quot;totalmoney&quot; title=&quot;订单金额&quot; type=&quot;Decimal&quot; /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;class name=&quot;OrderDetail&quot; title=&quot;销售订单子表&quot; tableName=&quot;sa_voucher_orderdetail&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;order&quot; columnName=&quot;order_id&quot; title=&quot;所属订单&quot; type=&quot;Order&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;goods&quot; columnName=&quot;goods_id&quot; title=&quot;包含商品&quot; type=&quot;aa.goods.Goods&quot; /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div><div class="line">        &lt;realizations&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditFlow&quot; client=&quot;Order&quot; /&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditInfo&quot; client=&quot;Order&quot; /&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditInfo&quot; client=&quot;OrderDetail&quot; /&gt;</div><div class="line">        &lt;/realizations&gt;</div><div class="line">        &lt;generalizations&gt;</div><div class="line">            &lt;generalization parent=&quot;base.entity.Vouch&quot; child=&quot;Order&quot; /&gt;</div><div class="line">            &lt;generalization parent=&quot;base.entity.BizModel&quot; child=&quot;OrderDetail&quot; /&gt;</div><div class="line">        &lt;/generalizations&gt;</div><div class="line">        &lt;associations&gt;</div><div class="line">            &lt;association type=&quot;composition&quot; roleB=&quot;order&quot; typeB=&quot;Order&quot; roleA=&quot;details&quot; typeA=&quot;OrderDetail&quot; roleAMulti=&quot;1..n&quot; /&gt;</div><div class="line">        &lt;/associations&gt;</div><div class="line">    &lt;/component&gt;</div><div class="line">&lt;/components&gt;</div></pre></td></tr></table></figure>
+                            <h2 id="领域模型和元数据映射"><a href="#领域模型和元数据映射" class="headerlink" title="领域模型和元数据映射"></a>领域模型和元数据映射</h2><table>
+                            <thead>
+                            <tr>
+                                <th>UML领域元素</th>
+                                <th style="text-align:center">元数据元素</th>
+                                <th style="text-align:right">示例</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>包</td>
+                                <td style="text-align:center">Component</td>
+                                <td style="text-align:right">sm.order</td>
+                            </tr>
+                            <tr>
+                                <td>包间依赖</td>
+                                <td style="text-align:center">Component.dependencies</td>
+                                <td style="text-align:right"></td>
+                            </tr>
+                            <tr>
+                                <td>基础类型</td>
+                                <td style="text-align:center">DataType</td>
+                                <td style="text-align:right">Integer,DateTime,String</td>
+                            </tr>
+                            <tr>
+                                <td>枚举类型</td>
+                                <td style="text-align:center">Enumeration</td>
+                                <td style="text-align:right">OrderStatus</td>
+                            </tr>
+                            <tr>
+                                <td>类型</td>
+                                <td style="text-align:center">Entity</td>
+                                <td style="text-align:right">Order,OrderDetail,User,Vouch</td>
+                            </tr>
+                            <tr>
+                                <td>接口</td>
+                                <td style="text-align:center">Interface</td>
+                                <td style="text-align:right">IAuditFlow,IAuditInfo,IDeleted,IArchive</td>
+                            </tr>
+                            <tr>
+                                <td>组合关系</td>
+                                <td style="text-align:center">Association</td>
+                                <td style="text-align:right">组合</td>
+                            </tr>
+                            <tr>
+                                <td>关联关系</td>
+                                <td style="text-align:center">Association</td>
+                                <td style="text-align:right">关联</td>
+                            </tr>
+                            <tr>
+                                <td>继承关系</td>
+                                <td style="text-align:center">Generalization</td>
+                                <td style="text-align:right">继承</td>
+                            </tr>
+                            <tr>
+                                <td>实现关系</td>
+                                <td style="text-align:center">Realization</td>
+                                <td style="text-align:right">实现</td>
+                            </tr>
+                            <tr>
+                                <td>属性</td>
+                                <td style="text-align:center">Property</td>
+                                <td style="text-align:right">code,status,order,details</td>
+                            </tr>
+                            <tr>
+                                <td>方法</td>
+                                <td style="text-align:center">Operation</td>
+                                <td style="text-align:right">submit,unSubmit</td>
+                            </tr>
+                            <tr>
+                                <td>方法参数</td>
+                                <td style="text-align:center">Parameter</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                            <h2 id="元数据结构"><a href="#元数据结构" class="headerlink" title="元数据结构"></a>元数据结构</h2><p><img src="http://static.xcoder.ren/public/images/metastruct.png" alt="元数据结构" title="元数据结构"></p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">  &lt;components xmlns=&quot;http://www.metadata.org/meta&quot;</div><div class="line">            xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">            xsi:schemaLocation=&quot;http://www.metadata.org/meta https://raw.githubusercontent.com/zhaoyin/MetaData/master/meta.xsd&quot;&gt;</div><div class="line">    &lt;references&gt;</div><div class="line">        &lt;reference file=&quot;java.xml&quot; /&gt;</div><div class="line">        &lt;reference file=&quot;base.xml&quot; /&gt;</div><div class="line">    &lt;/references&gt;</div><div class="line">    &lt;component&gt;&lt;/component&gt;</div><div class="line">    ...</div><div class="line">    &lt;component&gt;&lt;/component&gt;</div><div class="line">  &lt;/components&gt;</div></pre></td></tr></table></figure>
+                            <p>  如上，一个元数据描述xml就是一组包描述的集合,同时还定义了这些包引用的一些其他包</p>
+                            <h2 id="包"><a href="#包" class="headerlink" title="包"></a>包</h2><p>我们把具有同一类特性的类/表放到一起称为一个组件/包。</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">&lt;component name=&quot;voucher&quot; moduleName=&quot;sa&quot; title=&quot;单据&quot;&gt;</div><div class="line">    &lt;enum&gt;&lt;/enum&gt;</div><div class="line">    &lt;class&gt;&lt;/class&gt;</div><div class="line">    ...</div><div class="line">    &lt;class&gt;&lt;/class&gt;</div><div class="line">    ...</div><div class="line">    &lt;realizations&gt;</div><div class="line">        &lt;realization&gt;&lt;/realization&gt;</div><div class="line">        ...</div><div class="line">        &lt;realization&gt;&lt;/realization&gt;</div><div class="line">    &lt;/realizations&gt;</div><div class="line">    &lt;generalizations&gt;</div><div class="line">        &lt;generalization&gt;&lt;/generalization&gt;</div><div class="line">        ...</div><div class="line">        &lt;generalization&gt;&lt;/generalization&gt;</div><div class="line">    &lt;/generalizations&gt;</div><div class="line">    &lt;associations&gt;</div><div class="line">        &lt;association&gt;&lt;/association&gt;</div><div class="line">        ...</div><div class="line">    &lt;/associations&gt;</div><div class="line">&lt;/component&gt;</div></pre></td></tr></table></figure>
+                            <p>一个包定义了<br>包名<code>name</code><br>模块名<code>moduleName</code><br>标题<code>title</code><br>包含至少一个类型<code>&lt;class&gt;&lt;/class&gt;</code><br>可能包含一些枚举<code>&lt;enum/&gt;</code><br>包含类型实现了哪些接口<code>&lt;realizations/&gt;</code><br>类型继承自哪些基类<code>&lt;generalizations/&gt;</code><br>类型之间的组合关系<code>&lt;associations/&gt;</code></p>
+                            <h2 id="类型"><a href="#类型" class="headerlink" title="类型"></a>类型</h2><p>一个类型简单理解代表数据库的一个表，即具有原子性的基础数据类型，用来描述业务的原子数据</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">&lt;class name=&quot;Order&quot; title=&quot;销售订单&quot; tableName=&quot;sa_voucher_order&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;status&quot; title=&quot;订单状态&quot; type=&quot;OrderStatus&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;user&quot; columnName=&quot;user_id&quot; title=&quot;提交人&quot; type=&quot;aa.user.User&quot; /&gt;</div><div class="line">                &lt;attribute name=&quot;totalMoney&quot; columnName=&quot;totalmoney&quot; title=&quot;订单金额&quot; type=&quot;Decimal&quot; /&gt;</div><div class="line">                ...</div><div class="line">                &lt;attribute /&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/class&gt;</div></pre></td></tr></table></figure>
+                            <p>一个类型定义了<br>类型名<code>name</code><br>类型标题<code>title</code><br>类型对应的数据表名<code>tableName</code></p>
+                            <p>类型的数据表名<code>tableName</code>需要遵循如下规范<code>moduleName_</code>+<code>包名_</code>+<code>类型名</code></p>
+                            <p>一个类型自己的业务属性（字段）<code>attribute</code></p>
+                            <p>一个属性定义如下结构：</p>
+                            <p>属性名<code>name</code>代表UI表现层的名称（如果返回JSON数据，代表JSON数据的名称），name使用驼峰结构</p>
+                            <p>数据库字段名<code>columnName</code>代表数据库的字段名，如果和<code>name</code>一致则可以不写，如果type定义为其他关联表，则columnName为表名_id，如<code>user_id</code></p>
+                            <p>数据库字段描述信息<code>title</code>代表数据库字段的描述信息</p>
+                            <p>字段类型<code>type</code>代表字段类型，如为String，则需要指定<code>iLength</code>，即指定字段长度，如该字段代表关联表，type为<code>moduleName</code>.包名(<code>component.name</code>).类型名(<code>class.name</code>)（如<code>aa.user.User</code>),如在同一个包中可只指定类型名（如<code>type=&quot;OrderStatus&quot;</code>)</p>
+                            <p><strong>需要特别注意的是一个类型并不只有<code>attributes</code>节点中的<code>attribute</code>集合，还会包括包中<code>&lt;realizations/&gt;</code>和<code>&lt;generalizations/&gt;</code>节点的相应描述</strong></p>
+                            <h2 id="枚举"><a href="#枚举" class="headerlink" title="枚举"></a>枚举</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;enum name=&quot;VoucherType&quot; title=&quot;单据类型&quot;&gt;</div><div class="line">            &lt;item name=&quot;ApVouch&quot; title=&quot;应收单&quot; value=&quot;1&quot; /&gt;</div><div class="line">            &lt;item name=&quot;Receipt&quot; title=&quot;收款单&quot; value=&quot;2&quot; /&gt;</div><div class="line">        &lt;/enum&gt;</div></pre></td></tr></table></figure>
+                            <p>枚举包括枚举名称<code>name</code>,标题<code>title</code>以及枚举项<code>&lt;item/&gt;</code></p>
+                            <p>枚举项包括枚举项名称<code>name</code>，描述<code>title</code>，枚举值<code>value</code></p>
+                            <h2 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h2><p><img src="http://static.xcoder.ren/public/images/association.png" alt="组合关系描述" title="组合关系描述"><br>如上，订单和订单子表是一对多的关系</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;association type=&quot;composition&quot; roleB=&quot;order&quot; typeB=&quot;Order&quot; roleA=&quot;orderdetails&quot; typeA=&quot;OrderDetail&quot; roleAMulti=&quot;1..n&quot; /&gt;</div></pre></td></tr></table></figure>
+                            <p>roleAMulti=”0..n”零对多(子表可空);<br>roleAMulti=”1..n”一对多;<br>roleAMulti=”1”一对一</p>
+                            <p>最直接的区别：组合关系删主表时，子表必然级联删除，由主决定子的生命周期。</p>
+                            <h2 id="关联"><a href="#关联" class="headerlink" title="关联"></a>关联</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;attribute name=&quot;user&quot; columnName=&quot;user_id&quot; title=&quot;提交人&quot; type=&quot;aa.user.User&quot; /&gt;</div></pre></td></tr></table></figure>
+                            <p>Order对象需要关联User对象，即订单上有订单提交人字段，用来描述提交人的信息，会关联User表的id，我们可以通过上面的节点来描述这种关系，其实关联关系也是组合关系的一种，只是它是一种一对一的关系，这种关系我们可以不在<code>association</code>中描述</p>
+                            <h2 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;interface name=&quot;IAuditInfo&quot; title=&quot;审计信息&quot;&gt;</div><div class="line">            &lt;attributes&gt;</div><div class="line">                &lt;attribute name=&quot;createTime&quot; columnName=&quot;create_time&quot; title=&quot;创建时间&quot; type=&quot;DateTime&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;modifyTime&quot; columnName=&quot;modify_time&quot; title=&quot;修改时间&quot; type=&quot;DateTime&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;creator&quot; title=&quot;创建人&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">                &lt;attribute name=&quot;modifier&quot; title=&quot;修改人&quot; type=&quot;String&quot; isMultiLang=&quot;true&quot; iLength=&quot;20&quot;/&gt;</div><div class="line">            &lt;/attributes&gt;</div><div class="line">        &lt;/interface&gt;</div></pre></td></tr></table></figure>
+                            <p><strong>一个接口定义如上，和类型很类型，它定义了一种行为，如果一个类型实现了这个接口，也即这个类型具有了这种行为，相应的它就具有了这个接口的所有字段</strong></p>
+                            <h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">&lt;realizations&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditFlow&quot; client=&quot;Order&quot; /&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditInfo&quot; client=&quot;Order&quot; /&gt;</div><div class="line">            &lt;realization supplier=&quot;base.itf.IAuditInfo&quot; client=&quot;OrderDetail&quot; /&gt;</div><div class="line">        &lt;/realizations&gt;</div></pre></td></tr></table></figure>
+                            <p>上面的例子说明订单对象会实现审计接口和审核接口。意味着Order对象会有审计接口的字段<code>creatTime</code>，相应的Order表<code>sa_voucher_order</code>会有<code>create_time</code>字段</p>
+                            <p>同时Order对象还会具备<code>IAuditFlow</code>审批流所应具备的submit(),unSubmit(),audit(),unAudit()接口，即具有提交，回退，审批，弃审行为</p>
+                            <h2 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;generalizations&gt;</div><div class="line">            &lt;generalization parent=&quot;base.entity.Vouch&quot; child=&quot;Order&quot; /&gt;</div><div class="line">            &lt;generalization parent=&quot;base.entity.BizModel&quot; child=&quot;OrderDetail&quot; /&gt;</div><div class="line">        &lt;/generalizations&gt;</div></pre></td></tr></table></figure>
+                            <p>上面的例子说明订单对象是来自base包的Vouch对象，从base包中可以看到</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;generalizations&gt;</div><div class="line">            &lt;generalization parent=&quot;BizModel&quot; child=&quot;OrgModel&quot; /&gt;</div><div class="line">            &lt;generalization parent=&quot;OrgModel&quot; child=&quot;Voucher&quot; /&gt;</div><div class="line">        &lt;/generalizations&gt;</div></pre></td></tr></table></figure>
+                            <p>Vouch对象继承自OrgModel对象，OrgModel对象又继承自BizModel对象，则Order类型自然具备BizModel的id字段和pubts字段，同时也具备OrgModel的org字段，还具有Vouch的voucherNo，maker等字段</p>
+                            <h2 id="数据表"><a href="#数据表" class="headerlink" title="数据表"></a>数据表</h2><p>按照元数据描述会生成如下的数据表信息</p>
+                            <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">DROP TABLE IF EXISTS `sa_vouch_order`;</div><div class="line"></div><div class="line">CREATE TABLE `sa_vouch_order` (</div><div class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT,</div><div class="line">  `pubts` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT &apos;时间戳&apos;,</div><div class="line">  `org_id` bigint(20) NOT NULL COMMENT &apos;公司信息&apos;,</div><div class="line">  `create_time` datetime DEFAULT NULL COMMENT &apos;创建时间&apos;,</div><div class="line">  `creator` varchar(255) DEFAULT NULL COMMENT &apos;创建人&apos;,</div><div class="line">  `user_id` bigint(20) DEFAULT NULL COMMENT &apos;提交人&apos;,</div><div class="line">  `modifier` varchar(255) DEFAULT NULL COMMENT &apos;修改人&apos;,</div><div class="line">  `modify_time` datetime DEFAULT NULL COMMENT &apos;修改时间&apos;,</div><div class="line">  `maker` varchar(40) DEFAULT &apos;&apos; COMMENT &apos;制单人&apos;,</div><div class="line">  `outsys_key` varchar(100) DEFAULT &apos;&apos; COMMENT &apos;外部系统编码&apos;,</div><div class="line">  `voucher_date` datetime DEFAULT NULL COMMENT &apos;单据日期&apos;,</div><div class="line">  `voucher_no` varchar(100) NOT NULL DEFAULT &apos;&apos; COMMENT &apos;单据编号&apos;,</div><div class="line">  `audit_time` datetime DEFAULT NULL COMMENT &apos;审批时间&apos;,</div><div class="line">  `auditor` varchar(255) DEFAULT NULL COMMENT &apos;审批人&apos;,</div><div class="line">  `opinion` varchar(255) DEFAULT NULL COMMENT &apos;审核意见&apos;,</div><div class="line">  `status` smallint(6) DEFAULT NULL COMMENT &apos;状态&apos;,</div><div class="line">  `type` smallint(6) DEFAULT NULL COMMENT &apos;订单类型&apos;,</div><div class="line">  `totalmoney` decimal(19,2) DEFAULT NULL COMMENT &apos;订单金额&apos;,</div><div class="line">  PRIMARY KEY (`id`),</div><div class="line">  KEY `org_org_id_index` (`org_id`),</div><div class="line">  KEY `order_user_id_index` (`user_id`)</div><div class="line">) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;</div></pre></td></tr></table></figure>
+
+
+                        </div>
+
+                        <div>
+
+
+
+
+                        </div>
+
+                        <div>
+
+
+
+                            <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+                                <div>enjoy?donate!</div>
+                                <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+                                    <span>赏</span>
+                                </button>
+                                <div id="QR" style="display: none;">
+
+                                    <div id="wechat" style="display: inline-block">
+                                        <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+                                        <p>微信打赏</p>
+                                    </div>
+
+
+                                    <div id="alipay" style="display: inline-block">
+                                        <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png" alt="小英雄雨来 Alipay">
+                                        <p>支付宝打赏</p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+
+                        <div>
+
+
+                            <ul class="post-copyright">
+                                <li class="post-copyright-author">
+                                    <strong>本文作者：</strong>
+                                    小英雄雨来
+                                </li>
+                                <li class="post-copyright-link">
+                                    <strong>本文链接：</strong>
+                                    <a href="http://xcoder.me/2017-05/metadata/领域元数据建模/" title="领域元数据建模">http://xcoder.me/2017-05/metadata/领域元数据建模/</a>
+                                </li>
+                                <li class="post-copyright-license">
+                                    <strong>版权声明： </strong>
+                                    本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+                                </li>
+                            </ul>
+
+
+
+                        </div>
+
+                        <footer class="post-footer">
+
+                            <div class="post-tags">
+
+                                <a href="/tags/领域元数据/" rel="tag"># 领域元数据</a>
+
+                                <a href="/tags/建模/" rel="tag"># 建模</a>
+
+                            </div>
+
+
+
+
+
+
+
+                            <div class="post-nav">
+                                <div class="post-nav-next post-nav-item">
+
+                                </div>
+
+                                <span class="post-nav-divider"></span>
+
+                                <div class="post-nav-prev post-nav-item">
+
+                                    <a href="/2017-05/tools/POI高效操作Excel/" rel="prev" title="POI高效操作Excel">
+                                        POI高效操作Excel <i class="fa fa-chevron-right"></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+
+
+
+                        </footer>
+                    </article>
+
+
+
+                    <div class="post-spread">
+
+                        <!-- JiaThis Button BEGIN -->
+                        <div class="jiathis_style">
+                            <a class="jiathis_button_tsina"></a>
+                            <a class="jiathis_button_tqq"></a>
+                            <a class="jiathis_button_weixin"></a>
+                            <a class="jiathis_button_cqq"></a>
+                            <a class="jiathis_button_douban"></a>
+                            <a class="jiathis_button_renren"></a>
+                            <a class="jiathis_button_qzone"></a>
+                            <a class="jiathis_button_kaixin001"></a>
+                            <a class="jiathis_button_copy"></a>
+                            <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+                            <a class="jiathis_counter_style"></a>
+                        </div>
+                        <script type="text/javascript">
+                            var jiathis_config={
+                                hideMore:false
+                            }
+                        </script>
+                        <script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+                        <!-- JiaThis Button END -->
+
+
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+
+
+            <div class="comments" id="comments">
+
+            </div>
+
+
+        </div>
+
+
+
+        <div class="sidebar-toggle">
+            <div class="sidebar-toggle-line-wrap">
+                <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+                <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+                <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+            </div>
+        </div>
+
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-inner">
+
+
+
+
+                <ul class="sidebar-nav motion-element">
+                    <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+                        文章目录
+                    </li>
+                    <li class="sidebar-nav-overview" data-target="site-overview">
+                        站点概览
+                    </li>
+                </ul>
+
+
+                <section class="site-overview sidebar-panel">
+                    <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+                        <img class="site-author-image" itemprop="image" src="/images/avatar.gif" alt="小英雄雨来">
+                        <p class="site-author-name" itemprop="name">小英雄雨来</p>
+
+                        <p class="site-description motion-element" itemprop="description"></p>
+
+                    </div>
+                    <nav class="site-state motion-element">
+
+
+                        <div class="site-state-item site-state-posts">
+                            <a href="/archives">
+                                <span class="site-state-item-count">16</span>
+                                <span class="site-state-item-name">日志</span>
+                            </a>
+                        </div>
+
+
+
+
+
+                        <div class="site-state-item site-state-categories">
+                            <a href="/categories/index.html">
+                                <span class="site-state-item-count">8</span>
+                                <span class="site-state-item-name">分类</span>
+                            </a>
+                        </div>
+
+
+
+
+
+                        <div class="site-state-item site-state-tags">
+                            <a href="/tags/index.html">
+                                <span class="site-state-item-count">39</span>
+                                <span class="site-state-item-name">标签</span>
+                            </a>
+                        </div>
+
+
+                    </nav>
+
+
+
+                    <div class="links-of-author motion-element">
+
+                    </div>
+
+
+
+
+
+
+                    <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+                        <div class="links-of-blogroll-title">
+                            <i class="fa  fa-fw fa-globe"></i>
+                            收藏
+                        </div>
+                        <ul class="links-of-blogroll-list">
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                            </li>
+
+                            <li class="links-of-blogroll-item">
+                                <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                            </li>
+
+                        </ul>
+                    </div>
+
+
+
+
+
+                </section>
+
+
+                <!--noindex-->
+                <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+                    <div class="post-toc">
+
+
+
+
+
+
+                        <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#意义"><span class="nav-number">1.</span> <span class="nav-text">意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例"><span class="nav-number">2.</span> <span class="nav-text">举例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据类型定义"><span class="nav-number">2.1.</span> <span class="nav-text">数据类型定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基础数据结构定义"><span class="nav-number">2.2.</span> <span class="nav-text">基础数据结构定义</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#领域模型和元数据映射"><span class="nav-number">3.</span> <span class="nav-text">领域模型和元数据映射</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#元数据结构"><span class="nav-number">4.</span> <span class="nav-text">元数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#包"><span class="nav-number">5.</span> <span class="nav-text">包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#类型"><span class="nav-number">6.</span> <span class="nav-text">类型</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#枚举"><span class="nav-number">7.</span> <span class="nav-text">枚举</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组合"><span class="nav-number">8.</span> <span class="nav-text">组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联"><span class="nav-number">9.</span> <span class="nav-text">关联</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#接口"><span class="nav-number">10.</span> <span class="nav-text">接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现"><span class="nav-number">11.</span> <span class="nav-text">实现</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#继承"><span class="nav-number">12.</span> <span class="nav-text">继承</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据表"><span class="nav-number">13.</span> <span class="nav-text">数据表</span></a></li></ol></div>
+
+
+                    </div>
+                </section>
+                <!--/noindex-->
+
+
+
+
+            </div>
+        </aside>
+
+
+
+    </div>
+</main>
+
+    
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

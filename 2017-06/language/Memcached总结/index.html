@@ -1,0 +1,1105 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="memcached,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="目前我们使用Memcache来实现系统的无状态，以便无障碍的集群化部署，为了较少投入而解决单点雪崩的问题，我们购买了阿里云的云数据库Memcached版。 Memcached相关命令安装memcached123yum clean allyum -y updateyum -y install memcached 启动memcached1/usr/local/bin/memcached -d -m 1">
+<meta name="keywords" content="memcached">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Memcached总结">
+<meta property="og:url" content="http://xcoder.me/2017-06/language/Memcached总结/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="目前我们使用Memcache来实现系统的无状态，以便无障碍的集群化部署，为了较少投入而解决单点雪崩的问题，我们购买了阿里云的云数据库Memcached版。 Memcached相关命令安装memcached123yum clean allyum -y updateyum -y install memcached 启动memcached1/usr/local/bin/memcached -d -m 1">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.783Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Memcached总结">
+<meta name="twitter:description" content="目前我们使用Memcache来实现系统的无状态，以便无障碍的集群化部署，为了较少投入而解决单点雪崩的问题，我们购买了阿里云的云数据库Memcached版。 Memcached相关命令安装memcached123yum clean allyum -y updateyum -y install memcached 启动memcached1/usr/local/bin/memcached -d -m 1">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-06/language/Memcached总结/">
+
+
+
+
+
+  <title>Memcached总结 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-06/language/Memcached总结/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Memcached总结</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-05T14:40:56+00:00">
+                2017-06-05
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/language/" itemprop="url" rel="index">
+                    <span itemprop="name">language</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-06/language/Memcached总结/" class="leancloud_visitors" data-flag-title="Memcached总结">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(Memcached总结)原始地址]<a href="http://xcoder.me/2017-06/language/Memcached总结/" title="Memcached总结">http://xcoder.me/2017-06/language/Memcached总结/</a>
+        <p>目前我们使用Memcache来实现系统的无状态，以便无障碍的集群化部署，为了较少投入而解决单点雪崩的问题，我们购买了阿里云的云数据库Memcached版。</p>
+<h2 id="Memcached相关命令"><a href="#Memcached相关命令" class="headerlink" title="Memcached相关命令"></a>Memcached相关命令</h2><h3 id="安装memcached"><a href="#安装memcached" class="headerlink" title="安装memcached"></a>安装memcached</h3><figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum clean all</span><br><span class="line">yum -y update</span><br><span class="line">yum -y install memcached</span><br></pre></td></tr></table></figure>
+<h3 id="启动memcached"><a href="#启动memcached" class="headerlink" title="启动memcached"></a>启动memcached</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/bin/memcached -d -m 10 -u root -l 192.168.0.200 -p 12000 -c 256 -P /tmp/memcached.pid</span><br></pre></td></tr></table></figure>
+<p>-d选项是启动一个守护进程，<br>-m是分配给Memcache使用的内存数量，单位是MB，我这里是10MB，<br>-u是运行Memcache的用户，我这里是root，<br>-l是监听的服务器IP地址，如果有多个地址的话，我这里指定了服务器的IP地址192.168.0.200，<br>-p是设置Memcache监听的端口，我这里设置了12000，最好是1024以上的端口，<br>-c选项是最大运行的并发连接数，默认是1024，我这里设置了256，按照你服务器的负载量来设定，<br>-P是设置保存Memcache的pid文件，我这里是保存在 /tmp/memcached.pid，</p>
+<h3 id="结束Memcached进程"><a href="#结束Memcached进程" class="headerlink" title="结束Memcached进程"></a>结束Memcached进程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kill `cat /tmp/memcached.pid`</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<h2 id="适用memcached的业务场景"><a href="#适用memcached的业务场景" class="headerlink" title="适用memcached的业务场景"></a>适用memcached的业务场景</h2><ul>
+<li><p>如果网站包含了访问量很大的动态网页，因而数据库的负载将会很高。由于大部分数据库请求都是读操作，那么memcached可以显著地减小数据库负载。</p>
+</li>
+<li><p>如果数据库服务器的负载比较低但CPU使用率很高，这时可以缓存计算好的结果（ computed objects ）和渲染后的网页模板（enderred templates）。</p>
+</li>
+<li><p>利用memcached可以缓存session数据、临时数据以减少对他们的数据库写操作。</p>
+</li>
+<li><p>缓存一些很小但是被频繁访问的文件。</p>
+</li>
+<li><p>缓存Web ‘services’（非IBM宣扬的Web Services，译者注）或RSS feeds的结果。</p>
+</li>
+</ul>
+<h2 id="不适用memcached的业务场景"><a href="#不适用memcached的业务场景" class="headerlink" title="不适用memcached的业务场景"></a>不适用memcached的业务场景</h2><h3 id="缓存对象的大小大于1MB"><a href="#缓存对象的大小大于1MB" class="headerlink" title="缓存对象的大小大于1MB"></a>缓存对象的大小大于1MB</h3><p>Memcached本身就不是为了处理庞大的多媒体（large media）和巨大的二进制块（streaming huge blobs）而设计的。</p>
+<h3 id="虚拟主机不让运行memcached服务"><a href="#虚拟主机不让运行memcached服务" class="headerlink" title="虚拟主机不让运行memcached服务"></a>虚拟主机不让运行memcached服务</h3><p>如果应用本身托管在低端的虚拟私有服务器上，像vmware, xen这类虚拟化技术并不适合运行memcached。Memcached需要接管和控制大块的内存，如果memcached管理      的内存被OS或 hypervisor交换出去，memcached的性能将大打折扣。</p>
+<h3 id="应用运行在不安全的环境中"><a href="#应用运行在不安全的环境中" class="headerlink" title="应用运行在不安全的环境中"></a>应用运行在不安全的环境中</h3><p>Memcached为提供任何安全策略，仅仅通过telnet就可以访问到memcached。如果应用运行在共享的系统上，需要着重考虑安全问题。</p>
+<h3 id="业务本身需要的是持久化数据或者说需要的应该是database"><a href="#业务本身需要的是持久化数据或者说需要的应该是database" class="headerlink" title="业务本身需要的是持久化数据或者说需要的应该是database"></a>业务本身需要的是持久化数据或者说需要的应该是database</h3><h3 id="不能能够遍历memcached中所有的item"><a href="#不能能够遍历memcached中所有的item" class="headerlink" title="不能能够遍历memcached中所有的item"></a>不能能够遍历memcached中所有的item</h3><p>这个操作的速度相对缓慢且阻塞其他的操作（这里的缓慢时相比memcached其他的命令）。memcached所有非调试（non-debug）命令，例如add, set, get, fulsh等无论</p>
+<p>memcached中存储了多少数据，它们的执行都只消耗常量时间。任何遍历所有item的命令执行所消耗的时间，将随着memcached中数据量的增加而增加。当其他命令因为等待（遍历所有item的命令执行完毕）而不能得到执行，因而阻塞将发生。</p>
+<h3 id="memcached能接受的key的最大长度是250个字符"><a href="#memcached能接受的key的最大长度是250个字符" class="headerlink" title="memcached能接受的key的最大长度是250个字符"></a>memcached能接受的key的最大长度是250个字符</h3><p>memcached能接受的key的最大长度是250个字符。需要注意的是，250是memcached服务器端内部的限制。如果使用的Memcached客户端支持”key的前缀”或类似特性，那么key（前缀+原始key）的最大长度是可以超过250个字符的。推荐使用较短的key，这样可以节省内存和带宽。</p>
+<h3 id="单个item的大小被限制在1M-byte之内"><a href="#单个item的大小被限制在1M-byte之内" class="headerlink" title="单个item的大小被限制在1M byte之内"></a>单个item的大小被限制在1M byte之内</h3><p>Memcached存储单个item最大数据是在1MB内，如果数据超过1M,存取set和get是都是返回false，而且引起性能的问题。</p>
+<p>所以Memcahce不适合缓存大数据，超过1MB的数据，可以考虑在客户端压缩或拆分到多个key中。大的数据在进行load和uppack到内存的时候需要花很长时间，从而降低服务器的性能。</p>
+<p>Memcached支持最大的存储对象为1M。这个值由其内存分配机制决定的。</p>
+<p>memcached默认情况下采用了名为Slab Allocator的机制分配、管理内存。在该机制出现以前，内存的分配是通过对所有记录简单地进行malloc和free来进行的。但是，这种方式会导致内存碎片，加重操作系统内存管理器的负担，最坏的情况下，会导致操作系统比memcached进程本身还慢。Slab Allocator就是为解决该问题而诞生的。Slab Allocator的基本原理是按照预先规定的大小，将分配的内存分割成特定长度的块，以完全解决内存碎片问题.</p>
+<p>Memcached的内存存储引擎，使用slabs来管理内存。内存被分成大小不等的slabs chunks（先分成大小相等的slabs，然后每个slab被分成大小相等chunks，不同slab的chunk大小是不相等的）。chunk的大小依次从一个最小数开始，按某个因子增长，直到达到最大的可能值。如果最小值为400B，最大值是1MB，因子是1.20，各个slab的chunk的大小依次是：</p>
+<p>slab1 - 400B；slab2 - 480B；slab3 - 576B …slab中chunk越大，它和前面的slab之间的间隙就越大。因此，最大值越大，内存利用率越低。Memcached必须为每个slab预先分配内存，因此如果设置了较小的因子和较大的最大值，会需要为Memcached提供更多的内存。</p>
+<p>不要尝试向memcached中存取很大的数据，例如把巨大的网页放到mencached中。因为将大数据load和unpack到内存中需要花费很长的时间，从而导致系统的性能反而不好。如果确实需要存储大于1MB的数据，可以修改slabs.c：POWER_BLOCK的值，然后重新编译memcached；或者使用低效的malloc/free。另外，可以使用数据库、MogileFS等方案代替Memcached系统。</p>
+<h2 id="memcached的内存分配器是如何工作的？为什么不适用malloc-free！？为何要使用slabs？"><a href="#memcached的内存分配器是如何工作的？为什么不适用malloc-free！？为何要使用slabs？" class="headerlink" title="memcached的内存分配器是如何工作的？为什么不适用malloc/free！？为何要使用slabs？"></a>memcached的内存分配器是如何工作的？为什么不适用malloc/free！？为何要使用slabs？</h2><p>实际上，这是一个编译时选项。默认会使用内部的slab分配器，而且确实应该使用内建的slab分配器。最早的时候，memcached只使用malloc/free来管理内存。然而，这种方式不能与OS的内存管理以前很好地工作。反复地malloc/free造成了内存碎片，OS最终花费大量的时间去查找连续的内存块来满足malloc的请求，而不是运行memcached进程。slab分配器就是为了解决这个问题而生的。内存被分配并划分成chunks，一直被重复使用。因为内存被划分成大小不等的slabs，如果item的大小与被选择存放它的slab不是很合适的话，就会浪费一些内存。</p>
+<h2 id="memcached对item的过期时间有什么限制？"><a href="#memcached对item的过期时间有什么限制？" class="headerlink" title="memcached对item的过期时间有什么限制？"></a>memcached对item的过期时间有什么限制？</h2><p>item对象的过期时间最长可以达到30天。memcached把传入的过期时间（时间段）解释成时间点后，一旦到了这个时间点，memcached就把item置为失效状态，这是一个简单但obscure的机制。</p>
+<h2 id="什么是二进制协议，是否需要关注？"><a href="#什么是二进制协议，是否需要关注？" class="headerlink" title="什么是二进制协议，是否需要关注？"></a>什么是二进制协议，是否需要关注？</h2><p>二进制协议尝试为端提供一个更有效的、可靠的协议，减少客户端/服务器端因处理协议而产生的CPU时间。根据Facebook的测试，解析ASCII协议是memcached中消耗CPU时间最多的环节。</p>
+<h2 id="memcached是原子的吗？"><a href="#memcached是原子的吗？" class="headerlink" title="memcached是原子的吗？"></a>memcached是原子的吗？</h2><p>所有的被发送到memcached的单个命令是完全原子的。如果您针对同一份数据同时发送了一个set命令和一个get命令，它们不会影响对方。它们将被串行化、先后执行。即使在多线程模式，所有的命令都是原子的。然是，命令序列不是原子的。如果首先通过get命令获取了一个item，修改了它，然后再把它set回memcached，系统不保证这个item没有被其他进程（process，未必是操作系统中的进程）操作过。memcached 1.2.5以及更高版本，提供了gets和cas命令，它们可以解决上面的问题。如果使用gets命令查询某个key的item，memcached会返回该item当前值的唯一标识。如果客户端程序覆写了这个item并想把它写回到memcached中，可以通过cas命令把那个唯一标识一起发送给memcached。如果该item存放在memcached中的唯一标识与您提供的一致，写操作将会成功。如果另一个进程在这期间也修改了这个item，那么该item存放在memcached中的唯一标识将会改变，写操作就会</p>
+<p>失败。</p>
+<p>详细了解Memcached的内存分配机制：</p>
+<p><a href="http://cjjwzs.javaeye.com/blog/762453" target="_blank" rel="noopener">http://cjjwzs.javaeye.com/blog/762453</a></p>
+<p><a href="http://blog.csdn.net/hguisu/article/details/6163621" target="_blank" rel="noopener">Memcache存储大数据的问题</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-06/language/Memcached总结/" title="Memcached总结">http://xcoder.me/2017-06/language/Memcached总结/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/memcached/" rel="tag"># memcached</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-06/tuning/Mysql加索引调优总结/" rel="next" title="Mysql调优总结">
+                <i class="fa fa-chevron-left"></i> Mysql调优总结
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-06/architecture/[转]够了，不要一上来就把微服务说的神乎其神/" rel="prev" title="(转)够了，不要一上来就把微服务说的神乎其神">
+                (转)够了，不要一上来就把微服务说的神乎其神 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Memcached相关命令"><span class="nav-number">1.</span> <span class="nav-text">Memcached相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#安装memcached"><span class="nav-number">1.1.</span> <span class="nav-text">安装memcached</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动memcached"><span class="nav-number">1.2.</span> <span class="nav-text">启动memcached</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结束Memcached进程"><span class="nav-number">1.3.</span> <span class="nav-text">结束Memcached进程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#适用memcached的业务场景"><span class="nav-number">2.</span> <span class="nav-text">适用memcached的业务场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不适用memcached的业务场景"><span class="nav-number">3.</span> <span class="nav-text">不适用memcached的业务场景</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#缓存对象的大小大于1MB"><span class="nav-number">3.1.</span> <span class="nav-text">缓存对象的大小大于1MB</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟主机不让运行memcached服务"><span class="nav-number">3.2.</span> <span class="nav-text">虚拟主机不让运行memcached服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用运行在不安全的环境中"><span class="nav-number">3.3.</span> <span class="nav-text">应用运行在不安全的环境中</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#业务本身需要的是持久化数据或者说需要的应该是database"><span class="nav-number">3.4.</span> <span class="nav-text">业务本身需要的是持久化数据或者说需要的应该是database</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#不能能够遍历memcached中所有的item"><span class="nav-number">3.5.</span> <span class="nav-text">不能能够遍历memcached中所有的item</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memcached能接受的key的最大长度是250个字符"><span class="nav-number">3.6.</span> <span class="nav-text">memcached能接受的key的最大长度是250个字符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单个item的大小被限制在1M-byte之内"><span class="nav-number">3.7.</span> <span class="nav-text">单个item的大小被限制在1M byte之内</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memcached的内存分配器是如何工作的？为什么不适用malloc-free！？为何要使用slabs？"><span class="nav-number">4.</span> <span class="nav-text">memcached的内存分配器是如何工作的？为什么不适用malloc/free！？为何要使用slabs？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memcached对item的过期时间有什么限制？"><span class="nav-number">5.</span> <span class="nav-text">memcached对item的过期时间有什么限制？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是二进制协议，是否需要关注？"><span class="nav-number">6.</span> <span class="nav-text">什么是二进制协议，是否需要关注？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#memcached是原子的吗？"><span class="nav-number">7.</span> <span class="nav-text">memcached是原子的吗？</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

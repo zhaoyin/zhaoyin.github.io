@@ -1,0 +1,1112 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="baidu_union_verify" content="a055c43e3736b26c04bbc863ee83d654">
+<meta name="google-site-verification" content="4EsXPWQaxpEvQQ5TJCYpQENhCKYvJVr27PpTigZZn2c">
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+  <meta name="baidu-site-verification" content="EN0BCC9y7c">
+
+
+
+
+
+
+
+  
+  
+    
+  
+  <link href="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+  
+
+<link href="//cdn.staticfile.org/font-awesome/4.6.2/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="JVM,CMS,FullGC,">
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="实践cpu 100% 通常的思路是查看runnable的线程，但如果发现是耗尽cpu的是vmthread。多半会伴随old区已满（此时垃圾回收已停止），通常这是由于在并发下短时间内创建很多对象造成。 一个例子很抱歉，这个例子的原始样本日志已经被我删除了，而且是调优之后才想着记录下来的，所以下面的数据是根据记忆模拟的，但是能说明问题。123456789101112[test@mybook ~]# j">
+<meta name="keywords" content="JVM,CMS,FullGC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM FullGC的分析调优">
+<meta property="og:url" content="http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/index.html">
+<meta property="og:site_name" content="架构演进之旅">
+<meta property="og:description" content="实践cpu 100% 通常的思路是查看runnable的线程，但如果发现是耗尽cpu的是vmthread。多半会伴随old区已满（此时垃圾回收已停止），通常这是由于在并发下短时间内创建很多对象造成。 一个例子很抱歉，这个例子的原始样本日志已经被我删除了，而且是调优之后才想着记录下来的，所以下面的数据是根据记忆模拟的，但是能说明问题。123456789101112[test@mybook ~]# j">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-10T06:21:57.883Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM FullGC的分析调优">
+<meta name="twitter:description" content="实践cpu 100% 通常的思路是查看runnable的线程，但如果发现是耗尽cpu的是vmthread。多半会伴随old区已满（此时垃圾回收已停止），通常这是由于在并发下短时间内创建很多对象造成。 一个例子很抱歉，这个例子的原始样本日志已经被我删除了，而且是调优之后才想着记录下来的，所以下面的数据是根据记忆模拟的，但是能说明问题。123456789101112[test@mybook ~]# j">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: 'KB0W0YA2QV',
+      apiKey: '89767cf2290afa4adfbf45fec82c46ad',
+      indexName: 'prod_xcoder',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"搜索","hits_empty":"没有搜索到结果: ${query}","hits_stats":" ${time} ms 内发现了 ${hits} 条记录"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/">
+
+
+
+
+
+  <title>JVM FullGC的分析调优 | 架构演进之旅</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?4ed769e3121f39269b097e356ddd6a5e";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">架构演进之旅</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">DevOps,架构演进,性能调优</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小英雄雨来">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/qrcode.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="架构演进之旅">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JVM FullGC的分析调优</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-14T12:40:46+00:00">
+                2017-08-14
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-10T06:21:57+00:00">
+                2019-07-10
+              </time>
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/tuning/" itemprop="url" rel="index">
+                    <span itemprop="name">tuning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017-08/tuning/一次JVM FullGC的分析调优/" class="leancloud_visitors" data-flag-title="JVM FullGC的分析调优">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        [本文(JVM FullGC的分析调优)原始地址]<a href="http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/" title="JVM FullGC的分析调优">http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/</a>
+        <h2 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h2><p>cpu 100% 通常的思路是查看runnable的线程，但如果发现是耗尽cpu的是vmthread。多半会伴随old区已满（此时垃圾回收已停止），通常这是由于在并发下短时间内创建很多对象造成。</p>
+<p>一个例子<br>很抱歉，这个例子的原始样本日志已经被我删除了，而且是调优之后才想着记录下来的，所以下面的数据是根据记忆模拟的，但是能说明问题。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[test@mybook ~]# jstat -gcutil 13024 500 10</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.00   4.95  93.52  12.97  82.80  69.10   4163   62.073     125  430.260  492.333</span><br><span class="line">  3.81   0.00   8.03  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  15.37  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  30.35  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  40.27  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  46.95  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  51.08  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  54.42  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  56.63  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br><span class="line">  3.81   0.00  67.56  12.97  82.81  69.10   4164   62.088     125  430.260  492.333</span><br></pre></td></tr></table></figure></p>
+<p>执行<code>jps -mlvV</code>可以看出有问题应用的jvm参数如下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xms2400M -Xmx2400M -Xss512K -Xmn600M -XX:MetaspaceSize=750M -XX:MaxMetaspaceSize=750M -Xloggc:/tmp/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=700K -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=2 -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=75 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:CMSFullGCsBeforeCompaction=1 -XX:+UseCMSCompactAtFullCollection -Xverify:none -Dfile.encoding=utf-8</span><br></pre></td></tr></table></figure></p>
+<p>这个在频繁FullGC，年老代GC用的是CMS，CMS就是以停顿时间/STW短著称的，125次FullGC花费430s意味着每次GC要3s，这是不可接受的，正常CMS的FullGC也不会超过1s。</p>
+<a id="more"></a>
+<p>heap大小为2400M，新生代大小为600M，75%时执行CMS，比例为2</p>
+<p>老年代为2400-600=1800，老年代达到1350M时执行回收，此时老年代还剩下450M，此时新生代的对象如果要回收到老年代很可能申请不到足够的老年代空间，因为新生代有600M，就会FullGC。</p>
+<p>另外说一下，开了记录GC日志的开关，一定要配套打开其他几个开关<code>-Xloggc:/tmp/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=700K</code>,这个的例子是每个GC日志大小为700K，日志文件数为最新的10个，其他的会被丢弃。没有这样的设置GC日志文件会越来越大，同时最好打开<code>-XX:+PrintGCDateStamps</code>，这样能知道发生GC的具体时间，能同步查询这段时间系统的日志来最终确定问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">2017-08-16T10:12:49.579+0800: 44723.945: [Full GC (Allocation Failure) 44723.945: [CMS2017-08-16T10:12:52.213+0800: 44726.579: [CMS-concurrent-mark: 2.638/2.640 secs] [Times: user=2.65 sys=0.00, real=2.64 secs]</span><br><span class="line"> (concurrent mode failure): 2047999K-&gt;2047999K(2048000K), 8.6606867 secs] 2355199K-&gt;2354674K(2355200K), [Metaspace: 103711K-&gt;103711K(1202176K)], 8.6608144 secs] [Times: user=8.56 sys=0.00, real=8.66 secs]</span><br><span class="line">2017-08-16T10:12:58.247+0800: 44732.613: [Full GC (Allocation Failure) 44732.613: [CMS: 2047999K-&gt;2047999K(2048000K), 5.8058865 secs] 2355199K-&gt;2354690K(2355200K), [Metaspace: 103711K-&gt;103711K(1202176K)], 5.8060044 secs] [Times: user=5.76 sys=0.00, real=5.81 secs]</span><br><span class="line">2017-08-16T10:13:04.057+0800: 44738.423: [GC (CMS Initial Mark) [1 CMS-initial-mark: 2047999K(2048000K)] 2355177K(2355200K), 0.2686993 secs] [Times: user=0.40 sys=0.00, real=0.27 secs]</span><br><span class="line">2017-08-16T10:13:04.326+0800: 44738.692: [CMS-concurrent-mark-start]</span><br><span class="line">2017-08-16T10:13:04.327+0800: 44738.693: [Full GC (Allocation Failure) 44738.693: [CMS2017-08-16T10:13:07.013+0800: 44741.379: [CMS-concurrent-mark: 2.686/2.687 secs] [Times: user=2.71 sys=0.00, real=2.69 secs]</span><br><span class="line"> (concurrent mode failure): 2047999K-&gt;2047999K(2048000K), 8.5444313 secs] 2355199K-&gt;2354650K(2355200K), [Metaspace: 103711K-&gt;103711K(1202176K)], 8.5445348 secs] [Times: user=8.59 sys=0.00, real=8.55 secs]</span><br><span class="line">2017-08-16T10:13:12.877+0800: 44747.243: [Full GC (Allocation Failure) 44747.243: [CMS: 2047999K-&gt;2047999K(2048000K), 5.6359385 secs] 2355199K-&gt;2354677K(2355200K), [Metaspace: 103711K-&gt;103711K(1202176K)], 5.6360569 secs] [Times: user=5.67 sys=0.00, real=5.64 secs]</span><br><span class="line">2017-08-16T10:13:18.517+0800: 44752.883: [GC (CMS Initial Mark) [1 CMS-initial-mark: 2047999K(2048000K)] 2354891K(2355200K), 0.2264203 secs] [Times: user=0.35 sys=0.00, real=0.23 secs]</span><br><span class="line">2017-08-16T10:13:18.743+0800: 44753.109: [CMS-concurrent-mark-start]</span><br><span class="line">2017-08-16T10:13:18.745+0800: 44753.112: [Full GC (Allocation Failure) 44753.112: [CMS2017-08-16T10:13:21.400+0800: 44755.767: [CMS-concurrent-mark: 2.655/2.657 secs] [Times: user=2.68 sys=0.00, real=2.66 secs]</span><br><span class="line"> (concurrent mode failure): 2047999K-&gt;2047999K(2048000K), 8.4214522 secs] 2355193K-&gt;2354669K(2355200K), [Metaspace: 103715K-&gt;103715K(1202176K)], 8.4215869 secs] [Times: user=8.45 sys=0.00, real=8.42 secs]</span><br></pre></td></tr></table></figure>
+<p>因为我们设置了PrintGCDateStamps，所以我们可以看到10:13在频繁FullGC，频繁FullGC是CMS没有释放掉对象，说明此时有大对象存在。监控程序日志或者dump可以看到此时在做导入操作，说明导入操作应该优化代码。</p>
+<p>我们也同时可以对JVM做一些优化，可以看到FullGC是CMSGC后并没有释放空间，导致还是超过75%的回收比例，继续触发FullGC。</p>
+<p>方案是提高年老代大小，降低触发CMS的比例，比如把head的大小进一步提高，降低Xmn的大小，并将CMSInitiatingOccupancyFraction降低到70%</p>
+<p>修改如下:<br><code>-Xms2600M -Xmx2600M -Xss512K -Xmn400M -XX:MetaspaceSize=750M -XX:MaxMetaspaceSize=750M -Xloggc:/tmp/gc.log -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=700K -XX:+PrintGCDateStamps -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC -XX:+UseParNewGC -XX:+CMSParallelRemarkEnabled -XX:+CMSClassUnloadingEnabled -XX:SurvivorRatio=2 -XX:LargePageSizeInBytes=128M -XX:+UseFastAccessorMethods -XX:+UseCMSInitiatingOccupancyOnly -XX:CMSInitiatingOccupancyFraction=70 -XX:SoftRefLRUPolicyMSPerMB=0 -XX:+PrintClassHistogram -XX:+PrintGCDetails -XX:CMSFullGCsBeforeCompaction=1 -XX:+UseCMSCompactAtFullCollection</code><br>效果如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[test@mybook ~]# jstat -gcutil 5821 500 10</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  5.36   0.00  36.35  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  42.95  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  52.32  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  60.25  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  66.12  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  83.03  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  5.36   0.00  93.31  33.55  79.29  63.08   2194   48.136     0    0.000   48.136</span><br><span class="line">  0.00   4.32  22.42  33.57  79.30  63.09   2195   48.165     0    0.000   48.165</span><br><span class="line">  0.00   4.32  29.67  33.57  79.30  63.09   2195   48.165     0    0.000   48.165</span><br><span class="line">  0.00   4.32  44.94  33.57  79.30  63.09   2195   48.165     0    0.000   48.165</span><br></pre></td></tr></table></figure></p>
+<p>另一个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[test@mybook ~]# jstat -gcutil 14054 500 10</span><br><span class="line">  S0     S1     E      O      M     CCS    YGC     YGCT    FGC    FGCT     GCT   </span><br><span class="line">  0.00  57.60  89.27  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  90.92  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  92.88  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  94.00  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  95.78  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  97.37  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line">  0.00  57.60  98.98  17.26  81.04  52.05   1707   19.806   157  448.888  468.694</span><br><span class="line"> 53.92   0.00   0.36  17.71  81.08  51.94   1708   19.835   157  448.888  468.723</span><br><span class="line"> 53.92   0.00   2.28  17.71  81.08  51.94   1708   19.835   157  448.888  468.723</span><br><span class="line"> 53.92   0.00   3.67  17.71  81.08  51.94   1708   19.835   157  448.888  468.723</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">2017-08-16T08:20:56.859+0800: 68169.646: [GC (Allocation Failure) [PSYoungGen: 1045176K-&gt;36643K(1070080K)] 2091161K-&gt;1120579K(2196480K), 0.0599351 secs] [Times: user=0.23 sys=0.00, real=0.06 secs]</span><br><span class="line">2017-08-16T08:20:56.919+0800: 68169.706: [Full GC (Ergonomics) [PSYoungGen: 36643K-&gt;0K(1070080K)] [ParOldGen: 1083936K-&gt;1115405K(1126400K)] 1120579K-&gt;1115405K(2196480K), [Metaspace: 150009K-&gt;149972K(1200128K)], 2.2663258 secs] [Times: user=7.93 sys=0.00, real=2.27 secs]</span><br><span class="line">2017-08-16T08:20:59.975+0800: 68172.762: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;23530K(1070080K)] [ParOldGen: 1115405K-&gt;1126390K(1126400K)] 2127629K-&gt;1149920K(2196480K), [Metaspace: 149991K-&gt;149927K(1200128K)], 2.1220851 secs] [Times: user=7.38 sys=0.05, real=2.12 secs]</span><br><span class="line">2017-08-16T08:21:02.899+0800: 68175.686: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;59419K(1070080K)] [ParOldGen: 1126390K-&gt;1125954K(1126400K)] 2138614K-&gt;1185374K(2196480K), [Metaspace: 149927K-&gt;149922K(1200128K)], 2.5345709 secs] [Times: user=8.72 sys=0.03, real=2.54 secs]</span><br><span class="line">2017-08-16T08:21:06.094+0800: 68178.881: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;93211K(1070080K)] [ParOldGen: 1125954K-&gt;1125937K(1126400K)] 2138178K-&gt;1219148K(2196480K), [Metaspace: 149922K-&gt;149922K(1200128K)], 1.7138433 secs] [Times: user=6.15 sys=0.00, real=1.71 secs]</span><br><span class="line">2017-08-16T08:21:08.446+0800: 68181.233: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;125952K(1070080K)] [ParOldGen: 1125937K-&gt;1125909K(1126400K)] 2138161K-&gt;1251862K(2196480K), [Metaspace: 149922K-&gt;149922K(1200128K)], 2.3235504 secs] [Times: user=8.30 sys=0.00, real=2.32 secs]</span><br><span class="line">2017-08-16T08:21:11.386+0800: 68184.173: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;157529K(1070080K)] [ParOldGen: 1125909K-&gt;1125923K(1126400K)] 2138133K-&gt;1283453K(2196480K), [Metaspace: 149922K-&gt;149921K(1200128K)], 2.8770989 secs] [Times: user=10.37 sys=0.00, real=2.87 secs]</span><br><span class="line">2017-08-16T08:21:14.939+0800: 68187.726: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;187325K(1070080K)] [ParOldGen: 1125923K-&gt;1126346K(1126400K)] 2138147K-&gt;1313672K(2196480K), [Metaspace: 149921K-&gt;149921K(1200128K)], 2.6005103 secs] [Times: user=9.39 sys=0.00, real=2.60 secs]</span><br><span class="line">2017-08-16T08:21:18.116+0800: 68190.903: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;217103K(1070080K)] [ParOldGen: 1126346K-&gt;1126344K(1126400K)] 2138570K-&gt;1343448K(2196480K), [Metaspace: 149921K-&gt;149921K(1200128K)], 2.4098660 secs] [Times: user=8.58 sys=0.00, real=2.41 secs]</span><br><span class="line">2017-08-16T08:21:21.074+0800: 68193.861: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;244632K(1070080K)] [ParOldGen: 1126344K-&gt;1126342K(1126400K)] 2138568K-&gt;1370974K(2196480K), [Metaspace: 149921K-&gt;149921K(1200128K)], 2.3926853 secs] [Times: user=8.67 sys=0.00, real=2.39 secs]</span><br><span class="line">2017-08-16T08:21:24.015+0800: 68196.803: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;271948K(1070080K)] [ParOldGen: 1126342K-&gt;1126144K(1126400K)] 2138566K-&gt;1398092K(2196480K), [Metaspace: 149921K-&gt;149905K(1200128K)], 2.6729877 secs] [Times: user=9.52 sys=0.00, real=2.67 secs]</span><br><span class="line">2017-08-16T08:21:27.304+0800: 68200.091: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;296511K(1070080K)] [ParOldGen: 1126144K-&gt;1126335K(1126400K)] 2138368K-&gt;1422846K(2196480K), [Metaspace: 149905K-&gt;149905K(1200128K)], 3.4714176 secs] [Times: user=12.47 sys=0.00, real=3.47 secs]</span><br><span class="line">2017-08-16T08:21:31.255+0800: 68204.042: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;321001K(1070080K)] [ParOldGen: 1126335K-&gt;1126335K(1126400K)] 2138559K-&gt;1447337K(2196480K), [Metaspace: 149905K-&gt;149905K(1200128K)], 2.3689971 secs] [Times: user=8.54 sys=0.00, real=2.37 secs]</span><br><span class="line">2017-08-16T08:21:34.127+0800: 68206.915: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;346486K(1070080K)] [ParOldGen: 1126335K-&gt;1126335K(1126400K)] 2138559K-&gt;1472821K(2196480K), [Metaspace: 149905K-&gt;149905K(1200128K)], 1.4811130 secs] [Times: user=5.35 sys=0.00, real=1.48 secs]</span><br><span class="line">2017-08-16T08:21:36.104+0800: 68208.891: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;368640K(1070080K)] [ParOldGen: 1126335K-&gt;1126294K(1126400K)] 2138559K-&gt;1494934K(2196480K), [Metaspace: 149905K-&gt;149903K(1200128K)], 2.6448415 secs] [Times: user=9.32 sys=0.00, real=2.64 secs]</span><br><span class="line">2017-08-16T08:21:39.207+0800: 68211.994: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;392472K(1070080K)] [ParOldGen: 1126294K-&gt;1126217K(1126400K)] 2138518K-&gt;1518689K(2196480K), [Metaspace: 149903K-&gt;149877K(1200128K)], 2.5999380 secs] [Times: user=9.10 sys=0.00, real=2.60 secs]</span><br><span class="line">2017-08-16T08:21:42.232+0800: 68215.019: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;413216K(1070080K)] [ParOldGen: 1126217K-&gt;1126216K(1126400K)] 2138441K-&gt;1539433K(2196480K), [Metaspace: 149877K-&gt;149877K(1200128K)], 2.2401472 secs] [Times: user=7.97 sys=0.00, real=2.24 secs]</span><br><span class="line">2017-08-16T08:21:44.902+0800: 68217.689: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;434974K(1070080K)] [ParOldGen: 1126216K-&gt;1126216K(1126400K)] 2138440K-&gt;1561190K(2196480K), [Metaspace: 149877K-&gt;149877K(1200128K)], 1.6083593 secs] [Times: user=5.76 sys=0.00, real=1.61 secs]</span><br><span class="line">2017-08-16T08:21:46.945+0800: 68219.732: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;454029K(1070080K)] [ParOldGen: 1126216K-&gt;1126137K(1126400K)] 2138440K-&gt;1580167K(2196480K), [Metaspace: 149877K-&gt;149877K(1200128K)], 2.3399985 secs] [Times: user=8.36 sys=0.00, real=2.34 secs]</span><br><span class="line">2017-08-16T08:21:49.688+0800: 68222.475: [Full GC (Ergonomics) [PSYoungGen: 1012224K-&gt;474437K(1070080K)] [ParOldGen: 1126137K-&gt;1126137K(1126400K)] 2138361K-&gt;1600574K(2196480K), [Metaspace: 149877K-&gt;149877K(1200128K)], 2.2670294 secs] [Times: user=7.97 sys=0.00, real=2.27 secs]</span><br></pre></td></tr></table></figure>
+<p>2017-08-16T08:20:56.919+0800: 68169.706: [Full GC (Ergonomics) [PSYoungGen: 36643K-&gt;0K(1070080K)] [ParOldGen: 1083936K-&gt;1115405K(1126400K)] 1120579K-&gt;1115405K(2196480K), [Metaspace: 150009K-&gt;149972K(1200128K)], 2.2663258 secs] [Times: user=7.93 sys=0.00, real=2.27 secs]</p>
+<p>同样的年老代空间不足导致FullGC频繁。</p>
+<h2 id="跟踪计数器的三种算法"><a href="#跟踪计数器的三种算法" class="headerlink" title="跟踪计数器的三种算法"></a>跟踪计数器的三种算法</h2><ul>
+<li><p>复制<br>  从根集合搜扫描出存活的对象，然后将存活的对象复制到一块新的未使用的空间中，当要回收的空间中存活的对象较少时，比较高效；</p>
+</li>
+<li><p>标记清除<br>  从根集合开始扫描，对存活的对象进行标记，比较完毕后，再扫描整个空间中未标记的对象，然后进行回收，不需要对对象进行移动；</p>
+</li>
+<li><p>标记压缩<br>  标记形式和“标记清除”一样，但是回收不存活的对象后，会把所有存活的对象在内存空间中进行移动，好处是减少了内存碎片，缺点是成本比较高；</p>
+</li>
+</ul>
+<h2 id="新生代可以使用的GC"><a href="#新生代可以使用的GC" class="headerlink" title="新生代可以使用的GC"></a>新生代可以使用的GC</h2><p>新生代中对象存活的时间比较短，因此通过复制算法实现，Eden区域存放新创建的对象，S0和S1区其中一块用于存放在Minor GC的时候作为复制存活对象的目标空间，另外一块清空。</p>
+<p>串行GC（Serial GC）比较适合单CPU的情况，可以通过-XX:UseSerialGC来强行制定；</p>
+<p>并行回收GC（Parallel Scavenge），启动的时候按照设置的参数来划定Eden/S0/S1区域的大小，但是在运行时，会根据Minor GC的频率、消耗时间来动态调整三个区域的大小，可以用过-XX:UseAdaptiveSizePolicy来固定大小，不进行动态调整；</p>
+<p>并行GC（ParNew）划分Eden、S1、S0的区域上和串行GC一样。并行GC需要配合旧生代使用CMS GC（这是他和并行回收GC的不同）（如果配置了CMS GC的方式，那么新生代默认采取的就是并行GC的方式）；</p>
+<h2 id="何时会触发Minor-GC？"><a href="#何时会触发Minor-GC？" class="headerlink" title="何时会触发Minor GC？"></a>何时会触发Minor GC？</h2><p>当Eden区域分配内存时，发现空间不足，JVM就会触发Minor GC，程序中System.gc()也可以来触发。</p>
+<h2 id="老生代可以使用的GC"><a href="#老生代可以使用的GC" class="headerlink" title="老生代可以使用的GC"></a>老生代可以使用的GC</h2><p>串行GC（Serial MSC）、并行GC（Parallel MSC）、并发GC（CMS）;</p>
+<p>采用CMS时候，新生代必须使用Serial GC或者ParNew GC两种。CMS共有七个步骤，只有Initial Marking和Final Marking两个阶段是stop-the-world的，其他步骤均和应用并行进行。持久代的GC也采用CMS，通过-XX：CMSPermGenSweepingEnabled -XX：CMSClassUnloadingEnabled来制定。在采用cms gc的情况下，ygc变慢的原因通常是由于old gen出现了大量的碎片。</p>
+<h3 id="为啥CMS会有内存碎片，如何避免？"><a href="#为啥CMS会有内存碎片，如何避免？" class="headerlink" title="为啥CMS会有内存碎片，如何避免？"></a>为啥CMS会有内存碎片，如何避免？</h3><p>由于在CMS的回收步骤中，没有对内存进行压缩，所以会有内存碎片出现，CMS提供了一个整理碎片的功能，通过-XX：UseCompactAtFullCollection来启动此功能，启动这个功能后，默认每次执行Full GC的时候会进行整理（也可以通过-XX：CMSFullGCsBeforeCompaction=n来制定多少次Full GC之后来执行整理），整理碎片会stop-the-world.</p>
+<h3 id="啥时候会触发CMS-GC？"><a href="#啥时候会触发CMS-GC？" class="headerlink" title="啥时候会触发CMS GC？"></a>啥时候会触发CMS GC？</h3><p>1、旧生代或者持久代已经使用的空间达到设定的百分比时（CMSInitiatingOccupancyFraction这个设置old区，perm区也可以设置）；</p>
+<p>2、JVM自动触发(JVM的动态策略，也就是悲观策略)（基于之前GC的频率以及旧生代的增长趋势来评估决定什么时候开始执行），如果不希望JVM自行决定，可以通过-XX:UseCMSInitiatingOccupancyOnly=true来制定；</p>
+<p>3、设置-XX:CMSClassUnloading为Enabled时 这个则考虑Perm区；</p>
+<h2 id="啥时候会触发Full-GC？"><a href="#啥时候会触发Full-GC？" class="headerlink" title="啥时候会触发Full GC？"></a>啥时候会触发Full GC？</h2><h3 id="旧生代空间不足"><a href="#旧生代空间不足" class="headerlink" title="旧生代空间不足"></a>旧生代空间不足</h3><p>java.lang.outOfMemoryError：java heap space；</p>
+<h3 id="Perm空间满"><a href="#Perm空间满" class="headerlink" title="Perm空间满"></a>Perm空间满</h3><p>java.lang.outOfMemoryError：PermGen space；</p>
+<h3 id="CMS-GC时出现promotion-failed-和concurrent-mode-failure"><a href="#CMS-GC时出现promotion-failed-和concurrent-mode-failure" class="headerlink" title="CMS GC时出现promotion failed  和concurrent  mode failure"></a>CMS GC时出现promotion failed  和concurrent  mode failure</h3><p>promotion failed是在进行Minor GC时，survivor space放不下、对象只能放入老年代，而此时老年代也放不下造成的；<br>concurrent mode failure是在执行CMS GC的过程中同时有对象要放入老年代，而此时老年代空间不足造成的（有时候“空间不足”是CMS GC时当前的浮动垃圾过多导致暂时性的空间不足触发Full GC）。<br>应对措施为：增大survivor space、老年代空间或调低触发并发GC的比率，但在JDK 5.0+、6.0+的版本中有可能会由于JDK的bug29导致CMS在remark完毕后很久才触发sweeping动作。对于这种状况，可通过设置-XX: CMSMaxAbortablePrecleanTime=5（单位为ms）来避免。</p>
+<h3 id="统计得到的minor-GC晋升到旧生代的平均大小大于旧生代的剩余空间"><a href="#统计得到的minor-GC晋升到旧生代的平均大小大于旧生代的剩余空间" class="headerlink" title="统计得到的minor GC晋升到旧生代的平均大小大于旧生代的剩余空间"></a>统计得到的minor GC晋升到旧生代的平均大小大于旧生代的剩余空间</h3><h3 id="主动触发Full-GC（执行jmap-histo-live-pid-）来避免碎片问题"><a href="#主动触发Full-GC（执行jmap-histo-live-pid-）来避免碎片问题" class="headerlink" title="主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题"></a>主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题</h3><h3 id="堆中分配很大的对象"><a href="#堆中分配很大的对象" class="headerlink" title="堆中分配很大的对象"></a>堆中分配很大的对象</h3><p>所谓大对象，是指需要大量连续内存空间的java对象，例如很长的数组，此种对象会直接进入老年代，而老年代虽然有很大的剩余空间，但是无法找到足够大的连续空间来分配给当前对象，此种情况就会触发JVM进行Full GC。<br>为了解决这个问题，CMS垃圾收集器提供了一个可配置的参数，即-XX:+UseCMSCompactAtFullCollection开关参数，用于在“享受”完Full GC服务之后额外免费赠送一个碎片整理的过程，内存整理的过程无法并发的，空间碎片问题没有了，但提顿时间不得不变长了，JVM设计者们还提供了另外一个参数 -XX:CMSFullGCsBeforeCompaction,这个参数用于设置在执行多少次不压缩的Full GC后,跟着来一次带压缩的。</p>
+<p><a href="http://hellojava.info/?p=142" target="_blank" rel="noopener">为什么heap size&lt;=3G的情况下完全不要考虑CMS GC</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+<div id="wechat_subscriber" style="display: block; padding: 10px 0; margin: 20px auto; width: 100%; text-align: center">
+    <img id="wechat_subscriber_qcode" src="/uploads/qrcode.jpg" alt="小英雄雨来 wechat" style="width: 200px; max-width: 100%;">
+    <div>扫码二维码或搜索"架构演进之旅"订阅微信公众号</div>
+</div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  
+    <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+      <div>enjoy?donate!</div>
+      <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+        <span>赏</span>
+      </button>
+      <div id="QR" style="display: none;">
+        
+          <div id="wechat" style="display: inline-block">
+            <img id="wechat_qr" src="http://static.xcoder.ren/public/images/wechat.png" alt="小英雄雨来 WeChat Pay">
+            <p>微信打赏</p>
+          </div>
+        
+        
+          <div id="alipay" style="display: inline-block">
+            <img id="alipay_qr" src="http://static.xcoder.ren/public/images/alipay.png?v=1" alt="小英雄雨来 Alipay">
+            <p>支付宝打赏</p>
+          </div>
+        
+      </div>
+    </div>
+  
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      小英雄雨来
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/" title="JVM FullGC的分析调优">http://xcoder.me/2017-08/tuning/一次JVM FullGC的分析调优/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/" rel="external nofollow" target="_blank">知识共享署名-非商业性使用-禁止演绎 4.0 国际许可协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
+          
+            <a href="/tags/CMS/" rel="tag"># CMS</a>
+          
+            <a href="/tags/FullGC/" rel="tag"># FullGC</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017-08/tuning/吞吐量,TPS(QPS),用户并发量/" rel="next" title="吞吐量,QPS,并发请求数">
+                <i class="fa fa-chevron-left"></i> 吞吐量,QPS,并发请求数
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017-08/build/logstash-forwarder TLS handshake errors/" rel="prev" title="logstash-forwarder TLS handshake errors">
+                logstash-forwarder TLS handshake errors <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="gitment_container"></div>
+      
+
+
+
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+  var gitment = new Gitment({
+    id: window.location.pathname,
+    owner: 'zhaoyin',
+    repo: 'comments',
+    oauth: {
+    client_id: 'fbf487ab0c2f9a26b06c',
+    client_secret: 'b067cd9221324f0c865c1507dcedaaa53dfa1cdb'
+    }
+  });
+  gitment.render('gitment_container');
+</script>
+
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/uploads/qrcode.jpg" alt="小英雄雨来">
+          <p class="site-author-name" itemprop="name">小英雄雨来</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">68</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">72</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/zhaoyin" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              收藏
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://news.dbanotes.net/" title="dbanotes" target="_blank">dbanotes</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hedengcheng.com/" title="数据库" target="_blank">数据库</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.ruanyifeng.com/blog/" title="ruanyifeng" target="_blank">ruanyifeng</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://readhub.me/" title="readhub" target="_blank">readhub</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="https://www.thoughtworks.com/cn/radar" title="技术雷达" target="_blank">技术雷达</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://hellojava.info/" title="hellojava" target="_blank">hellojava</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fordba.com/" title="For DBA" target="_blank">For DBA</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#实践"><span class="nav-number">1.</span> <span class="nav-text">实践</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跟踪计数器的三种算法"><span class="nav-number">2.</span> <span class="nav-text">跟踪计数器的三种算法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#新生代可以使用的GC"><span class="nav-number">3.</span> <span class="nav-text">新生代可以使用的GC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#何时会触发Minor-GC？"><span class="nav-number">4.</span> <span class="nav-text">何时会触发Minor GC？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#老生代可以使用的GC"><span class="nav-number">5.</span> <span class="nav-text">老生代可以使用的GC</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#为啥CMS会有内存碎片，如何避免？"><span class="nav-number">5.1.</span> <span class="nav-text">为啥CMS会有内存碎片，如何避免？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#啥时候会触发CMS-GC？"><span class="nav-number">5.2.</span> <span class="nav-text">啥时候会触发CMS GC？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#啥时候会触发Full-GC？"><span class="nav-number">6.</span> <span class="nav-text">啥时候会触发Full GC？</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#旧生代空间不足"><span class="nav-number">6.1.</span> <span class="nav-text">旧生代空间不足</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Perm空间满"><span class="nav-number">6.2.</span> <span class="nav-text">Perm空间满</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CMS-GC时出现promotion-failed-和concurrent-mode-failure"><span class="nav-number">6.3.</span> <span class="nav-text">CMS GC时出现promotion failed  和concurrent  mode failure</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#统计得到的minor-GC晋升到旧生代的平均大小大于旧生代的剩余空间"><span class="nav-number">6.4.</span> <span class="nav-text">统计得到的minor GC晋升到旧生代的平均大小大于旧生代的剩余空间</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主动触发Full-GC（执行jmap-histo-live-pid-）来避免碎片问题"><span class="nav-number">6.5.</span> <span class="nav-text">主动触发Full GC（执行jmap -histo:live [pid]）来避免碎片问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆中分配很大的对象"><span class="nav-number">6.6.</span> <span class="nav-text">堆中分配很大的对象</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小英雄雨来</span>
+</div>
+
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.3/jquery.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fastclick/1.0.6/fastclick.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/jquery_lazyload/1.9.7/jquery.lazyload.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/velocity/1.2.1/velocity.ui.min.js"></script>
+
+  
+  <script type="text/javascript" src="//cdn.staticfile.org/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+  
+  
+  
+    
+  
+  <link rel="stylesheet" href="//static.xcoder.ren/public/js/instantsearch.min.css">
+
+  
+  
+    
+  
+  <script src="//static.xcoder.ren/public/js/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("MFNpPwI7d5XttuK79a1A9A6o-gzGzoHsz", "NrqlYJViJsDVg4JNTKTW0fFQ");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
