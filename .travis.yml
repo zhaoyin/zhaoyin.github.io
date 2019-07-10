@@ -27,4 +27,3 @@ branches:
     - markdown
 env:
  global:
-   - GH_REF: github.com/zhaoyin/zhaoyin.github.io.git
